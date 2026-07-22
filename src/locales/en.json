@@ -1,0 +1,382 @@
+{
+  "common": {
+    "home": "Home",
+    "loading": "Loading...",
+    "error": "An unexpected error occurred."
+  },
+  "navigation": {
+    "home": "Home",
+    "features": "Features",
+    "platforms": "Platforms",
+    "premium": "Premium",
+    "roadmap": "Roadmap",
+    "blog": "Blog",
+    "login": "Login"
+  },
+  "hero": {
+    "headline": "Your Universal Streaming Watchlist.\nTrack Movies & Series Everywhere.",
+    "subtitle": "Discover, track, and share movies and series across Netflix, Prime Video, Disney+, and more. The ultimate movie tracker and streaming guide—all in one place.",
+    "ctaPrimary": "Get Started Free",
+    "ctaSecondary": "See Plans",
+    "emailPlaceholder": "Enter your email",
+    "submitBtn": "Join Now",
+    "submittedLabel": "Joined",
+    "successMessage": "Thanks for joining the waitlist!",
+    "androidBadge": "Coming Soon for Android",
+    "androidBadgeSubtitle": "Join the waitlist and be the first to know."
+  },
+  "features": {
+    "title": "Everything You Need in a Movie Tracker",
+    "subtitle": "From streaming discovery to series tracking, SeeUs is your complete guide across all platforms.",
+    "items": {
+      "discovery": {
+        "title": "Smart Discovery",
+        "description": "Get personalized movie and series recommendations powered by your watch history and preferences."
+      },
+      "tracking": {
+        "title": "Unified Tracking",
+        "description": "Track movies and TV series across Netflix, Prime Video, Disney+, Hulu, and all your streaming services."
+      },
+      "social": {
+        "title": "Social Watchlist",
+        "description": "Create and share watchlists with friends. Build your ultimate movie queue together."
+      },
+      "calendar": {
+        "title": "Release Calendar",
+        "description": "Never miss a premiere. Get alerts for new seasons, movie releases, and series premieres."
+      },
+      "ratings": {
+        "title": "Smart Ratings",
+        "description": "Compare scores from IMDb, Rotten Tomatoes, and Metacritic in one unified view."
+      },
+      "offline": {
+        "title": "Offline Mode",
+        "description": "Browse your movie library and manage your watchlist even without an internet connection."
+      }
+    }
+  },
+  "platforms": {
+    "title": "Available Everywhere",
+    "subtitle": "SeeUs comes to all your devices. Start on one, continue on another.",
+    "cards": {
+      "web": {
+        "name": "Web",
+        "description": "Access SeeUs from any browser. No download required."
+      },
+      "windows": {
+        "name": "Windows",
+        "description": "Native Windows app with full offline support and system tray integration."
+      },
+      "android": {
+        "name": "Android",
+        "description": "Take your watchlist on the go with the Android mobile app."
+      }
+    },
+    "buttons": {
+      "web": "Open in Browser",
+      "windows": "Download for Windows",
+      "android": "Get it on Google Play",
+      "comingSoon": "Coming Soon"
+    }
+  },
+  "premium": {
+    "title": "Go Premium",
+    "subtitle": "Unlock exclusive features and enhance your viewing experience.",
+    "features": {
+      "adFree": "Ad-free experience",
+      "analytics": "Advanced analytics",
+      "support": "Priority support",
+      "earlyAccess": "Early access to new features"
+    },
+    "cta": "Upgrade Now",
+    "plans": {
+      "title": "Choose Your Plan",
+      "subtitle": "Everything you need to organize what you want to watch.",
+      "startFree": "Start Free",
+      "comingSoonLabel": "Coming Soon",
+      "badge": "Most Popular",
+      "free": {
+        "title": "Free",
+        "description": "Everything you need to organize what you want to watch.",
+        "features": {
+          "favorites": "Favorites",
+          "unlimitedWatchlist": "Unlimited watchlist",
+          "officialTrailers": "Official trailers"
+        }
+      },
+      "premium": {
+        "title": "Premium",
+        "price": "$9.90",
+        "period": "/month",
+        "description": "Enjoy all SeeUs features without limitations.",
+        "features": {
+          "unlimitedSync": "Unlimited sync across devices",
+          "personalStats": "Personal statistics",
+          "fullHistory": "Complete viewing history",
+          "adFree": "Ad-free experience",
+          "aiRecommendations": "Smart AI recommendations",
+          "smartNotifications": "Smart notifications",
+          "exclusiveWidgets": "Exclusive widgets"
+        },
+        "footer": "Coming soon for Android, Web and Windows."
+      },
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "price999": "$9.99",
+      "price9999": "$99.99",
+      "periodMonth": "/month",
+      "periodYear": "/year",
+      "selectPlan": "Select Plan",
+      "features": {
+        "adFree": "Ad-free experience",
+        "basicAnalytics": "Basic analytics",
+        "advancedAnalytics": "Advanced analytics",
+        "prioritySupport": "Priority support",
+        "earlyAccess": "Early access to new features",
+        "exclusiveContent": "Exclusive content & rewards"
+      }
+    }
+  },
+  "roadmap": {
+    "title": "What's Coming Next",
+    "subtitle": "Here's what we're building. Follow along as we bring SeeUs to every platform.",
+    "quarters": {
+      "q1_2026": {
+        "quarter": "Q1 2026",
+        "title": "Core Platform Launch",
+        "description": "Initial release with web app, basic tracking, and cross-platform watchlist sync."
+      },
+      "q2_2026": {
+        "quarter": "Q2 2026",
+        "title": "Social Features",
+        "description": "Friend lists, shared watchlists, activity feeds, and comment threads."
+      },
+      "q3_2026": {
+        "quarter": "Q3 2026",
+        "title": "Mobile Apps",
+        "description": "Native Android app with offline mode, widgets, and push notifications."
+      },
+      "q4_2026": {
+        "quarter": "Q4 2026",
+        "title": "Recommendation Engine",
+        "description": "AI-powered suggestions based on watch history, genre preferences, and social trends."
+      },
+      "q1_2027": {
+        "quarter": "Q1 2027",
+        "title": "Windows Desktop App",
+        "description": "Native Windows client with system tray, PIP mode, and keyboard shortcuts."
+      },
+      "q2_2027": {
+        "quarter": "Q2 2027",
+        "title": "API & Integrations",
+        "description": "Public API for third-party developers and integrations with Plex, Jellyfin, and Kodi."
+      }
+    },
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "planned": "Planned"
+    }
+  },
+  "faq": {
+    "section": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about SeeUs."
+    },
+    "items": [
+      {
+        "question": "Is SeeUs free?",
+        "answer": "Yes. SeeUs offers a free version with essential features. A Premium version is available for users who want additional capabilities."
+      },
+      {
+        "question": "Do I need to create an account?",
+        "answer": "No. You can start using SeeUs immediately. Creating an account allows you to synchronize your data across devices."
+      },
+      {
+        "question": "How do I sync my data?",
+        "answer": "Simply sign in with your account. Your watchlists, favorites and preferences are automatically synchronized."
+      },
+      {
+        "question": "Is there an Android app?",
+        "answer": "Yes. SeeUs is available for Android devices."
+      },
+      {
+        "question": "Is there a Windows version?",
+        "answer": "Not yet. The web version works on Windows, and a native desktop application is part of our roadmap."
+      },
+      {
+        "question": "How does Premium work?",
+        "answer": "Premium unlocks additional features and helps support the continued development of SeeUs."
+      },
+      {
+        "question": "Does SeeUs track where I watch my content?",
+        "answer": "No. SeeUs helps organize what you watch but does not monitor where you stream your content."
+      },
+      {
+        "question": "Can I import my existing watchlists?",
+        "answer": "Import functionality is planned and will be available in a future update."
+      }
+    ]
+  },
+  "newsletter": {
+    "title": "Stay in the Loop",
+    "description": "Get the latest features, platform updates, and curated recommendations delivered to your inbox.",
+    "placeholder": "Enter your email address",
+    "submitLabel": "Subscribe",
+    "successMessage": "Thanks for subscribing!",
+    "submittedLabel": "Subscribed"
+  },
+  "footer": {
+    "brandDescription": "Discover, track, and share your favorite movies and series. Your next binge starts here.",
+    "navigation": {
+      "heading": "Navigation",
+      "home": "Home",
+      "features": "Features",
+      "platforms": "Platforms",
+      "premium": "Premium",
+      "roadmap": "Roadmap"
+    },
+    "platforms": {
+      "heading": "Platforms",
+      "web": "Web App",
+      "windows": "Windows",
+      "android": "Android"
+    },
+    "legal": {
+      "heading": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy",
+      "feedback": "Feedback",
+      "backToHome": "Back to Home"
+    },
+    "social": {
+      "twitter": "Twitter",
+      "github": "GitHub",
+      "discord": "Discord"
+    }
+  },
+  "feedback": {
+    "seo": {
+      "title": "Feedback | SeeUs",
+      "description": "Send suggestions, report bugs, or request new features for SeeUs."
+    },
+    "title": "Feedback",
+    "subtitle": "Help us improve SeeUs. Choose one of the options below and send us your feedback.",
+    "categories": {
+      "suggestion": "Suggestions",
+      "bug": "Report a Bug",
+      "feature": "Feature Request"
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your name (optional)",
+      "email": "Email",
+      "emailPlaceholder": "your email (optional)",
+      "message": "Message",
+      "submit": "Send Feedback",
+      "submitting": "Sending...",
+      "submitAnother": "Submit Another Feedback",
+      "placeholders": {
+        "suggestion": "Tell us your idea...",
+        "bug": "Describe the problem...",
+        "feature": "What feature would you like to see?"
+      }
+    },
+    "success": {
+      "title": "Thank you!",
+      "message": "Your feedback helps us improve SeeUs.",
+      "submitAnother": "Submit Another Feedback"
+    }
+  },
+  "blog": {
+    "seo": {
+      "title": "Blog | SeeUs",
+      "description": "Discover articles about streaming movies and series, guides, tips, and news for SeeUs users."
+    },
+    "title": "Blog",
+    "subtitle": "Guides, tips, and news about streaming movies and series.",
+    "home": "Home",
+    "by": "By",
+    "readingTime": "min read",
+    "minRead": "min read",
+    "featured": "Featured",
+    "categories": "Categories",
+    "tags": "Tags",
+    "searchPlaceholder": "Search articles...",
+    "noPostsFound": "No posts found.",
+    "postNotFound": "Post Not Found",
+    "postNotFoundDescription": "The article you're looking for doesn't exist.",
+    "backToBlog": "Back to Blog",
+    "relatedArticles": "Related Articles"
+  },
+  "content": {
+    "meta": {
+      "releaseYear": "Release Year",
+      "firstAirYear": "First Air Year",
+      "lastAirYear": "Last Air Year",
+      "duration": "Duration",
+      "seasons": "Seasons",
+      "rating": "Rating",
+      "genres": "Genres",
+      "director": "Director",
+      "directors": "Directors",
+      "cast": "Cast",
+      "profession": "Profession",
+      "birthDate": "Birth Date",
+      "birthPlace": "Birth Place",
+      "filmography": "Filmography",
+      "status": "Status",
+      "platforms": "Available On"
+    },
+    "navigation": {
+      "backToHome": "Back to Home",
+      "relatedContent": "Related Content",
+      "alsoStarring": "Also Starring",
+      "moreByDirector": "More by This Director",
+      "similarTitles": "Similar Titles",
+      "viewActor": "View Actor",
+      "viewDirector": "View Director",
+      "viewMovie": "View Movie",
+      "viewSeries": "View Series"
+    },
+    "labels": {
+      "minutes": "min",
+      "seasons": "seasons",
+      "episodes": "episodes"
+    }
+  },
+  "movie": {
+    "watch_now": "Watch Now",
+    "no_poster": "No poster available",
+    "no_synopsis": "No synopsis available.",
+    "original_title": "Original title",
+    "popularity": "Popularity",
+    "votes": "votes",
+    "synopsis": "Synopsis",
+    "financial": "Financial Information",
+    "budget": "Budget",
+    "revenue": "Revenue",
+    "official_site": "Official Site",
+    "not_found": "Movie not found.",
+    "no_providers": "No streaming providers available for your region.",
+    "providers": {
+      "streaming": "Streaming",
+      "free": "Free",
+      "ads": "Ads",
+      "rent": "Rent",
+      "buy": "Buy"
+    }
+  },
+  "waitlist": {
+    "error": {
+      "emailRequired": "Email is required",
+      "invalidEmail": "Please enter a valid email address",
+      "alreadySubscribed": "This email is already registered",
+      "generic": "Failed to join waitlist. Please try again later."
+    },
+    "success": {
+      "joined": "Thanks for joining the waitlist!"
+    }
+  }
+}

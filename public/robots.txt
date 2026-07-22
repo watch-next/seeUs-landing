@@ -1,0 +1,10 @@
+# Watch Next - Robots.txt
+# Allow all public pages
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://watch-next-landing.vercel.app/sitemap.xml
+Sitemap: https://watch-next-landing.vercel.app/blog-sitemap.xml
+Sitemap: https://watch-next-landing.vercel.app/movie-sitemap.xml
