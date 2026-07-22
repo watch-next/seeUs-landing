@@ -5,6 +5,6 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://watch-next-landing.vercel.app/sitemap.xml
-Sitemap: https://watch-next-landing.vercel.app/blog-sitemap.xml
-Sitemap: https://watch-next-landing.vercel.app/movie-sitemap.xml
+Sitemap: https://see-us-landing.vercel.app/sitemap.xml
+Sitemap: https://see-us-landing.vercel.app/blog-sitemap.xml
+Sitemap: https://see-us-landing.vercel.app/movie-sitemap.xml
