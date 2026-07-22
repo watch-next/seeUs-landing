@@ -283,7 +283,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [vue(), googleAnalyticsPlugin, VitePluginRSS(), VitePluginBlogSitemap(), VitePluginSitemap(), VitePluginMovieSitemap(), tmdbProxyPlugin],
+    plugins: [vue(), googleAnalyticsPlugin, googleAdSensePlugin, VitePluginRSS(), VitePluginBlogSitemap(), VitePluginSitemap(), VitePluginMovieSitemap(), tmdbProxyPlugin],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
