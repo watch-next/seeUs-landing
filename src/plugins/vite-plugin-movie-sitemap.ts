@@ -1,6 +1,6 @@
 import { Plugin } from 'vite';
 
-const SITE_URL = 'https://watchnext.app';
+const SITE_URL = 'https://see-us-landing.vercel.app';
 
 /**
  * Generate slug from movie title (same logic as MoviePage)

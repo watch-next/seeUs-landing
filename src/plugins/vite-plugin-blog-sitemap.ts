@@ -16,7 +16,7 @@ export function VitePluginBlogSitemap() {
   return {
     name: 'vite-plugin-blog-sitemap',
     async generateBundle() {
-      const baseUrl = process.env.VITE_SITE_URL || 'https://watchnext.app'
+      const baseUrl = process.env.VITE_APP_URL || 'https://see-us-landing.vercel.app'
       const supabaseUrl = process.env.VITE_SUPABASE_URL
       const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
 

@@ -25,7 +25,7 @@ export function VitePluginSitemap() {
   return {
     name: 'vite-plugin-sitemap',
     async generateBundle() {
-      const baseUrl = process.env.VITE_SITE_URL || 'https://watchnext.app'
+      const baseUrl = process.env.VITE_APP_URL || 'https://see-us-landing.vercel.app'
       const sitemapXml = generateSitemap(STATIC_ROUTES, baseUrl)
 
       this.emitFile({
