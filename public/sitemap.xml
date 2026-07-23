@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://watchnext.app/</loc>
+    <loc>https://see-us-landing.vercel.app/</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://watchnext.app/privacy-policy</loc>
+    <loc>https://see-us-landing.vercel.app/privacy-policy</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://watchnext.app/terms-of-service</loc>
+    <loc>https://see-us-landing.vercel.app/terms-of-service</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://watchnext.app/cookies-policy</loc>
+    <loc>https://see-us-landing.vercel.app/cookies-policy</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
