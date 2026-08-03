@@ -410,5 +410,38 @@ onMounted(() => {
       flex-direction: column;
     }
   }
+
+  @media (max-width: 380px) {
+    padding-block: 72px $space-10;
+
+    &__inner {
+      gap: $space-6;
+    }
+
+    &__headline {
+      font-size: $text-2xl;
+    }
+
+    &__subtitle {
+      font-size: $text-sm;
+    }
+
+    &__cta {
+      padding: $space-2 $space-6;
+      font-size: $text-sm;
+    }
+
+    &__image {
+      max-width: 280px;
+    }
+
+    &__waitlist-form {
+      flex-direction: column;
+    }
+
+    &__submit {
+      width: 100%;
+    }
+  }
 }
 </style>
