@@ -567,9 +567,22 @@ const generateSlug = () => {
 }
 
 const addTag = () => {
-  const tag = tagInput.value.trim().toLowerCase()
-  if (tag && !form.value.tags.includes(tag)) {
-    form.value.tags.push(tag)
+  const tags = tagInput.value
+    .split(',')
+    .map(t => t.trim().toLowerCase())
+    .filter(t => t.length > 0)
+
+  const existing = new Set(form.value.tags.map(t => t.toLowerCase()))
+  let added = false
+  for (const tag of tags) {
+    if (!existing.has(tag)) {
+      form.value.tags.push(tag)
+      existing.add(tag)
+      added = true
+    }
+  }
+
+  if (added) {
     tagInput.value = ''
     markAsChanged()
   }

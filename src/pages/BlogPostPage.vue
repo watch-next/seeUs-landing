@@ -134,7 +134,7 @@ const relatedPosts = ref<Awaited<ReturnType<typeof SupabaseBlogProvider.prototyp
 const blogProvider = new SupabaseBlogProvider()
 
 const canonicalUrl = computed(() => {
-  const baseUrl = import.meta.env.VITE_SITE_URL || 'https://watchnext.app'
+  const baseUrl = import.meta.env.VITE_SITE_URL || 'https://see-us-landing.vercel.app/'
   return `${baseUrl}/blog/${props.slug}`
 })
 
@@ -163,7 +163,7 @@ useSeo({
 const structuredData = computed(() => {
   if (!post.value) return null
 
-  const baseUrl = import.meta.env.VITE_SITE_URL || 'https://watchnext.app'
+  const baseUrl = import.meta.env.VITE_SITE_URL || 'https://see-us-landing.vercel.app/'
 
   return {
     '@context': 'https://schema.org',
