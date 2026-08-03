@@ -8,8 +8,20 @@
           <p class="footer__description">{{ footerSection.brandDescription }}</p>
           <ul class="footer__social">
             <li v-for="social in socialLinks" :key="social.label">
-              <a :href="social.href" class="footer__social-link" :aria-label="social.label" @click="handleSocialClick(social.label, social.href)">
-                {{ social.label.charAt(0) }}
+              <a
+                :href="social.href"
+                class="footer__social-link"
+                :aria-label="social.label"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click="handleSocialClick(social.label, social.href)"
+              >
+                <svg v-if="social.icon === 'instagram'" class="footer__social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+                <span v-else>{{ social.label.charAt(0) }}</span>
               </a>
             </li>
           </ul>
@@ -92,6 +104,7 @@ const socialLinks = [
   { label: t('footer.social.twitter'), href: '#' },
   { label: t('footer.social.github'), href: '#' },
   { label: t('footer.social.discord'), href: '#' },
+  { label: t('footer.social.instagram'), href: 'https://www.instagram.com/seeus.tv', icon: 'instagram' },
 ]
 
 const year = new Date().getFullYear()
@@ -158,6 +171,12 @@ const year = new Date().getFullYear()
       background: $color-primary;
       transform: translateY(-2px);
     }
+  }
+
+  &__social-icon {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
   }
 
   &__group-title {
