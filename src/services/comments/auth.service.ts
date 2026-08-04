@@ -7,19 +7,14 @@
 //   seeus:anonymous_display_name — persisted display name (optional)
 //   seeus:anonymous_avatar_seed  — persisted avatar seed
 
-import type { CommentUser } from '@/types/comments'
+import type { CommentAuthProfile, CommentUser } from '@/types/comments'
 
 const STORAGE_KEY_TOKEN = 'seeus:anonymous_id'
 const STORAGE_KEY_NAME = 'seeus:anonymous_display_name'
 const STORAGE_KEY_SEED = 'seeus:anonymous_avatar_seed'
 const AVATAR_STYLE = 'bottts-neutral'
 
-export interface AnonymousProfile {
-  anonymousToken: string
-  displayName: string
-  avatarSeed: string
-  avatarUrl: string
-}
+export type AnonymousProfile = CommentAuthProfile
 
 function readStorage(key: string): string | null {
   try {
@@ -77,10 +72,15 @@ export function getAnonymousProfile(): AnonymousProfile {
   }
 
   return {
+    provider: 'anonymous',
+    commentUserId: null,
+    providerUserId: null,
     anonymousToken: token,
     displayName,
     avatarSeed,
     avatarUrl: dicebearUrl(avatarSeed),
+    email: null,
+    isAuthenticated: false,
   }
 }
 
@@ -102,9 +102,14 @@ export function persistAvatarSeed(seed: string): void {
  */
 export function profileFromCommentUser(user: CommentUser): AnonymousProfile {
   return {
-    anonymousToken: user.anonymousToken ?? '',
+    provider: user.provider,
+    commentUserId: user.id,
+    providerUserId: user.providerUserId,
+    anonymousToken: user.anonymousToken,
     displayName: user.displayName,
     avatarSeed: user.avatarSeed,
     avatarUrl: user.avatarUrl ?? dicebearUrl(user.avatarSeed),
+    email: user.email,
+    isAuthenticated: user.provider !== 'anonymous',
   }
 }

@@ -1,23 +1,20 @@
-// Anonymous provider — re-exports auth.service as the canonical CommentAuthProvider
-// for anonymous commenters. Kept as a thin wrapper so future social providers
-// can sit sibling to it without the rest of the system re-importing auth.service.
-
 import type { CommentAuthProvider } from './CommentAuthProvider'
-import {
-  getAnonymousProfile,
-  persistDisplayName,
-  type AnonymousProfile,
-} from '../auth.service'
+import { getAnonymousProfile, persistDisplayName } from '../auth.service'
+import type { AnonymousProfile } from '../auth.service'
 
-class AnonymousProvider implements CommentAuthProvider {
+export class AnonymousProvider implements CommentAuthProvider {
   readonly provider = 'anonymous' as const
 
-  getProfile(): AnonymousProfile {
-    return getAnonymousProfile()
+  async restoreSession(): Promise<AnonymousProfile | null> {
+    return this.getProfile()
   }
 
-  setDisplayName(displayName: string): void {
-    persistDisplayName(displayName)
+  async isAuthenticated(): Promise<boolean> {
+    return true
+  }
+
+  async getProfile(): Promise<AnonymousProfile> {
+    return getAnonymousProfile()
   }
 
   async login(): Promise<AnonymousProfile> {
@@ -25,9 +22,12 @@ class AnonymousProvider implements CommentAuthProvider {
   }
 
   async logout(): Promise<void> {
-    // Intentionally a no-op. See AnonymousProviderImpl.logout comment.
+    // Anonymous mode has no remote session to clear.
+  }
+
+  setDisplayName(displayName: string): void {
+    persistDisplayName(displayName)
   }
 }
 
-export { AnonymousProvider }
 export default AnonymousProvider

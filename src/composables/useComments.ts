@@ -1,12 +1,13 @@
-// useComments — reactive wrapper around comments.service for a single post.
+// useComments â€” reactive wrapper around comments.service for a single post.
 //
 // Lifecycle:
 //   const { comments, loading, error, hasMore, loadMore, addComment,
 //          replyTo, editComment, removeComment, profile } = useComments(slug)
 
-import { ref, computed, readonly, type Ref } from 'vue'
+import { computed, readonly, ref, type Ref } from 'vue'
 import type {
   Comment,
+  CommentAuthProfile,
   CommentMentionDraft,
   CommentsPage,
   ReportCategory,
@@ -20,6 +21,7 @@ import {
   reportComment as reportCommentService,
 } from '@/services/comments/comments.service'
 import { getAnonymousProfile, persistDisplayName } from '@/services/comments/auth.service'
+import { providerRegistry } from '@/services/comments/providers/registry'
 
 const PAGE_SIZE = 20
 
@@ -33,13 +35,52 @@ export function useComments(slug: Ref<string> | string) {
   const totalCount = ref(0)
   const nextCursor = ref<string | null>(null)
   const hasMore = ref(false)
-  const profile = ref(getAnonymousProfile())
+  const profile = ref<CommentAuthProfile>(getAnonymousProfile())
+  const activeProvider = ref(profile.value.provider)
+  const pendingProvider = ref<CommentAuthProfile['provider'] | null>(null)
+  const authenticating = ref(false)
+
+  let authInitialized = false
+  let authInitPromise: Promise<void> | null = null
+
+  async function initializeAuth(): Promise<void> {
+    if (authInitialized) return
+    if (authInitPromise) return authInitPromise
+
+    authInitPromise = (async () => {
+      authenticating.value = true
+      try {
+        const googleProfile = await providerRegistry.google.provider.restoreSession()
+        if (googleProfile) {
+          profile.value = googleProfile
+          activeProvider.value = googleProfile.provider
+          return
+        }
+
+        const anonymousProfile = await providerRegistry.anonymous.provider.restoreSession()
+        profile.value = anonymousProfile ?? getAnonymousProfile()
+        activeProvider.value = profile.value.provider
+      } catch (e) {
+        error.value = e instanceof Error ? e.message : 'Failed to restore comment session'
+        profile.value = getAnonymousProfile()
+        activeProvider.value = 'anonymous'
+      } finally {
+        authenticating.value = false
+        authInitialized = true
+      }
+    })()
+
+    return authInitPromise
+  }
 
   async function load(initial = false): Promise<void> {
+    await initializeAuth()
+
     if (initial) {
       nextCursor.value = null
       comments.value = []
     }
+
     loading.value = true
     error.value = null
     try {
@@ -47,17 +88,18 @@ export function useComments(slug: Ref<string> | string) {
         slug: slugRef.value,
         cursor: nextCursor.value,
         limit: PAGE_SIZE,
-        anonymousToken: profile.value.anonymousToken,
+        auth: profile.value,
       })
+
       if (initial) {
         comments.value = page.comments
       } else {
         comments.value = [...comments.value, ...page.comments]
       }
+
       totalCount.value = page.totalCount
       nextCursor.value = page.nextCursor
       hasMore.value = page.hasMore
-
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to load comments'
     } finally {
@@ -74,9 +116,52 @@ export function useComments(slug: Ref<string> | string) {
     await load(true)
   }
 
+  async function selectProvider(provider: CommentAuthProfile['provider']): Promise<void> {
+    error.value = null
+
+    if (provider === 'anonymous') {
+      pendingProvider.value = null
+      profile.value = await providerRegistry.anonymous.provider.login() as CommentAuthProfile
+      activeProvider.value = profile.value.provider
+      await refresh()
+      return
+    }
+
+    if (provider === 'google') {
+      pendingProvider.value = 'google'
+      authenticating.value = true
+      try {
+        await providerRegistry.google.provider.login()
+      } catch (e) {
+        error.value = e instanceof Error ? e.message : 'Unable to authenticate with Google. Please try again.'
+        pendingProvider.value = null
+      } finally {
+        authenticating.value = false
+      }
+    }
+  }
+
+  async function logout(): Promise<void> {
+    pendingProvider.value = activeProvider.value
+    authenticating.value = true
+    error.value = null
+    try {
+      if (activeProvider.value === 'google') {
+        await providerRegistry.google.provider.logout()
+      }
+      profile.value = getAnonymousProfile()
+      activeProvider.value = 'anonymous'
+      await refresh()
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Failed to log out of Google'
+    } finally {
+      pendingProvider.value = null
+      authenticating.value = false
+    }
+  }
+
   interface SubmitInput {
     content: string
-    displayName: string
     parentId?: string | null
     mentions?: CommentMentionDraft[]
   }
@@ -85,24 +170,23 @@ export function useComments(slug: Ref<string> | string) {
     submitting.value = true
     error.value = null
     try {
-      // Persist the display name so it survives reloads.
-      if (input.displayName && input.displayName !== profile.value.displayName) {
-        persistDisplayName(input.displayName)
-        profile.value = getAnonymousProfile()
+      if (
+        profile.value.provider === 'anonymous' &&
+        profile.value.displayName &&
+        profile.value.displayName !== getAnonymousProfile().displayName
+      ) {
+        persistDisplayName(profile.value.displayName)
       }
 
       const created = await createComment({
         postSlug: slugRef.value,
         parentId: input.parentId ?? null,
         content: input.content,
-        anonymousToken: profile.value.anonymousToken,
-        displayName: input.displayName,
-        avatarSeed: profile.value.avatarSeed,
+        auth: profile.value,
         mentions: input.mentions,
       })
 
       if (input.parentId) {
-        // Insert into the parent's reply list
         const parent = comments.value.find((c) => c.id === input.parentId)
         if (parent) {
           parent.replyCount = (parent.replyCount ?? 0) + 1
@@ -126,12 +210,12 @@ export function useComments(slug: Ref<string> | string) {
     }
   }
 
-  async function addComment(content: string, displayName: string, mentions?: CommentMentionDraft[]): Promise<Comment | null> {
-    return submit({ content, displayName, parentId: null, mentions })
+  async function addComment(content: string, mentions?: CommentMentionDraft[]): Promise<Comment | null> {
+    return submit({ content, parentId: null, mentions })
   }
 
-  async function replyTo(parentId: string, content: string, displayName: string, mentions?: CommentMentionDraft[]): Promise<Comment | null> {
-    return submit({ content, displayName, parentId, mentions })
+  async function replyTo(parentId: string, content: string, mentions?: CommentMentionDraft[]): Promise<Comment | null> {
+    return submit({ content, parentId, mentions })
   }
 
   async function editComment(commentId: string, content: string, mentions?: CommentMentionDraft[]): Promise<void> {
@@ -141,7 +225,7 @@ export function useComments(slug: Ref<string> | string) {
       const updated = await updateComment({
         commentId,
         content,
-        anonymousToken: profile.value.anonymousToken,
+        auth: profile.value,
         mentions,
       })
       replaceComment(updated)
@@ -156,8 +240,7 @@ export function useComments(slug: Ref<string> | string) {
     submitting.value = true
     error.value = null
     try {
-      await deleteComment(commentId, profile.value.anonymousToken)
-      // Mark deleted locally without losing the row (preserves replies).
+      await deleteComment(commentId, profile.value)
       const target = findComment(commentId, comments.value)
       if (target) {
         target.deletedAt = new Date().toISOString()
@@ -195,7 +278,7 @@ export function useComments(slug: Ref<string> | string) {
     target.hasLiked = !target.hasLiked
     target.likeCount = Math.max(0, target.likeCount + (target.hasLiked ? 1 : -1))
     try {
-      const result = await toggleLike(commentId, profile.value.anonymousToken)
+      const result = await toggleLike(commentId, profile.value)
       target.hasLiked = result.liked
       target.likeCount = result.likeCount
     } catch (e) {
@@ -213,12 +296,7 @@ export function useComments(slug: Ref<string> | string) {
   ): Promise<boolean> {
     error.value = null
     try {
-      return await reportCommentService(
-        commentId,
-        profile.value.anonymousToken,
-        category,
-        reason,
-      )
+      return await reportCommentService(commentId, profile.value, category, reason)
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Failed to report comment'
       return false
@@ -248,6 +326,12 @@ export function useComments(slug: Ref<string> | string) {
     totalCount: readonly(totalCount),
     topLevelCount,
     profile,
+    activeProvider,
+    pendingProvider,
+    authenticating: readonly(authenticating),
+    initializeAuth,
+    selectProvider,
+    logout,
     load: refresh,
     loadMore,
     addComment,

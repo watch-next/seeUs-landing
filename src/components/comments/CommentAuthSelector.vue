@@ -7,14 +7,16 @@
           type="button"
           class="auth-selector__btn"
           :class="{ 'auth-selector__btn--active': activeProvider === entry.key && entry.ready }"
-          :disabled="!entry.ready"
-          :aria-disabled="!entry.ready"
+          :disabled="!entry.ready || busyProvider === entry.key"
+          :aria-disabled="!entry.ready || busyProvider === entry.key"
           :aria-pressed="activeProvider === entry.key && entry.ready"
-          :title="entry.ready ? entry.label : `${entry.label} is coming soon`"
+          :title="buttonTitle(entry)"
           @click="onSelect(entry)"
         >
           <span class="auth-selector__icon" aria-hidden="true">{{ entry.icon }}</span>
-          <span class="auth-selector__label">{{ entry.label }}</span>
+          <span class="auth-selector__label">
+            {{ busyProvider === entry.key ? 'Connecting...' : entry.label }}
+          </span>
           <span v-if="!entry.ready" class="auth-selector__badge">Coming Soon</span>
         </button>
       </li>
@@ -32,9 +34,11 @@ type ProviderKey = 'anonymous' | 'google' | 'facebook'
 const props = withDefaults(
   defineProps<{
     activeProvider?: ProviderKey
+    busyProvider?: ProviderKey | null
   }>(),
   {
     activeProvider: 'anonymous',
+    busyProvider: null,
   },
 )
 
@@ -76,8 +80,14 @@ const emit = defineEmits<{
 }>()
 
 function onSelect(entry: SelectorEntry) {
-  if (!entry.ready) return
+  if (!entry.ready || props.busyProvider === entry.key) return
   emit('select', { provider: entry.key, ready: entry.ready })
+}
+
+function buttonTitle(entry: SelectorEntry): string {
+  if (!entry.ready) return `${entry.label} is coming soon`
+  if (props.busyProvider === entry.key) return 'Connecting...'
+  return entry.label
 }
 </script>
 

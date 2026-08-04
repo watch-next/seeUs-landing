@@ -1,10 +1,11 @@
-// Comments service — thin wrappers around Supabase RPC functions.
+// Comments service â€” thin wrappers around Supabase RPC functions.
 // All mutations are ownership-checked server-side; see migration
 // 20260803120000_create_comments.sql. Likes + reports live in
 // migration 20260803130000_create_comment_likes_and_reports.sql.
 
-import { supabase } from '@/lib/supabase'
+import { commentsSupabase } from './client'
 import type {
+  CommentAuthProfile,
   Comment,
   CommentListRow,
   CommentMention,
@@ -14,6 +15,7 @@ import type {
   ListCommentsParams,
   ReportCategory,
   UpdateCommentInput,
+  CommentUser,
 } from '@/types/comments'
 
 const DEFAULT_LIMIT = 20
@@ -38,8 +40,40 @@ interface CommentReplyListRow {
   has_liked: boolean
 }
 
+interface GoogleCommentUserRow {
+  id: string
+  provider: string
+  provider_user_id: string | null
+  anonymous_token: string | null
+  display_name: string
+  avatar_seed: string
+  avatar_url: string | null
+  email: string | null
+  created_at: string
+  updated_at: string
+}
+
 function mentionsToDrafts(mentions?: CommentMentionDraft[]): CommentMentionDraft[] {
   return mentions ?? []
+}
+
+function authToAnonymousToken(auth: CommentAuthProfile): string | null {
+  return auth.provider === 'anonymous' ? auth.anonymousToken : null
+}
+
+function googleRowToCommentUser(row: GoogleCommentUserRow): CommentUser {
+  return {
+    id: row.id,
+    provider: 'google',
+    providerUserId: row.provider_user_id,
+    anonymousToken: row.anonymous_token,
+    displayName: row.display_name,
+    avatarSeed: row.avatar_seed,
+    avatarUrl: row.avatar_url,
+    email: row.email,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }
 }
 
 function rowToMention(row: {
@@ -60,44 +94,52 @@ function rowToMention(row: {
   }
 }
 
-/** Hydrate mention rows for a comment by querying the join table. */
-async function hydrateMentions(commentId: string): Promise<CommentMention[]> {
-  const { data, error } = await supabase
-    .from('comment_mentions')
-    .select('id, comment_id, mentioned_user_id, mentioned_display_name, start_index, end_index')
-    .eq('comment_id', commentId)
-    .order('start_index', { ascending: true })
-
-  if (error) {
-    console.error('[comments.service] hydrateMentions failed', error)
-    return []
+function buildAuthorFromAuth(auth: CommentAuthProfile): Comment['author'] {
+  return {
+    provider: auth.provider,
+    anonymousToken: auth.anonymousToken,
+    displayName: auth.displayName,
+    avatarSeed: auth.avatarSeed,
+    avatarUrl: auth.avatarUrl,
   }
-
-  return ((data ?? []) as Parameters<typeof rowToMention>[0][]).map(rowToMention)
 }
 
-/** Hydrate all mentions for a batch of comment ids in one round-trip. */
-async function hydrateMentionsBatch(commentIds: string[]): Promise<Map<string, CommentMention[]>> {
-  const result = new Map<string, CommentMention[]>()
-  if (commentIds.length === 0) return result
-
-  const { data, error } = await supabase
-    .from('comment_mentions')
-    .select('id, comment_id, mentioned_user_id, mentioned_display_name, start_index, end_index')
-    .in('comment_id', commentIds)
-    .order('start_index', { ascending: true })
-
-  if (error) {
-    console.error('[comments.service] hydrateMentionsBatch failed', error)
-    return result
+function buildRpcAuthArgs(auth: CommentAuthProfile): Record<string, unknown> {
+  return {
+    p_anonymous_token: authToAnonymousToken(auth),
   }
+}
 
-  for (const row of (data ?? []) as Parameters<typeof rowToMention>[0][]) {
-    const list = result.get(row.comment_id) ?? []
-    list.push(rowToMention(row))
-    result.set(row.comment_id, list)
+function buildCommentFromAuth(
+  auth: CommentAuthProfile,
+  base: Pick<
+    Comment,
+    'id' | 'postSlug' | 'parentId' | 'userId' | 'content' | 'createdAt' | 'updatedAt'
+  > & {
+    deletedAt?: string | null
+    edited?: boolean
+    mentions?: CommentMention[]
+    replyCount?: number
+    likeCount?: number
+    hasLiked?: boolean
+  },
+): Comment {
+  return {
+    id: base.id,
+    postSlug: base.postSlug,
+    parentId: base.parentId,
+    userId: base.userId,
+    content: base.content,
+    createdAt: base.createdAt,
+    updatedAt: base.updatedAt,
+    deletedAt: base.deletedAt ?? null,
+    edited: base.edited ?? false,
+    author: buildAuthorFromAuth(auth),
+    mentions: base.mentions ?? [],
+    replyCount: base.replyCount ?? 0,
+    likeCount: base.likeCount ?? 0,
+    hasLiked: base.hasLiked ?? false,
   }
-  return result
 }
 
 function rowToComment(
@@ -129,23 +171,87 @@ function rowToComment(
   }
 }
 
+/** Hydrate mention rows for a comment by querying the join table. */
+async function hydrateMentions(commentId: string): Promise<CommentMention[]> {
+  const { data, error } = await commentsSupabase
+    .from('comment_mentions')
+    .select('id, comment_id, mentioned_user_id, mentioned_display_name, start_index, end_index')
+    .eq('comment_id', commentId)
+    .order('start_index', { ascending: true })
+
+  if (error) {
+    console.error('[comments.service] hydrateMentions failed', error)
+    return []
+  }
+
+  return ((data ?? []) as Parameters<typeof rowToMention>[0][]).map(rowToMention)
+}
+
+/** Hydrate all mentions for a batch of comment ids in one round-trip. */
+async function hydrateMentionsBatch(commentIds: string[]): Promise<Map<string, CommentMention[]>> {
+  const result = new Map<string, CommentMention[]>()
+  if (commentIds.length === 0) return result
+
+  const { data, error } = await commentsSupabase
+    .from('comment_mentions')
+    .select('id, comment_id, mentioned_user_id, mentioned_display_name, start_index, end_index')
+    .in('comment_id', commentIds)
+    .order('start_index', { ascending: true })
+
+  if (error) {
+    console.error('[comments.service] hydrateMentionsBatch failed', error)
+    return result
+  }
+
+  for (const row of (data ?? []) as Parameters<typeof rowToMention>[0][]) {
+    const list = result.get(row.comment_id) ?? []
+    list.push(rowToMention(row))
+    result.set(row.comment_id, list)
+  }
+  return result
+}
+
+export async function upsertGoogleCommentUser(input: {
+  displayName: string
+  avatarUrl: string | null
+  email: string | null
+}): Promise<CommentUser> {
+  const { data, error } = await commentsSupabase.rpc('upsert_comment_user_google', {
+    p_display_name: input.displayName,
+    p_avatar_url: input.avatarUrl,
+    p_email: input.email,
+  })
+
+  if (error) {
+    console.error('[comments.service] upsert_comment_user_google failed', error)
+    throw error
+  }
+
+  const row = data as GoogleCommentUserRow | null
+  if (!row?.id) {
+    throw new Error('upsert_comment_user_google returned no row')
+  }
+
+  return googleRowToCommentUser(row)
+}
+
 export async function listComments({
   slug,
   cursor = null,
   limit = DEFAULT_LIMIT,
-  anonymousToken = null,
+  auth,
 }: ListCommentsParams): Promise<CommentsPage> {
   const rpcArgs: Record<string, unknown> = {
     p_post_slug: slug,
     p_limit: limit,
-    p_anonymous_token: anonymousToken,
+    ...buildRpcAuthArgs(auth),
   }
 
   if (cursor !== null) {
     rpcArgs.p_cursor = cursor
   }
 
-  const { data, error } = await supabase.rpc('list_comments', rpcArgs)
+  const { data, error } = await commentsSupabase.rpc('list_comments', rpcArgs)
 
   if (error) {
     console.error('[comments.service] list_comments failed', error)
@@ -193,13 +299,13 @@ export async function listComments({
 }
 
 export async function createComment(input: CreateCommentInput): Promise<Comment> {
-  const { data, error } = await supabase.rpc('create_comment', {
+  const { data, error } = await commentsSupabase.rpc('create_comment', {
     p_post_slug: input.postSlug,
     p_parent_id: input.parentId,
     p_content: input.content,
-    p_anonymous_token: input.anonymousToken,
-    p_display_name: input.displayName,
-    p_avatar_seed: input.avatarSeed,
+    p_display_name: input.auth.displayName,
+    p_avatar_seed: input.auth.avatarSeed,
+    ...buildRpcAuthArgs(input.auth),
     // p_mentions is declared jsonb in the migration. The Supabase JS client
     // serializes a JS array to a proper jsonb array. Passing JSON.stringify
     // here would encode it as a scalar jsonb string, and jsonb_array_elements
@@ -219,9 +325,7 @@ export async function createComment(input: CreateCommentInput): Promise<Comment>
   }
 
   const mentions = await hydrateMentions(createdId)
-  const replyCount = 0
-
-  return {
+  return buildCommentFromAuth(input.auth, {
     id: createdId,
     postSlug: input.postSlug,
     parentId: input.parentId,
@@ -231,25 +335,18 @@ export async function createComment(input: CreateCommentInput): Promise<Comment>
     updatedAt: (created as unknown as { updated_at: string }).updated_at,
     deletedAt: null,
     edited: false,
-    author: {
-      provider: 'anonymous',
-      anonymousToken: input.anonymousToken,
-      displayName: input.displayName,
-      avatarSeed: input.avatarSeed,
-      avatarUrl: null,
-    },
     mentions,
-    replyCount,
+    replyCount: 0,
     likeCount: 0,
     hasLiked: false,
-  }
+  })
 }
 
 export async function updateComment(input: UpdateCommentInput): Promise<Comment> {
-  const { data, error } = await supabase.rpc('update_comment', {
+  const { data, error } = await commentsSupabase.rpc('update_comment', {
     p_comment_id: input.commentId,
     p_content: input.content,
-    p_anonymous_token: input.anonymousToken,
+    ...buildRpcAuthArgs(input.auth),
     p_mentions: mentionsToDrafts(input.mentions),
   })
 
@@ -261,7 +358,7 @@ export async function updateComment(input: UpdateCommentInput): Promise<Comment>
   const updatedId = (data as unknown as { id: string }).id
   const mentions = await hydrateMentions(updatedId)
 
-  return {
+  return buildCommentFromAuth(input.auth, {
     id: updatedId,
     postSlug: (data as unknown as { post_slug: string }).post_slug,
     parentId: (data as unknown as { parent_id: string | null }).parent_id,
@@ -271,24 +368,17 @@ export async function updateComment(input: UpdateCommentInput): Promise<Comment>
     updatedAt: (data as unknown as { updated_at: string }).updated_at,
     deletedAt: null,
     edited: true,
-    author: {
-      provider: 'anonymous',
-      anonymousToken: null,
-      displayName: '',
-      avatarSeed: '',
-      avatarUrl: null,
-    },
     mentions,
     replyCount: 0,
     likeCount: 0,
     hasLiked: false,
-  }
+  })
 }
 
-export async function deleteComment(commentId: string, anonymousToken: string): Promise<void> {
-  const { error } = await supabase.rpc('delete_comment', {
+export async function deleteComment(commentId: string, auth: CommentAuthProfile): Promise<void> {
+  const { error } = await commentsSupabase.rpc('delete_comment', {
     p_comment_id: commentId,
-    p_anonymous_token: anonymousToken,
+    ...buildRpcAuthArgs(auth),
   })
 
   if (error) {
@@ -305,12 +395,12 @@ export async function deleteComment(commentId: string, anonymousToken: string): 
  */
 export async function listReplies(
   parentId: string,
-  anonymousToken: string | null = null,
+  auth: CommentAuthProfile,
   limit = 50,
 ): Promise<Comment[]> {
-  const { data, error } = await supabase.rpc('list_replies', {
+  const { data, error } = await commentsSupabase.rpc('list_replies', {
     p_parent_id: parentId,
-    p_anonymous_token: anonymousToken,
+    ...buildRpcAuthArgs(auth),
   })
 
   if (error) {
@@ -323,28 +413,30 @@ export async function listReplies(
 
   const mentionsMap = await hydrateMentionsBatch(rows.map((r) => r.comment_id))
 
-  return rows.map((row) => ({
-    id: row.comment_id,
-    postSlug: row.post_slug,
-    parentId: row.parent_id,
-    userId: row.user_id,
-    content: row.content,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-    deletedAt: row.deleted_at,
-    edited: row.edited,
-    author: {
-      provider: row.comments_user_provider,
-      anonymousToken: row.comments_user_anonymous_token,
-      displayName: row.comments_user_display_name,
-      avatarSeed: row.comments_user_avatar_seed,
-      avatarUrl: row.comments_user_avatar_url,
-    },
-    mentions: mentionsMap.get(row.comment_id) ?? [],
-    replyCount: 0,
-    likeCount: row.like_count ?? 0,
-    hasLiked: row.has_liked ?? false,
-  })).slice(0, limit)
+  return rows
+    .map((row) => ({
+      id: row.comment_id,
+      postSlug: row.post_slug,
+      parentId: row.parent_id,
+      userId: row.user_id,
+      content: row.content,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      deletedAt: row.deleted_at,
+      edited: row.edited,
+      author: {
+        provider: row.comments_user_provider,
+        anonymousToken: row.comments_user_anonymous_token,
+        displayName: row.comments_user_display_name,
+        avatarSeed: row.comments_user_avatar_seed,
+        avatarUrl: row.comments_user_avatar_url,
+      },
+      mentions: mentionsMap.get(row.comment_id) ?? [],
+      replyCount: 0,
+      likeCount: row.like_count ?? 0,
+      hasLiked: row.has_liked ?? false,
+    }))
+    .slice(0, limit)
 }
 
 /**
@@ -353,11 +445,11 @@ export async function listReplies(
  */
 export async function toggleLike(
   commentId: string,
-  anonymousToken: string,
+  auth: CommentAuthProfile,
 ): Promise<{ liked: boolean; likeCount: number }> {
-  const { data, error } = await supabase.rpc('toggle_comment_like', {
+  const { data, error } = await commentsSupabase.rpc('toggle_comment_like', {
     p_comment_id: commentId,
-    p_anonymous_token: anonymousToken,
+    ...buildRpcAuthArgs(auth),
   })
 
   if (error) {
@@ -378,15 +470,15 @@ export async function toggleLike(
  */
 export async function reportComment(
   commentId: string,
-  anonymousToken: string,
+  auth: CommentAuthProfile,
   category: ReportCategory,
   reason?: string,
 ): Promise<boolean> {
-  const { data, error } = await supabase.rpc('report_comment', {
+  const { data, error } = await commentsSupabase.rpc('report_comment', {
     p_comment_id: commentId,
-    p_anonymous_token: anonymousToken,
     p_category: category,
     p_reason: reason ?? null,
+    ...buildRpcAuthArgs(auth),
   })
 
   if (error) {

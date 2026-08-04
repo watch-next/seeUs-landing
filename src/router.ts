@@ -9,6 +9,7 @@ const CookiesPolicy = () => import('./pages/CookiesPolicy.vue')
 const FeedbackPage = () => import('./pages/FeedbackPage.vue')
 const BlogPage = () => import('./pages/BlogPage.vue')
 const BlogPostPage = () => import('./pages/BlogPostPage.vue')
+const AuthCallbackPage = () => import('./pages/AuthCallbackPage.vue')
 // Movies pages
 const MoviesPage = () => import('./pages/MoviesPage.vue')
 const MoviePage = () => import('./pages/MoviePage.vue')
@@ -38,6 +39,11 @@ const routes = [
     name: 'BlogPost',
     component: BlogPostPage,
     props: true,
+  },
+  {
+    path: '/auth/callback',
+    name: 'AuthCallback',
+    component: AuthCallbackPage,
   },
   {
     path: '/movies',
@@ -96,6 +102,9 @@ const router = createRouter({
   routes,
   scrollBehavior(to, _from, savedPosition) {
     if (pages.has(to.path)) {
+      return { top: 0 }
+    }
+    if (to.path === '/auth/callback') {
       return { top: 0 }
     }
     if (savedPosition) {

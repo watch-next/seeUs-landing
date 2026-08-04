@@ -3,6 +3,18 @@
 
 export type CommentProvider = 'anonymous' | 'facebook' | 'google' | 'github'
 
+export interface CommentAuthProfile {
+  provider: CommentProvider
+  commentUserId: string | null
+  providerUserId: string | null
+  anonymousToken: string | null
+  displayName: string
+  avatarSeed: string
+  avatarUrl: string | null
+  email: string | null
+  isAuthenticated: boolean
+}
+
 export interface CommentUser {
   id: string
   provider: CommentProvider
@@ -94,24 +106,22 @@ export interface ListCommentsParams {
   slug: string
   cursor?: string | null
   limit?: number
-  /** Anonymous token used to resolve has_liked server-side. */
-  anonymousToken?: string | null
+  /** Current comments auth session. */
+  auth: CommentAuthProfile
 }
 
 export interface CreateCommentInput {
   postSlug: string
   parentId: string | null
   content: string
-  anonymousToken: string
-  displayName: string
-  avatarSeed: string
+  auth: CommentAuthProfile
   mentions?: CommentMentionDraft[]
 }
 
 export interface UpdateCommentInput {
   commentId: string
   content: string
-  anonymousToken: string
+  auth: CommentAuthProfile
   mentions?: CommentMentionDraft[]
 }
 
@@ -126,7 +136,7 @@ export type ReportCategory = 'spam' | 'harassment' | 'offensive_language' | 'oth
 
 export interface ReportCommentInput {
   commentId: string
-  anonymousToken: string
+  auth: CommentAuthProfile
   category: ReportCategory
   reason?: string
 }
