@@ -4,6 +4,7 @@
 // migration 20260803130000_create_comment_likes_and_reports.sql.
 
 import { commentsSupabase } from './client'
+import { getAnonymousProfile } from './auth.service'
 import type {
   CommentAuthProfile,
   Comment,
@@ -58,7 +59,16 @@ function mentionsToDrafts(mentions?: CommentMentionDraft[]): CommentMentionDraft
 }
 
 function authToAnonymousToken(auth: CommentAuthProfile): string | null {
-  return auth.provider === 'anonymous' ? auth.anonymousToken : null
+  if (auth.provider !== 'anonymous') {
+    return null
+  }
+
+  return auth.anonymousToken ?? getAnonymousProfile().anonymousToken
+}
+
+function buildAnonymousRpcAuthArgs(auth: CommentAuthProfile): Record<string, unknown> {
+  const anonymousToken = authToAnonymousToken(auth)
+  return anonymousToken ? { p_anonymous_token: anonymousToken } : {}
 }
 
 function googleRowToCommentUser(row: GoogleCommentUserRow): CommentUser {
@@ -105,9 +115,7 @@ function buildAuthorFromAuth(auth: CommentAuthProfile): Comment['author'] {
 }
 
 function buildRpcAuthArgs(auth: CommentAuthProfile): Record<string, unknown> {
-  return {
-    p_anonymous_token: authToAnonymousToken(auth),
-  }
+  return buildAnonymousRpcAuthArgs(auth)
 }
 
 function buildCommentFromAuth(
@@ -244,7 +252,6 @@ export async function listComments({
   const rpcArgs: Record<string, unknown> = {
     p_post_slug: slug,
     p_limit: limit,
-    ...buildRpcAuthArgs(auth),
   }
 
   if (cursor !== null) {
@@ -346,7 +353,7 @@ export async function updateComment(input: UpdateCommentInput): Promise<Comment>
   const { data, error } = await commentsSupabase.rpc('update_comment', {
     p_comment_id: input.commentId,
     p_content: input.content,
-    ...buildRpcAuthArgs(input.auth),
+    ...buildAnonymousRpcAuthArgs(input.auth),
     p_mentions: mentionsToDrafts(input.mentions),
   })
 
@@ -378,7 +385,7 @@ export async function updateComment(input: UpdateCommentInput): Promise<Comment>
 export async function deleteComment(commentId: string, auth: CommentAuthProfile): Promise<void> {
   const { error } = await commentsSupabase.rpc('delete_comment', {
     p_comment_id: commentId,
-    ...buildRpcAuthArgs(auth),
+    ...buildAnonymousRpcAuthArgs(auth),
   })
 
   if (error) {
@@ -400,7 +407,6 @@ export async function listReplies(
 ): Promise<Comment[]> {
   const { data, error } = await commentsSupabase.rpc('list_replies', {
     p_parent_id: parentId,
-    ...buildRpcAuthArgs(auth),
   })
 
   if (error) {
@@ -449,7 +455,7 @@ export async function toggleLike(
 ): Promise<{ liked: boolean; likeCount: number }> {
   const { data, error } = await commentsSupabase.rpc('toggle_comment_like', {
     p_comment_id: commentId,
-    ...buildRpcAuthArgs(auth),
+    ...buildAnonymousRpcAuthArgs(auth),
   })
 
   if (error) {
@@ -478,7 +484,7 @@ export async function reportComment(
     p_comment_id: commentId,
     p_category: category,
     p_reason: reason ?? null,
-    ...buildRpcAuthArgs(auth),
+    ...buildAnonymousRpcAuthArgs(auth),
   })
 
   if (error) {
