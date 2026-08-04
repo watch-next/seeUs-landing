@@ -80,7 +80,6 @@ export function useComments(slug: Ref<string> | string) {
       nextCursor.value = null
       comments.value = []
     }
-
     loading.value = true
     error.value = null
     try {
