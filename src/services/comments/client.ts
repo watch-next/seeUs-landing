@@ -8,6 +8,7 @@ export const commentsSupabase = createClient(
   supabaseAnonKey || 'placeholder-key',
   {
     auth: {
+      flowType: 'pkce',
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: true,
