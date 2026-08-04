@@ -10,12 +10,13 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { providerRegistry } from '@/services/comments/providers/registry'
 import { commentsSupabase } from '@/services/comments/client'
 
-const router = useRouter()
 const RETURN_URL_KEY = 'comment_auth_return_url'
+const APP_BASE_URL = import.meta.env.PROD
+  ? 'https://see-us-landing.vercel.app'
+  : window.location.origin
 
 const status = ref('Completing Google sign-in...')
 const error = ref<string | null>(null)
@@ -32,14 +33,44 @@ function readReturnUrl(): string {
   return '/blog'
 }
 
+function readOAuthSessionFromHash():
+  | { access_token: string; refresh_token: string }
+  | null {
+  const hash = window.location.hash
+  if (!hash) {
+    return null
+  }
+
+  const params = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : hash)
+  const accessToken = params.get('access_token')
+  const refreshToken = params.get('refresh_token')
+
+  if (!accessToken || !refreshToken) {
+    return null
+  }
+
+  return {
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  }
+}
+
+function clearOAuthHash(): void {
+  window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.search}`)
+}
+
+function buildAbsoluteUrl(pathname: string): string {
+  return `${APP_BASE_URL}${pathname}`
+}
+
 onMounted(async () => {
   try {
-    if (window.location.hash) {
-      const cleanUrl = `${window.location.pathname}${window.location.search}`
-      window.history.replaceState({}, document.title, cleanUrl)
+    const oauthSession = readOAuthSessionFromHash()
+    if (oauthSession) {
+      await commentsSupabase.auth.setSession(oauthSession)
     }
+    clearOAuthHash()
 
-    await commentsSupabase.auth.getSession()
     const profile = await providerRegistry.google.provider.restoreSession()
     if (!profile) {
       throw new Error('Unable to restore Google session.')
@@ -52,8 +83,9 @@ onMounted(async () => {
     } catch {
       /* ignore */
     }
-    await router.replace(returnUrl)
+    window.location.replace(buildAbsoluteUrl(returnUrl))
   } catch {
+    clearOAuthHash()
     error.value = 'Unable to authenticate with Google. Please try again.'
   }
 })
