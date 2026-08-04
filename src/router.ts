@@ -125,6 +125,20 @@ router.onError((error, to) => {
 
 // Admin route guard
 router.beforeEach(async (to, _from, next) => {
+  if (to.path === '/' && (to.query.code || to.hash.includes('access_token='))) {
+    const query = new URLSearchParams(
+      Object.entries(to.query).reduce<Record<string, string>>((acc, [key, value]) => {
+        if (typeof value === 'string') {
+          acc[key] = value
+        }
+        return acc
+      }, {}),
+    ).toString()
+
+    const target = `/auth/callback${query ? `?${query}` : ''}${to.hash || ''}`
+    return next(target)
+  }
+
   if (to.path === '/auth/callback' && to.hash) {
     const cleanUrl = to.fullPath.split('#')[0]
     window.history.replaceState({}, document.title, cleanUrl)
