@@ -75,6 +75,19 @@ export class GoogleProvider implements CommentAuthProvider {
   readonly provider = 'google' as const
   private cachedProfile: CommentAuthProfile | null = null
 
+  private getOAuthRedirectUrl(): string {
+    if (import.meta.env.PROD) {
+      return 'https://see-us-landing.vercel.app/auth/callback'
+    }
+    return `${window.location.origin}/auth/callback`
+  }
+
+  private getAppBaseUrl(): string {
+    return import.meta.env.PROD
+      ? 'https://see-us-landing.vercel.app'
+      : window.location.origin
+  }
+
   async restoreSession(): Promise<CommentAuthProfile | null> {
     const { data, error } = await commentsSupabase.auth.getSession()
     if (error || !data.session?.user) {
@@ -121,7 +134,7 @@ export class GoogleProvider implements CommentAuthProvider {
     const { data, error } = await commentsSupabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: this.getOAuthRedirectUrl(),
       },
     })
 
@@ -143,5 +156,9 @@ export class GoogleProvider implements CommentAuthProvider {
 
   setDisplayName(): void {
     // Google display names are sourced from the OAuth profile.
+  }
+
+  getAppUrl(pathname: string): string {
+    return `${this.getAppBaseUrl()}${pathname}`
   }
 }
