@@ -31,6 +31,11 @@ BEGIN
         IF v_user_id IS NOT NULL THEN
             RETURN v_user_id;
         END IF;
+
+        v_user_id := ensure_anonymous_comment_user(p_anonymous_token);
+        IF v_user_id IS NOT NULL THEN
+            RETURN v_user_id;
+        END IF;
     END IF;
 
     RETURN NULL;
@@ -444,4 +449,3 @@ $$;
 
 REVOKE ALL ON FUNCTION report_comment(uuid, uuid, text, text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION report_comment(uuid, uuid, text, text) TO anon, authenticated;
-

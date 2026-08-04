@@ -41,6 +41,9 @@ ALTER TABLE public.waitlist_entries
 DROP POLICY IF EXISTS "allow_anonymous_insert"
 ON public.waitlist_entries;
 
+DROP POLICY IF EXISTS "authenticated_read_waitlist"
+ON public.waitlist_entries;
+
 GRANT INSERT ON TABLE public.waitlist_entries TO anon;
 GRANT INSERT ON TABLE public.waitlist_entries TO authenticated;
 
