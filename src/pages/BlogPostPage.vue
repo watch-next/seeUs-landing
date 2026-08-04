@@ -79,6 +79,8 @@
         class="blog-post__ad"
       />
 
+      <CommentSection :post-slug="post.slug" />
+
       <footer class="blog-post__footer">
         <div v-if="relatedPosts.length" class="blog-post__related">
           <h2 class="blog-post__related-title">{{ t('blog.relatedArticles') }}</h2>
@@ -118,6 +120,7 @@ import BlogMeta from '@/components/blog/BlogMeta.vue'
 import BlogCard from '@/components/blog/BlogCard.vue'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
+import CommentSection from '@/components/comments/CommentSection.vue'
 
 const { t } = useI18n()
 const route = useRoute()
