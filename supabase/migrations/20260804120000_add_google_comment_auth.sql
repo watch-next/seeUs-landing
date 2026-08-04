@@ -4,6 +4,44 @@
 --   - the current Google Supabase Auth session (auth.uid()), or
 --   - the anonymous browser token (p_anonymous_token).
 
+CREATE OR REPLACE FUNCTION ensure_anonymous_comment_user(p_anonymous_token uuid)
+RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER AS $$
+DECLARE
+    v_user_id uuid;
+BEGIN
+    IF p_anonymous_token IS NULL THEN
+        RAISE EXCEPTION 'p_anonymous_token is required';
+    END IF;
+
+    SELECT id INTO v_user_id
+    FROM comment_users
+    WHERE provider = 'anonymous'
+      AND anonymous_token = p_anonymous_token
+    LIMIT 1;
+
+    IF v_user_id IS NULL THEN
+        INSERT INTO comment_users (
+            provider,
+            anonymous_token,
+            display_name,
+            avatar_seed
+        )
+        VALUES (
+            'anonymous',
+            p_anonymous_token,
+            'Anonymous',
+            p_anonymous_token::text
+        )
+        RETURNING id INTO v_user_id;
+    END IF;
+
+    RETURN v_user_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION ensure_anonymous_comment_user(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION ensure_anonymous_comment_user(uuid) TO anon, authenticated;
+
 CREATE OR REPLACE FUNCTION get_comment_user_for_request(p_anonymous_token uuid DEFAULT NULL)
 RETURNS uuid LANGUAGE plpgsql STABLE AS $$
 DECLARE

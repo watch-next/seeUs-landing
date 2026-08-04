@@ -68,7 +68,9 @@ function authToAnonymousToken(auth: CommentAuthProfile): string | null {
 
 function buildAnonymousRpcAuthArgs(auth: CommentAuthProfile): Record<string, unknown> {
   const anonymousToken = authToAnonymousToken(auth)
-  return anonymousToken ? { p_anonymous_token: anonymousToken } : {}
+  return {
+    p_anonymous_token: anonymousToken,
+  }
 }
 
 function googleRowToCommentUser(row: GoogleCommentUserRow): CommentUser {
