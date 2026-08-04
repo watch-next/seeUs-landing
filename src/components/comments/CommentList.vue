@@ -5,8 +5,7 @@
         <CommentItem
           :comment="comment"
           :post-slug="postSlug"
-          :anonymous-token="anonymousToken"
-          :display-name="displayName"
+          :auth="auth"
           :submitting="submitting"
           @edit="(payload) => $emit('edit', payload)"
           @reply="(payload) => $emit('reply', payload)"
@@ -32,13 +31,13 @@
 
 <script setup lang="ts">
 import type { Comment, CommentMentionDraft } from '@/types/comments'
+import type { CommentAuthProfile } from '@/types/comments'
 import CommentItem from './CommentItem.vue'
 
 defineProps<{
   comments: Comment[]
   postSlug: string
-  anonymousToken: string | null
-  displayName?: string
+  auth: CommentAuthProfile
   submitting?: boolean
   loading?: boolean
   hasMore?: boolean

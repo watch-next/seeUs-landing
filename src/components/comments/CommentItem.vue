@@ -42,7 +42,7 @@
       <CommentComposer
         v-if="showEdit && !isDeleted"
         :post-slug="postSlug"
-        :display-name="displayName"
+        :display-name="auth.displayName"
         :initial-value="comment.content"
         :submit-label="'Save'"
         :can-cancel="true"
@@ -56,7 +56,7 @@
         :post-slug="postSlug"
         :reply-to-name="authorName"
         :parent-id="comment.id"
-        :display-name="displayName"
+        :display-name="auth.displayName"
         :submitting="submitting"
         @submit="(payload) => $emit('reply', payload)"
         @cancel="showReply = false"
@@ -68,8 +68,7 @@
           <CommentItem
             :comment="reply"
             :post-slug="postSlug"
-            :anonymous-token="anonymousToken"
-            :display-name="displayName"
+            :auth="auth"
             :submitting="submitting"
             :reply-count="0"
             @edit="(payload) => $emit('edit', payload)"
@@ -86,7 +85,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Comment, CommentMentionDraft } from '@/types/comments'
+import type { Comment, CommentAuthProfile, CommentMentionDraft } from '@/types/comments'
 import { renderCommentContent } from '@/services/comments/render'
 import CommentActions from './CommentActions.vue'
 import CommentComposer from './CommentComposer.vue'
@@ -96,13 +95,11 @@ const props = withDefaults(
   defineProps<{
     comment: Comment
     postSlug: string
-    anonymousToken: string | null
-    displayName?: string
+    auth: CommentAuthProfile
     submitting?: boolean
     replyCount?: number
   }>(),
   {
-    displayName: '',
     submitting: false,
     replyCount: 0,
   },
@@ -124,9 +121,11 @@ const isDeleted = computed(() => props.comment.deletedAt !== null)
 const replies = computed(() => props.comment.replies ?? [])
 
 const isOwned = computed(() => {
-  if (isDeleted.value) return false
-  if (!props.anonymousToken || !author.value) return false
-  return author.value.provider === 'anonymous' && author.value.anonymousToken === props.anonymousToken
+  if (isDeleted.value || !author.value) return false
+  if (props.auth.provider === 'anonymous') {
+    return author.value.provider === 'anonymous' && author.value.anonymousToken === props.auth.anonymousToken
+  }
+  return props.auth.commentUserId !== null && props.comment.userId === props.auth.commentUserId
 })
 
 const renderedContent = computed(() => {

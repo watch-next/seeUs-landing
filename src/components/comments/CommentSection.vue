@@ -6,9 +6,25 @@
         <span v-if="totalCount > 0" class="comment-section__count">{{ totalCount }}</span>
       </h3>
       <CommentAuthSelector
-        active-provider="anonymous"
+        :active-provider="activeProvider"
+        :busy-provider="authenticating ? pendingProvider : null"
+        @select="onSelectProvider"
       />
+      <button
+        v-if="activeProvider === 'google'"
+        type="button"
+        class="btn btn-ghost btn-sm comment-section__logout"
+        :disabled="authenticating"
+        @click="onLogout"
+      >
+        Logout
+      </button>
     </header>
+
+    <p v-if="authenticating" class="comment-section__status">Connecting...</p>
+    <p v-else-if="error" class="comment-section__status comment-section__status--error">
+      {{ error }}
+    </p>
 
     <!-- Skeleton loading state -->
     <template v-if="loading">
@@ -27,8 +43,7 @@
       <CommentList
         :comments="comments"
         :post-slug="postSlug"
-        :anonymous-token="profile.anonymousToken"
-        :display-name="profile.displayName"
+        :auth="profile"
         :submitting="submitting"
         :loading="loading"
         :has-more="hasMore"
@@ -107,6 +122,9 @@ const {
   hasMore,
   totalCount,
   profile,
+  activeProvider,
+  pendingProvider,
+  authenticating,
   load,
   loadMore,
   addComment,
@@ -115,6 +133,8 @@ const {
   removeComment,
   likeComment,
   reportComment,
+  selectProvider,
+  logout,
 } = useComments(props.postSlug)
 
 const composerRef = ref<InstanceType<typeof CommentComposer> | null>(null)
@@ -132,7 +152,7 @@ const reportSuccess = ref(false)
 load()
 
 async function onSubmit(payload: { content: string; mentions: CommentMentionDraft[] }) {
-  const created = await addComment(payload.content, profile.value.displayName, payload.mentions)
+  const created = await addComment(payload.content, payload.mentions)
   if (created) {
     newCommentId.value = created.id
     composerRef.value?.reset()
@@ -142,7 +162,7 @@ async function onSubmit(payload: { content: string; mentions: CommentMentionDraf
 }
 
 async function onReply(payload: { parentId: string; content: string; mentions: CommentMentionDraft[] }) {
-  const created = await replyTo(payload.parentId, payload.content, profile.value.displayName, payload.mentions)
+  const created = await replyTo(payload.parentId, payload.content, payload.mentions)
   if (created) {
     newCommentId.value = created.id
   }
@@ -196,6 +216,16 @@ function scrollToComment(commentId: string) {
     el.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 }
+
+async function onSelectProvider(payload: { provider: 'anonymous' | 'google' | 'facebook' | 'github'; ready: boolean }) {
+  if (!payload.ready) return
+  if (payload.provider === activeProvider.value) return
+  await selectProvider(payload.provider)
+}
+
+async function onLogout() {
+  await logout()
+}
 </script>
 
 <style lang="scss" scoped>
@@ -209,6 +239,20 @@ function scrollToComment(commentId: string) {
     align-items: center;
     justify-content: space-between;
     margin-bottom: $space-4;
+  }
+
+  &__logout {
+    margin-left: $space-3;
+  }
+
+  &__status {
+    margin: 0 0 $space-4;
+    color: $color-text-muted;
+    font-size: $text-sm;
+
+    &--error {
+      color: $color-error;
+    }
   }
 
   &__title {
