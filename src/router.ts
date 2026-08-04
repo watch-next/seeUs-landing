@@ -125,6 +125,11 @@ router.onError((error, to) => {
 
 // Admin route guard
 router.beforeEach(async (to, _from, next) => {
+  if (to.path === '/auth/callback' && to.hash) {
+    const cleanUrl = to.fullPath.split('#')[0]
+    window.history.replaceState({}, document.title, cleanUrl)
+  }
+
   if (to.path.startsWith('/admin')) {
     // Allow login page without auth
     if (to.path === '/admin/login') {

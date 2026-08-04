@@ -10,13 +10,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { providerRegistry } from '@/services/comments/providers/registry'
 import { commentsSupabase } from '@/services/comments/client'
 
+const router = useRouter()
 const RETURN_URL_KEY = 'comment_auth_return_url'
-const APP_BASE_URL = import.meta.env.PROD
-  ? 'https://see-us-landing.vercel.app'
-  : window.location.origin
 
 const status = ref('Completing Google sign-in...')
 const error = ref<string | null>(null)
@@ -55,16 +54,25 @@ function readOAuthSessionFromHash():
   }
 }
 
+function readOAuthCodeFromQuery(): string | null {
+  const params = new URLSearchParams(window.location.search)
+  return params.get('code')
+}
+
 function clearOAuthHash(): void {
   window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.search}`)
 }
 
-function buildAbsoluteUrl(pathname: string): string {
-  return `${APP_BASE_URL}${pathname}`
-}
-
 onMounted(async () => {
   try {
+    const code = readOAuthCodeFromQuery()
+    if (code) {
+      const { error } = await commentsSupabase.auth.exchangeCodeForSession(code)
+      if (error) {
+        throw error
+      }
+    }
+
     const oauthSession = readOAuthSessionFromHash()
     if (oauthSession) {
       await commentsSupabase.auth.setSession(oauthSession)
@@ -83,7 +91,7 @@ onMounted(async () => {
     } catch {
       /* ignore */
     }
-    window.location.replace(buildAbsoluteUrl(returnUrl))
+    await router.replace(returnUrl)
   } catch {
     clearOAuthHash()
     error.value = 'Unable to authenticate with Google. Please try again.'
