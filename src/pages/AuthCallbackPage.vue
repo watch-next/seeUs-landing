@@ -1,9 +1,8 @@
 <template>
   <main class="auth-callback">
     <div class="auth-callback__panel">
-      <p v-if="!error" class="auth-callback__status">{{ status }}</p>
-      <p v-else class="auth-callback__status auth-callback__status--error">{{ error }}</p>
-      <router-link v-if="error" to="/blog" class="btn btn-primary">Back to blog</router-link>
+      <p class="auth-callback__status">{{ status }}</p>
+      <p v-if="error" class="auth-callback__status auth-callback__status--error">{{ error }}</p>
     </div>
   </main>
 </template>
@@ -11,13 +10,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { providerRegistry } from '@/services/comments/providers/registry'
 import { commentsSupabase } from '@/services/comments/client'
+import { providerRegistry } from '@/services/comments/providers/registry'
 
 const router = useRouter()
 const RETURN_URL_KEY = 'comment_auth_return_url'
 
-const status = ref('Completing Google sign-in...')
+const status = ref('Connecting Google account...')
 const error = ref<string | null>(null)
 
 function readReturnUrl(): string {
@@ -32,15 +31,20 @@ function readReturnUrl(): string {
   return '/blog'
 }
 
-function readOAuthSessionFromHash():
+function clearUrlFragment(): void {
+  const cleanUrl = `${window.location.pathname}${window.location.search}`
+  window.history.replaceState({}, document.title, cleanUrl)
+}
+
+function readOAuthHashSession():
   | { access_token: string; refresh_token: string }
   | null {
-  const hash = window.location.hash
-  if (!hash) {
+  const fragment = window.location.hash
+  if (!fragment) {
     return null
   }
 
-  const params = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : hash)
+  const params = new URLSearchParams(fragment.startsWith('#') ? fragment.slice(1) : fragment)
   const accessToken = params.get('access_token')
   const refreshToken = params.get('refresh_token')
 
@@ -54,47 +58,59 @@ function readOAuthSessionFromHash():
   }
 }
 
-function readOAuthCodeFromQuery(): string | null {
-  const params = new URLSearchParams(window.location.search)
-  return params.get('code')
-}
-
-function clearOAuthHash(): void {
-  window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.search}`)
-}
-
 onMounted(async () => {
   try {
-    const code = readOAuthCodeFromQuery()
+    const code = new URLSearchParams(window.location.search).get('code')
     if (code) {
-      const { error } = await commentsSupabase.auth.exchangeCodeForSession(code)
-      if (error) {
-        throw error
+      const { error: exchangeError } = await commentsSupabase.auth.exchangeCodeForSession(code)
+      if (exchangeError) {
+        const isMissingVerifier =
+          typeof exchangeError.message === 'string' &&
+          exchangeError.message.toLowerCase().includes('code verifier')
+
+        if (!isMissingVerifier) {
+          throw exchangeError
+        }
       }
     }
 
-    const oauthSession = readOAuthSessionFromHash()
-    if (oauthSession) {
-      await commentsSupabase.auth.setSession(oauthSession)
+    const hashSession = readOAuthHashSession()
+    if (hashSession) {
+      const { error: sessionError } = await commentsSupabase.auth.setSession(hashSession)
+      if (sessionError) {
+        throw sessionError
+      }
     }
-    clearOAuthHash()
+
+    const { data, error: sessionError } = await commentsSupabase.auth.getSession()
+    if (sessionError) {
+      throw sessionError
+    }
+
+    if (!data.session?.user) {
+      throw new Error('Unable to restore Google session.')
+    }
 
     const profile = await providerRegistry.google.provider.restoreSession()
     if (!profile) {
       throw new Error('Unable to restore Google session.')
     }
 
-    status.value = 'Sign-in complete. Redirecting...'
+    clearUrlFragment()
+
     const returnUrl = readReturnUrl()
     try {
       sessionStorage.removeItem(RETURN_URL_KEY)
     } catch {
       /* ignore */
     }
+
     await router.replace(returnUrl)
-  } catch {
-    clearOAuthHash()
-    error.value = 'Unable to authenticate with Google. Please try again.'
+  } catch (callbackError) {
+    console.error('[AuthCallbackPage] OAuth callback failed', callbackError)
+    clearUrlFragment()
+    error.value = 'Unable to complete Google sign-in. Please try again.'
+    status.value = 'Authentication failed.'
   }
 })
 </script>
