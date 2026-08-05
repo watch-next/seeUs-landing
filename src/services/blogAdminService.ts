@@ -483,35 +483,35 @@ export async function getBlogStats(): Promise<{
   }
 
   try {
-    const { data, error } = await supabase
-      .from('blog_posts_admin_stats')
-      .select('*')
+    const base = () =>
+      supabase
+        .from('blog_posts')
+        .select('*', { count: 'exact', head: true })
+        .is('deleted_at', null)
 
-    if (error) {
-      return { published: 0, draft: 0, scheduled: 0, featured: 0, total: 0, error: error.message }
+    const [pubRes, draftRes, schedRes, featRes, totalRes] = await Promise.all([
+      base().eq('status', 'published'),
+      base().eq('status', 'draft'),
+      base().eq('status', 'scheduled'),
+      base().eq('featured', true),
+      base(),
+    ])
+
+    // Surface the first query error if any query failed
+    const firstError =
+      pubRes.error || draftRes.error || schedRes.error || featRes.error || totalRes.error
+    if (firstError) {
+      return { published: 0, draft: 0, scheduled: 0, featured: 0, total: 0, error: firstError.message }
     }
 
-    const stats = {
-      published: 0,
-      draft: 0,
-      scheduled: 0,
-      featured: 0,
-      total: 0,
+    return {
+      published: pubRes.count ?? 0,
+      draft: draftRes.count ?? 0,
+      scheduled: schedRes.count ?? 0,
+      featured: featRes.count ?? 0,
+      total: totalRes.count ?? 0,
+      error: null,
     }
-
-    data?.forEach(row => {
-      if (row.status === 'published') {
-        stats.published = row.count
-        stats.featured = row.featured_count
-      } else if (row.status === 'draft') {
-        stats.draft = row.count
-      } else if (row.status === 'scheduled') {
-        stats.scheduled = row.count
-      }
-      stats.total += row.count
-    })
-
-    return { ...stats, error: null }
   } catch (error: any) {
     return { published: 0, draft: 0, scheduled: 0, featured: 0, total: 0, error: error.message }
   }
