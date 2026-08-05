@@ -17,6 +17,8 @@ const MoviePage = () => import('./pages/MoviePage.vue')
 const AdminLoginPage = () => import('./pages/admin/AdminLoginPage.vue')
 const AdminBlogDashboard = () => import('./pages/admin/AdminBlogDashboard.vue')
 const AdminBlogEditor = () => import('./pages/admin/AdminBlogEditor.vue')
+const AdminBlogTrash = () => import('./pages/admin/AdminBlogTrash.vue')
+const AdminBlogSettings = () => import('./pages/admin/AdminBlogSettings.vue')
 
 const routes = [
   {
@@ -86,6 +88,16 @@ const routes = [
     path: '/admin/blog/new',
     name: 'AdminBlogNew',
     component: AdminBlogEditor,
+  },
+  {
+    path: '/admin/blog/trash',
+    name: 'AdminBlogTrash',
+    component: AdminBlogTrash,
+  },
+  {
+    path: '/admin/blog/settings',
+    name: 'AdminBlogSettings',
+    component: AdminBlogSettings,
   },
   {
     path: '/admin/blog/:id',
