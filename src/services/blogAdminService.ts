@@ -377,6 +377,7 @@ export async function getAdminBlogPosts(options?: {
   search?: string
   status?: string[]
   includeDeleted?: boolean
+  deletedOnly?: boolean
 }): Promise<{
   data: BlogPostRecord[]
   total: number
@@ -390,6 +391,7 @@ export async function getAdminBlogPosts(options?: {
     const page = options?.page || 1
     const limit = options?.limit || 20
     const includeDeleted = options?.includeDeleted || false
+    const deletedOnly = options?.deletedOnly || false
     const search = options?.search
     const status = options?.status
 
@@ -398,7 +400,9 @@ export async function getAdminBlogPosts(options?: {
       .select('*', { count: 'exact' })
 
     // Filter deleted
-    if (!includeDeleted) {
+    if (deletedOnly) {
+      query = query.not('deleted_at', 'is', null)
+    } else if (!includeDeleted) {
       query = query.is('deleted_at', null)
     }
 
