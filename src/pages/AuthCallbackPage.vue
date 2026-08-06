@@ -16,7 +16,7 @@ import { providerRegistry } from '@/services/comments/providers/registry'
 const router = useRouter()
 const RETURN_URL_KEY = 'comment_auth_return_url'
 
-const status = ref('Connecting Google account...')
+const status = ref('Connecting your account...')
 const error = ref<string | null>(null)
 
 function readReturnUrl(): string {
@@ -88,12 +88,32 @@ onMounted(async () => {
     }
 
     if (!data.session?.user) {
-      throw new Error('Unable to restore Google session.')
+      throw new Error('Unable to restore session.')
     }
 
-    const profile = await providerRegistry.google.provider.restoreSession()
+    // Detect provider from the session user metadata (Supabase sets this).
+    const identities = data.session.user.identities ?? []
+    const socialIdentity = identities.find(
+      (i: { provider?: string }) => i.provider === 'google' || i.provider === 'facebook',
+    )
+    const detectedProvider = socialIdentity?.provider
+
+    let providerKey: 'google' | 'facebook'
+    if (detectedProvider === 'google' || detectedProvider === 'facebook') {
+      providerKey = detectedProvider
+    } else {
+      // Fallback: try to infer from user metadata
+      const hasGoogle =
+        data.session.user.user_metadata?.iss?.includes('google') ||
+        data.session.user.email?.endsWith('@gmail.com')
+      providerKey = hasGoogle ? 'google' : 'facebook'
+    }
+
+    status.value = `Connecting ${providerKey === 'google' ? 'Google' : 'Facebook'} account...`
+
+    const profile = await providerRegistry[providerKey].provider.restoreSession()
     if (!profile) {
-      throw new Error('Unable to restore Google session.')
+      throw new Error('Unable to restore session.')
     }
 
     clearUrlFragment()
@@ -109,7 +129,7 @@ onMounted(async () => {
   } catch (callbackError) {
     console.error('[AuthCallbackPage] OAuth callback failed', callbackError)
     clearUrlFragment()
-    error.value = 'Unable to complete Google sign-in. Please try again.'
+    error.value = 'Unable to complete sign-in. Please try again.'
     status.value = 'Authentication failed.'
   }
 })

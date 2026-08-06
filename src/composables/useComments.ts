@@ -57,6 +57,13 @@ export function useComments(slug: Ref<string> | string) {
           return
         }
 
+        const facebookProfile = await providerRegistry.facebook.provider.restoreSession()
+        if (facebookProfile) {
+          profile.value = facebookProfile
+          activeProvider.value = facebookProfile.provider
+          return
+        }
+
         const anonymousProfile = await providerRegistry.anonymous.provider.restoreSession()
         profile.value = anonymousProfile ?? getAnonymousProfile()
         activeProvider.value = profile.value.provider
@@ -138,6 +145,19 @@ export function useComments(slug: Ref<string> | string) {
         authenticating.value = false
       }
     }
+
+    if (provider === 'facebook') {
+      pendingProvider.value = 'facebook'
+      authenticating.value = true
+      try {
+        await providerRegistry.facebook.provider.login()
+      } catch (e) {
+        error.value = e instanceof Error ? e.message : 'Unable to authenticate with Facebook. Please try again.'
+        pendingProvider.value = null
+      } finally {
+        authenticating.value = false
+      }
+    }
   }
 
   async function logout(): Promise<void> {
@@ -147,6 +167,9 @@ export function useComments(slug: Ref<string> | string) {
     try {
       if (activeProvider.value === 'google') {
         await providerRegistry.google.provider.logout()
+      }
+      if (activeProvider.value === 'facebook') {
+        await providerRegistry.facebook.provider.logout()
       }
       profile.value = getAnonymousProfile()
       activeProvider.value = 'anonymous'
