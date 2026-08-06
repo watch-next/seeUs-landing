@@ -96,6 +96,18 @@ export class FacebookProvider implements CommentAuthProvider {
       return null
     }
 
+    // Only claim sessions that were actually authenticated by Facebook. The
+    // Supabase client returns the same active session regardless of which
+    // provider created it, so without this guard a Facebook session could
+    // be claimed by Google (which runs first in initializeAuth).
+    const sessionProvider =
+      data.session.user.app_metadata?.provider ??
+      data.session.user.identities?.[0]?.provider
+    if (sessionProvider !== 'facebook') {
+      this.cachedProfile = null
+      return null
+    }
+
     const { user } = data.session
     const commentUser = await upsertFacebookCommentUser({
       displayName:
