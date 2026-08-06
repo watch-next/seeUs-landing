@@ -42,8 +42,7 @@
           class="premium-page__plan-button btn btn-primary"
           disabled
         >
-          {{ $t('premium.plans.comingSoon') }}
-          <span class="premium-page__plan-button-badge">{{ $t('premium.plans.soon') }}</span>
+          {{ $t('premium.plans.comingSoonLabel') }}
         </button>
       </div>
     </div>
