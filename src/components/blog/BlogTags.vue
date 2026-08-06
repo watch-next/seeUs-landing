@@ -1,7 +1,7 @@
 <template>
   <div class="blog-tags">
     <h3 class="blog-tags__title">{{ t('blog.tags') }}</h3>
-    <div class="blog-tags__cloud">
+    <div class="blog-tags__cloud" aria-label="Blog tags">
       <button
         v-for="tag in tags"
         :key="tag"
@@ -56,24 +56,62 @@ const selectTag = (tag: string) => {
   &__title {
     font-size: $text-lg;
     font-weight: $weight-semibold;
-    margin-bottom: $space-4;
+    margin-bottom: $space-3;
     color: $color-text;
   }
 
   &__cloud {
+    position: relative;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: $space-2;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    padding: $space-1 0 $space-2;
+    margin-inline: calc(-1 * #{$space-1});
+    padding-inline: $space-1;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: $space-6;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    &::before {
+      left: 0;
+      background: linear-gradient(90deg, $color-background 20%, rgba($color-background, 0));
+    }
+
+    &::after {
+      right: 0;
+      background: linear-gradient(270deg, $color-background 20%, rgba($color-background, 0));
+    }
   }
 
   &__item {
-    padding: $space-2 $space-3;
+    flex: 0 0 auto;
+    padding: $space-1 $space-4;
+    min-height: 2rem;
     background: $gradient-surface;
     border: 1px solid $color-border;
-    border-radius: $radius-md;
+    border-radius: $radius-full;
     color: $color-text-secondary;
     font-size: $text-sm;
     font-weight: $weight-medium;
+    line-height: 1;
     cursor: pointer;
     transition: all $transition-base;
 
@@ -90,3 +128,10 @@ const selectTag = (tag: string) => {
   }
 }
 </style>
+
+
+
+
+
+
+
