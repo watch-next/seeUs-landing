@@ -7,27 +7,12 @@
         <h1 class="hero__headline" v-html="hero.headline.replace('\n', '<br />')"></h1>
         <p class="hero__subtitle">{{ hero.subtitle }}</p>
         <div class="hero__actions">
-          <a href="#features" class="hero__cta hero__cta--primary glow-pulse btn-hover-smooth" @click="trackEvent(trackHeroCta('features'))">{{ hero.ctaPrimary }}</a>
-          <a href="#premium" class="hero__cta hero__cta--secondary btn-hover-smooth" @click="trackEvent(trackHeroCta('premium'))">{{ hero.ctaSecondary }}</a>
+          <a href="#features" class="hero__cta hero__cta--primary glow-pulse btn-hover-smooth"
+            @click="trackEvent(trackHeroCta('features'))">{{ hero.ctaPrimary }}</a>
+          <a href="#premium" class="hero__cta hero__cta--secondary btn-hover-smooth"
+            @click="trackEvent(trackHeroCta('premium'))">{{ hero.ctaSecondary }}</a>
           <router-link to="/movies" class="hero__cta hero__cta--secondary btn-hover-smooth">Explore Movies</router-link>
         </div>
-        <div class="hero__signup">
-          <div class="hero__badge">{{ hero.androidBadge }}</div>
-          <p class="hero__badge-subtitle">{{ hero.androidBadgeSubtitle }}</p>
-          <form class="hero__waitlist-form" @submit.prevent="handleAndroidSubmit">
-            <input v-model="androidEmail" type="email" class="hero__email"
-              :class="{ 'hero__email--error': androidError }" :placeholder="hero.emailPlaceholder"
-              aria-label="Email address for Android waitlist" :disabled="androidSubmitted || isSubmittingAndroid" />
-            <button type="submit" class="hero__submit" :disabled="androidSubmitted || isSubmittingAndroid">
-              {{ androidSubmitted ? hero.submittedLabel : hero.submitBtn }}
-            </button>
-          </form>
-          <div class="hero__feedback">
-            <span v-if="androidError" class="hero__error" role="alert">{{ androidError }}</span>
-            <span v-if="androidSubmitted" class="hero__success" role="status">{{ hero.successMessage }}</span>
-          </div>
-        </div>
-
 
       </div>
       <div ref="visualReveal" class="hero__visual reveal-right">
@@ -76,18 +61,18 @@ async function handleAndroidSubmit() {
 
   androidError.value = ''
   if (!androidEmail.value.trim()) {
-    
+
     androidError.value = 'Email is required'
     return
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(androidEmail.value)) {
-   
+
     androidError.value = 'Please enter a valid email address'
     return
   }
 
- 
+
   isSubmittingAndroid.value = true
   const result = await joinWaitlist(androidEmail.value, 'web', 'hero')
 
