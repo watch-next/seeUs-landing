@@ -20,8 +20,8 @@ import type { CommentProvider } from '@/types/comments'
 import type { CommentAuthProvider } from './CommentAuthProvider'
 import { AnonymousProvider } from './anonymous'
 import { GoogleProvider } from './GoogleProvider'
+import { FacebookProvider } from './FacebookProvider'
 import {
-  facebookProvider,
   githubProvider,
 } from './OAuthProviderStubs'
 
@@ -33,6 +33,6 @@ export interface ProviderRegistration {
 export const providerRegistry: Record<CommentProvider, ProviderRegistration> = {
   anonymous: { provider: new AnonymousProvider(), ready: true },
   google: { provider: new GoogleProvider(), ready: true },
-  facebook: { provider: facebookProvider, ready: false },
+  facebook: { provider: new FacebookProvider(), ready: true },
   github: { provider: githubProvider, ready: false },
 }

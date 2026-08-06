@@ -54,6 +54,19 @@ interface GoogleCommentUserRow {
   updated_at: string
 }
 
+interface FacebookCommentUserRow {
+  id: string
+  provider: string
+  provider_user_id: string | null
+  anonymous_token: string | null
+  display_name: string
+  avatar_seed: string
+  avatar_url: string | null
+  email: string | null
+  created_at: string
+  updated_at: string
+}
+
 function mentionsToDrafts(mentions?: CommentMentionDraft[]): CommentMentionDraft[] {
   return mentions ?? []
 }
@@ -77,6 +90,21 @@ function googleRowToCommentUser(row: GoogleCommentUserRow): CommentUser {
   return {
     id: row.id,
     provider: 'google',
+    providerUserId: row.provider_user_id,
+    anonymousToken: row.anonymous_token,
+    displayName: row.display_name,
+    avatarSeed: row.avatar_seed,
+    avatarUrl: row.avatar_url,
+    email: row.email,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  }
+}
+
+function facebookRowToCommentUser(row: FacebookCommentUserRow): CommentUser {
+  return {
+    id: row.id,
+    provider: 'facebook',
     providerUserId: row.provider_user_id,
     anonymousToken: row.anonymous_token,
     displayName: row.display_name,
@@ -243,6 +271,30 @@ export async function upsertGoogleCommentUser(input: {
   }
 
   return googleRowToCommentUser(row)
+}
+
+export async function upsertFacebookCommentUser(input: {
+  displayName: string
+  avatarUrl: string | null
+  email: string | null
+}): Promise<CommentUser> {
+  const { data, error } = await commentsSupabase.rpc('upsert_comment_user_facebook', {
+    p_display_name: input.displayName,
+    p_avatar_url: input.avatarUrl,
+    p_email: input.email,
+  })
+
+  if (error) {
+    console.error('[comments.service] upsert_comment_user_facebook failed', error)
+    throw error
+  }
+
+  const row = data as FacebookCommentUserRow | null
+  if (!row?.id) {
+    throw new Error('upsert_comment_user_facebook returned no row')
+  }
+
+  return facebookRowToCommentUser(row)
 }
 
 export async function listComments({

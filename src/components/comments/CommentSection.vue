@@ -11,7 +11,7 @@
         @select="onSelectProvider"
       />
       <button
-        v-if="activeProvider === 'google'"
+        v-if="activeProvider === 'google' || activeProvider === 'facebook'"
         type="button"
         class="btn btn-ghost btn-sm comment-section__logout"
         :disabled="authenticating"
