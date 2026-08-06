@@ -31,14 +31,54 @@
 
       <BlogList
         :posts="posts"
-        :filtered-slugs="filteredSlugs"
+        :filtered-slugs="paginatedSlugs"
       />
+
+      <nav
+        v-if="filteredSlugs.length > 0 && totalPages > 1"
+        class="blog-page__pagination"
+        aria-label="Blog pagination"
+      >
+        <button
+          type="button"
+          class="blog-page__page-btn blog-page__page-btn--nav"
+          :disabled="currentPage === 1"
+          aria-label="Previous page"
+          @click="goToPage(currentPage - 1)"
+        >
+          ‹ Previous
+        </button>
+
+        <ul class="blog-page__pages">
+          <li v-for="page in pageNumbers" :key="page">
+            <button
+              type="button"
+              class="blog-page__page-btn"
+              :class="{ 'blog-page__page-btn--active': page === currentPage }"
+              :aria-current="page === currentPage ? 'page' : undefined"
+              @click="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          </li>
+        </ul>
+
+        <button
+          type="button"
+          class="blog-page__page-btn blog-page__page-btn--nav"
+          :disabled="currentPage === totalPages"
+          aria-label="Next page"
+          @click="goToPage(currentPage + 1)"
+        >
+          Next ›
+        </button>
+      </nav>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { SupabaseBlogProvider, buildSearchIndex, searchPosts } from '@/blog'
 import BlogSearch from '@/components/blog/BlogSearch.vue'
@@ -97,6 +137,33 @@ const handleCategorySelect = (category: string | null) => {
 
 const handleTagSelect = (tag: string | null) => {
   selectedTag.value = tag || undefined
+}
+
+// ── Pagination ───────────────────────────────────────────────────────────
+const POSTS_PER_PAGE = 10
+const currentPage = ref(1)
+
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil(filteredSlugs.value.length / POSTS_PER_PAGE))
+)
+
+const paginatedSlugs = computed(() => {
+  const start = (currentPage.value - 1) * POSTS_PER_PAGE
+  return filteredSlugs.value.slice(start, start + POSTS_PER_PAGE)
+})
+
+const pageNumbers = computed(() =>
+  Array.from({ length: totalPages.value }, (_, i) => i + 1)
+)
+
+// Reset to page 1 whenever filters/search change
+watch([searchQuery, selectedCategory, selectedTag], () => {
+  currentPage.value = 1
+})
+
+const goToPage = (page: number) => {
+  if (page < 1 || page > totalPages.value) return
+  currentPage.value = page
 }
 </script>
 
@@ -177,5 +244,71 @@ const handleTagSelect = (tag: string | null) => {
   display: flex;
   flex-direction: column;
   gap: $space-4;
+}
+
+.blog-page__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $space-3;
+  flex-wrap: wrap;
+  padding-block: $space-6;
+}
+
+.blog-page__pages {
+  list-style: none;
+  display: flex;
+  gap: $space-2;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.blog-page__page-btn {
+  min-width: 40px;
+  min-height: 40px;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-secondary;
+  font-size: $text-sm;
+  font-weight: $weight-medium;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: $color-surface-hover;
+    border-color: $color-border-hover;
+    color: $color-text;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &--active {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-text;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-hover;
+      border-color: $color-primary-hover;
+      color: $color-text;
+    }
+  }
+
+  &--nav {
+    padding-inline: $space-4;
+  }
+
+  @media (max-width: 480px) {
+    min-width: 36px;
+    min-height: 36px;
+    font-size: $text-xs;
+  }
 }
 </style>
