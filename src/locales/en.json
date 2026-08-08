@@ -11,6 +11,7 @@
     "premium": "Premium",
     "roadmap": "Roadmap",
     "blog": "Blog",
+    "about": "About Us",
     "login": "Login"
   },
   "hero": {
@@ -245,6 +246,7 @@
     "legal": {
       "heading": "Legal",
       "privacy": "Privacy Policy",
+      "about": "About Us",
       "terms": "Terms of Service",
       "cookies": "Cookie Policy",
       "feedback": "Feedback",
