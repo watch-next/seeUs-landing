@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Layout principal da landing page
 const HomeLayout = () => import('./App.vue')
 // Páginas jurídicas com layout próprio
+const AboutPage = () => import('./pages/AboutPage.vue')
 const PrivacyPolicy = () => import('./pages/PrivacyPolicy.vue')
 const TermsOfService = () => import('./pages/TermsOfService.vue')
 const CookiesPolicy = () => import('./pages/CookiesPolicy.vue')
@@ -41,6 +42,11 @@ const routes = [
     name: 'BlogPost',
     component: BlogPostPage,
     props: true,
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: AboutPage,
   },
   {
     path: '/auth/callback',
@@ -107,7 +113,7 @@ const routes = [
   },
 ]
 
-const pages = new Set(['/privacy-policy', '/terms-of-service', '/cookies-policy', '/feedback', '/blog'])
+const pages = new Set(['/privacy-policy', '/terms-of-service', '/cookies-policy', '/feedback', '/blog', '/about'])
 
 const router = createRouter({
   history: createWebHistory(),

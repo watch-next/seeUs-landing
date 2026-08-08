@@ -94,6 +94,7 @@ const footerNav = [
       { label: t('footer.legal.privacy'), href: '/privacy-policy' },
       { label: t('footer.legal.terms'), href: '/terms-of-service' },
       { label: t('footer.legal.cookies'), href: '/cookies-policy' },
+      { label: t('footer.legal.about'), href: '/about' },
       { label: t('footer.legal.feedback'), href: '/feedback' },
       { label: t('footer.legal.backToHome'), href: '/' },
     ],

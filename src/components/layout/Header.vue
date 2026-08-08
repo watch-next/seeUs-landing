@@ -56,6 +56,7 @@ const navLinks = [
   { label: t('navigation.premium'), href: '#premium' },
   { label: t('navigation.roadmap'), href: '#roadmap' },
   { label: t('navigation.blog'), href: '/blog', isRoute: true },
+  { label: t('navigation.about'), href: '/about', isRoute: true },
 ]
 
 const languages = [
