@@ -352,5 +352,277 @@
     "success": {
       "joined": "¡Gracias por unirte a la lista de espera!"
     }
+  },
+  "about": {
+    "seo": {
+      "title": "Sobre SeeUs | SeeUs",
+      "description": "Conoce qu? es SeeUs, c?mo funciona hoy, qu? est? planificado y c?mo el proyecto aborda privacidad, roadmap, comunidad y limitaciones del producto."
+    },
+    "hero": {
+      "title": "Sobre SeeUs",
+      "subtitle": "SeeUs es un rastreador de pel?culas y series construido sobre una idea simple: lo que ves, y lo que piensas sobre ello, es tuyo. Lo estamos construyendo de forma independiente, sin publicidad ni seguimiento conductual. Esta p?gina es la versi?n larga de esa declaraci?n: qui?nes somos, c?mo empez? el proyecto, qu? hemos entregado y hacia d?nde vamos."
+    },
+    "story": {
+      "title": "Nuestra Historia",
+      "blocks": [
+        {
+          "heading": "C?mo empez? la idea",
+          "body": "Segu?amos perdiendo el rastro. Una pel?cula vista en un viaje, una serie recomendada por un amigo, el siguiente episodio de una temporada que nunca terminamos: todo quedaba repartido entre servicios, apps de notas y memoria. El problema no era la falta de herramientas, sino la falta de herramientas que respetaran a la persona que las usa."
+        },
+        {
+          "heading": "Construyendo de forma independiente",
+          "body": "SeeUs es un proyecto independiente. No est? respaldado por una empresa de medios, una red publicitaria ni un fondo de inversi?n. Pagamos nuestra propia infraestructura, definimos nuestro propio roadmap y respondemos por nuestros propios errores."
+        },
+        {
+          "heading": "La primera versi?n funcional",
+          "body": "La primera versi?n de SeeUs hac?a una cosa: permit?a marcar una pel?cula o serie como vista. Sin calificaciones, sin red social, sin calendario. Eso bast? para saber que la idea val?a la pena. La <a href=\"/\">homepage</a> muestra en qu? se ha convertido el producto desde entonces, y publicamos los cambios en el <a href=\"/blog\">blog</a>."
+        }
+      ]
+    },
+    "why": {
+      "title": "Por Qu? Existe SeeUs",
+      "subtitle": "Un rastreador privado de pel?culas creado alrededor de lo que faltaba en la forma en que vemos y recordamos lo que vimos.",
+      "blocks": [
+        {
+          "heading": "El problema que segu?amos encontrando",
+          "body": "Mantener un historial significativo de lo que vemos no deber?a ser dif?cil. En la pr?ctica lo es: pel?culas, series recomendadas y episodios pendientes quedan repartidos entre servicios, notas y memoria."
+        },
+        {
+          "heading": "Lo que faltaba",
+          "body": "Quer?amos un lugar unificado para seguir pel?culas y series, organizar lo que planeamos ver, interactuar sin un feed impulsado por anuncios y mantener control real sobre nuestros datos."
+        },
+        {
+          "heading": "El principio elegido",
+          "body": "Lo que registras sobre lo que ves debe permanecer bajo tu control. SeeUs no vende datos personales, no hace perfilado conductual y no usa seguimiento entre sitios. Consulta <a href=\"/about#about-privacy\">Privacidad y Seguridad</a>."
+        }
+      ]
+    },
+    "mission": {
+      "title": "Misi?n",
+      "subtitle": "Dar a las personas un lugar privado y sin anuncios para seguir las pel?culas y series que ven, construido de una forma que respete m?s a los usuarios que a los incentivos externos.",
+      "blocks": [
+        {
+          "statement": true,
+          "body": "Construimos SeeUs para que lo que alguien ve, y lo que piensa sobre ello, siga siendo suyo."
+        },
+        {
+          "heading": "Construir para uso real",
+          "body": "Una funci?n pertenece a SeeUs cuando resuelve una parte real del seguimiento de lo que ves. Para entender la direcci?n del producto, consulta <a href=\"/about#about-vision\">Visi?n</a>."
+        },
+        {
+          "heading": "Mantener los datos personales bajo control del usuario",
+          "body": "Tu historial es personal. SeeUs no vende datos personales, no hace perfilado conductual y no coloca seguimiento entre sitios. Consulta <a href=\"/about#about-privacy\">Privacidad y Seguridad</a>."
+        },
+        {
+          "heading": "Explicar qu? cambia y por qu?",
+          "body": "Cuando cambiamos algo que afecta el uso de SeeUs, publicamos notas y contexto en el <a href=\"/blog\">Blog</a>."
+        }
+      ]
+    },
+    "vision": {
+      "title": "Visi?n",
+      "subtitle": "Hacia d?nde queremos llevar SeeUs a largo plazo, y los l?mites que no pretendemos cruzar.",
+      "blocks": [
+        {
+          "heading": "Hacia d?nde vamos",
+          "body": "Queremos que SeeUs sea un registro personal estable de lo que alguien ve, con experiencia consistente entre dispositivos, funciones sociales cuidadosas y mejores herramientas de organizaci?n. Consulta la <a href=\"/#features\">homepage</a> para ver qu? existe hoy."
+        },
+        {
+          "heading": "Lo que no construiremos",
+          "body": "No estamos construyendo una red publicitaria, no licenciamos contenido y no convertiremos SeeUs en un servicio de streaming. Tampoco vendemos datos conductuales."
+        },
+        {
+          "heading": "C?mo mediremos el ?xito",
+          "body": "Medimos el ?xito por el uso sostenido y por el control real del usuario sobre su propio registro. El trabajo concreto est? en el <a href=\"/about#about-roadmap\">Roadmap de Desarrollo</a>."
+        }
+      ]
+    },
+    "technologies": {
+      "title": "Tecnolog?as",
+      "subtitle": "La stack detr?s de SeeUs, elegida para mantenimiento a largo plazo, contribuci?n ligera y una ejecuci?n ?gil en el dispositivo.",
+      "items": [
+        {
+          "name": "Vue 3 + TypeScript",
+          "description": "El frontend est? escrito en Vue 3 con Composition API y TypeScript de punta a punta. La comprobaci?n de tipos forma parte del build de Vite."
+        },
+        {
+          "name": "Vite",
+          "description": "Vite sostiene el desarrollo local y el build de producci?n. El bundle final se despliega en Vercel."
+        },
+        {
+          "name": "vue-router",
+          "description": "El enrutamiento del cliente usa vue-router, con rutas est?ticas y din?micas declaradas expl?citamente."
+        },
+        {
+          "name": "vue-i18n",
+          "description": "La copia de interfaz vive en archivos locale para ingl?s, espa?ol y portugu?s, incluida esta p?gina About."
+        },
+        {
+          "name": "@unhead/vue",
+          "description": "Los t?tulos y meta tags se gestionan con @unhead/vue para que cada ruta defina el head del documento."
+        },
+        {
+          "name": "Supabase (Postgres)",
+          "description": "El frontend se comunica con Supabase mediante @supabase/supabase-js. Auth, blog y comentarios usan servicios de Supabase; no hay API custom en este repositorio frontend."
+        }
+      ]
+    },
+    "how": {
+      "title": "C?mo Funciona SeeUs",
+      "subtitle": "Esta secci?n describe lo que SeeUs hace hoy, seg?n lo que realmente est? funcionando. La <a href=\"/#features\">vista de funciones en la homepage</a> describe hacia d?nde vamos; <a href=\"/about#about-technologies\">las tecnolog?as detr?s de SeeUs</a> se cubren por separado.",
+      "blocks": [
+        {
+          "heading": "Las cinco ?reas actuales",
+          "body": "Agrupamos la funcionalidad actual en cinco ?reas. Algunas ya est?n entregadas; otras existen solo como texto de homepage mientras se construyen."
+        },
+        {
+          "heading": "Descubrimiento",
+          "body": "Puedes navegar por una cuadr?cula de t?tulos populares y bien valorados en la <a href=\"/movies\">p?gina de pel?culas</a> y abrir detalles con p?ster, sinopsis, g?neros, a?o, duraci?n y calificaci?n agregada. Hoy no hay b?squeda, filtros ni motor de recomendaci?n."
+        },
+        {
+          "heading": "Seguimiento",
+          "body": "Hoy no hay watchlist, bot?n de \"marcar como vista\" ni selector de estado. Es una de las pr?ximas entregas grandes del roadmap."
+        },
+        {
+          "heading": "Social",
+          "body": "La ?nica superficie social hoy es el hilo de comentarios en <a href=\"/blog\">posts del blog</a>. No hay perfiles de usuario, red de seguidores ni watchlists compartidas."
+        },
+        {
+          "heading": "Calendario",
+          "body": "No hay funci?n de calendario en el repositorio: no existe p?gina, ruta ni componente de calendario. La tarjeta de la homepage es lenguaje de roadmap."
+        },
+        {
+          "heading": "Calificaciones",
+          "body": "Las p?ginas de pel?culas muestran una calificaci?n agregada de TMDB. No hay calificaciones de usuarios, rese?as ni agregaci?n de IMDb, Rotten Tomatoes o Metacritic."
+        },
+        {
+          "heading": "El modelo de datos en lenguaje simple",
+          "body": "Como seguimiento y calificaciones a?n no se han entregado, los datos por usuario almacenados hoy se limitan a comentarios del blog. SeeUs no aloja, transmite ni almacena video, y no hay herramienta de exportaci?n hoy."
+        },
+        {
+          "heading": "Qu? ocurre al iniciar sesi?n",
+          "body": "La autenticaci?n usa Supabase Auth. Puedes entrar con Google o Facebook mediante OAuth o participar de forma an?nima. Las identidades an?nimas y OAuth son separadas; entrar con un proveedor social no fusiona comentarios an?nimos anteriores. El identificador an?nimo queda en el navegador y no es un l?mite de seguridad."
+        },
+        {
+          "body": "La p?gina de pel?culas es la vista m?s completa de SeeUs: <a href=\"/movies\">abre la demo en vivo</a>."
+        }
+      ]
+    },
+    "roadmap": {
+      "title": "Roadmap de Desarrollo",
+      "subtitle": "El roadmap representa nuestra direcci?n de desarrollo. Los elementos planificados son intenciones, no garant?as. Puedes ver la versi?n visual en la <a href=\"/#roadmap\">homepage</a>.",
+      "blocks": [
+        {
+          "heading": "D?nde estamos",
+          "body": "Estamos al inicio de la construcci?n. La aplicaci?n web est? activa con navegaci?n por metadatos, comentarios en el blog y autenticaci?n. El trimestre actual mostrado es Q2 2026 (Funciones Sociales), marcado en progreso."
+        },
+        {
+          "heading": "Qu? se entreg?",
+          "body": "<strong>Q1 2026: Lanzamiento de la Plataforma Principal.</strong> Se entregaron navegaci?n por pel?culas y series, p?ginas de detalle, comentarios con identidades an?nima, Google y Facebook, y Supabase Auth. La descripci?n original tambi?n menciona seguimiento y sincronizaci?n de watchlist, pero eso a?n no existe en el c?digo."
+        },
+        {
+          "heading": "Qu? sigue",
+          "body": "<strong>Q2 2026: Funciones Sociales</strong> est? en progreso, pero hoy solo est?n activos los comentarios del blog. Despu?s vienen etapas planificadas para apps mobile y motor de recomendaci?n. Etapas de 2027 aparecen en los locales, pero no en la timeline renderizada, as? que se tratan como borradores."
+        },
+        {
+          "heading": "Qu? cambi? desde el plan original",
+          "body": "El seguimiento b?sico y la sincronizaci?n de watchlist de Q1 2026 no se entregaron. Primero entregamos navegaci?n p?blica, detalles, blog y autenticaci?n; las prioridades pueden cambiar con el desarrollo."
+        },
+        {
+          "body": "<a href=\"/blog\">Seguir progreso -></a>"
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacidad y Seguridad",
+      "subtitle": "La versi?n corta: no vendemos tus datos personales, no hacemos perfilado conductual y no usamos seguimiento entre sitios. Para el texto legal, lee la <a href=\"/privacy-policy\">Pol?tica de Privacidad</a> y la <a href=\"/cookies-policy\">Pol?tica de Cookies</a>.",
+      "blocks": [
+        {
+          "heading": "Qu? recopilamos",
+          "body": "Al crear una cuenta, almacenamos tu correo y credenciales con hash usadas por Supabase Auth. En comentarios almacenamos nombre visible, semilla de avatar, texto, likes y reportes. Los metadatos vienen de TMDB. Usamos GA4 para m?tricas agregadas; las cookies est?n en la <a href=\"/cookies-policy\">Pol?tica de Cookies</a>."
+        },
+        {
+          "heading": "Qu? no recopilamos",
+          "body": "No vendemos datos personales, no hacemos perfilado conductual ni seguimiento entre sitios, y no alojamos, transmitimos ni almacenamos video. Como seguimiento y calificaciones a?n no se entregaron, hoy no recopilamos historial visto, watchlist ni calificaciones personales."
+        },
+        {
+          "heading": "C?mo se almacenan tus datos",
+          "body": "Los datos de cuenta y comentarios viven en Supabase Postgres, accedidos v?a Supabase JS por HTTPS. La identidad an?nima es un UUID en localStorage y no est? vinculada criptogr?ficamente a una cuenta de servidor."
+        },
+        {
+          "heading": "C?mo puedes irte",
+          "body": "Puedes ejercer los derechos descritos en la Pol?tica de Privacidad escribiendo a privacy@watchnext.app. Hoy no hay bot?n de eliminaci?n de cuenta ni herramienta de exportaci?n dentro del producto."
+        },
+        {
+          "heading": "Limitaciones conocidas",
+          "body": "El token an?nimo es texto claro en localStorage y no es un l?mite de seguridad. Confirmamos HTTPS en tr?nsito, pero no auditamos el cifrado en reposo de Supabase. Eliminaci?n self-service y exportaci?n siguen como tareas pendientes. Consulta <a href=\"/about#about-community\">Comunidad</a>."
+        }
+      ]
+    },
+    "community": {
+      "title": "Comunidad",
+      "subtitle": "SeeUs es peque?o y transparente al respecto. No publicamos recuentos de usuarios o descargas, y no pretendemos ser una plataforma concurrida cuando a?n no lo somos.",
+      "blocks": [
+        {
+          "heading": "C?mo usan SeeUs las personas",
+          "body": "Hoy la aplicaci?n permite navegar por pel?culas y series, abrir detalles y leer contenido en el <a href=\"/blog\">blog</a>. Cualquier persona puede comentar de forma an?nima o entrando con Google o Facebook. Seguimiento, watchlists, calificaciones y funciones sociales a?n no est?n entregadas."
+        },
+        {
+          "heading": "C?mo contactarnos",
+          "body": "El canal directo principal es el <a href=\"/feedback\">formulario de feedback</a>, para bugs, usabilidad, accesibilidad y seguridad. No hay equipo formal de soporte ni plazo garantizado de respuesta."
+        },
+        {
+          "heading": "C?mo contribuir",
+          "body": "Por ahora, el feedback es la v?a pr?ctica de contribuci?n. A?n no apuntamos a un repositorio p?blico que acepte pull requests."
+        },
+        {
+          "heading": "Moderaci?n y reportes",
+          "body": "Los comentarios pueden reportarse por spam, acoso, lenguaje ofensivo u otros motivos. Esto no es una promesa de moderaci?n 24/7 o automatizada."
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ",
+      "subtitle": "Respuestas directas a las preguntas m?s comunes. Cuando algo se superpone con otra p?gina, mantenemos la respuesta breve y enlazamos el detalle.",
+      "items": [
+        {
+          "question": "?SeeUs es gratis?",
+          "answer": "S?. SeeUs tiene un plan gratuito para la experiencia principal. Hay un plan Premium por <a href=\"/#premium\">$9.90 al mes</a>. Hoy no mostramos un plan anual."
+        },
+        {
+          "question": "?Qu? plataformas soporta SeeUs?",
+          "answer": "Los datos del producto declaran web, Windows y Android; consulta <a href=\"/#platforms\">plataformas</a>. Las URLs de tienda y descarga vienen de configuraci?n en runtime, y a?n no hay app iOS."
+        },
+        {
+          "question": "?Puedo exportar mis datos?",
+          "answer": "Todav?a no. No hay herramienta funcional de exportaci?n hoy. Cuando exista, se mencionar? aqu? y en la <a href=\"/privacy-policy\">Pol?tica de Privacidad</a>."
+        },
+        {
+          "question": "?Venden mis datos?",
+          "answer": "No. No vendemos datos personales, no creamos perfiles conductuales y no te rastreamos en otros sitios. Consulta la <a href=\"/privacy-policy\">Pol?tica de Privacidad</a>."
+        },
+        {
+          "question": "?C?mo elimino mi cuenta?",
+          "answer": "Hoy no hay bot?n self-service de eliminaci?n de cuenta. La Pol?tica de Privacidad describe la v?a manual por el <a href=\"/privacy-policy\">contacto de privacidad</a>."
+        },
+        {
+          "question": "?Hay app m?vil?",
+          "answer": "Todav?a no como lanzamiento nativo. Android aparece en los datos del producto, pero no anunciamos disponibilidad en tiendas sin un enlace real. Consulta <a href=\"/#platforms\">plataformas</a>."
+        },
+        {
+          "question": "?C?mo reporto un bug o abuso?",
+          "answer": "Usa el <a href=\"/feedback\">formulario de feedback</a> para bugs, accesibilidad, seguridad y reportes de contenido."
+        },
+        {
+          "question": "?C?mo sigo las actualizaciones?",
+          "answer": "El <a href=\"/blog\">blog</a> es donde publicamos notas de lanzamiento y progreso."
+        }
+      ]
+    },
+    "download": {
+      "title": "Prueba SeeUs",
+      "subtitle": "Ahora sabes qu? es SeeUs, c?mo funciona y hacia d?nde va. La forma m?s r?pida de evaluarlo es abrirlo y navegar por tu cuenta.",
+      "cta": "Abrir SeeUs"
+    }
   }
 }
