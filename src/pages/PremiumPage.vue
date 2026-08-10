@@ -44,6 +44,8 @@
         >
           {{ $t('premium.plans.comingSoonLabel') }}
         </button>
+
+        <p v-if="plan.footer" class="premium-page__plan-footer">{{ $t(plan.footer) }}</p>
       </div>
     </div>
   </div>
@@ -81,6 +83,19 @@ const plans = [
       'premium.plans.premium.features.exclusiveWidgets',
     ],
     footer: 'premium.plans.premium.footer',
+  },
+  {
+    id: 'premium-annual',
+    freePlan: false,
+    badge: 'premium.plans.annual.badge',
+    nameKey: 'premium.plans.annual.title',
+    priceKey: 'premium.plans.annual.price',
+    periodKey: 'premium.plans.annual.period',
+    description: 'premium.plans.annual.description',
+    footer: 'premium.plans.annual.savings',
+    features: [
+      'premium.plans.annual.features.sameBenefits',
+    ],
   },
 ]
 </script>
