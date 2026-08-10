@@ -10,6 +10,7 @@ export function useSeo(options: {
   image?: MaybeRef<string | undefined>
   type?: MaybeRef<string>
   url?: MaybeRef<string>
+  canonical?: MaybeRef<string>
   jsonLd?: MaybeRef<Record<string, any> | undefined>
   openGraph?: MaybeRef<any>
   twitter?: MaybeRef<any>
@@ -40,6 +41,14 @@ export function useSeo(options: {
     head.meta!.push({ name: 'og:url', content: options.url })
   }
 
+
+  const canonicalUrl = options.canonical ?? options.url
+  if (canonicalUrl) {
+    head.link = [
+      ...(head.link ?? []),
+      { rel: 'canonical', href: canonicalUrl },
+    ]
+  }
   if (options.jsonLd) {
     head.script = [
       {

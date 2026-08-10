@@ -392,5 +392,277 @@
     "success": {
       "joined": "Thanks for joining the waitlist!"
     }
+  },
+  "about": {
+    "seo": {
+      "title": "About SeeUs | SeeUs",
+      "description": "Learn what SeeUs is, how it works today, what is planned, and how the project handles privacy, roadmap decisions, community feedback, and product limitations."
+    },
+    "hero": {
+      "title": "About SeeUs",
+      "subtitle": "SeeUs is a movie and series tracker built on a simple premise: what you watch, and what you think about it, is yours. We are building it independently, without advertising or behavioral tracking. This page is the long version of that statement: who we are, how the project started, what we have shipped so far, and where we are heading next."
+    },
+    "story": {
+      "title": "Our Story",
+      "blocks": [
+        {
+          "heading": "How the idea started",
+          "body": "We kept losing track. A film watched on a flight, a series a friend recommended over dinner, the next episode in a season we never finished: scattered across services, notes apps, and memory. Existing trackers were either ad-heavy, locked into a single platform, or built for everyone and no one. The problem was not a lack of tools. It was a lack of tools that respected the person using them."
+        },
+        {
+          "heading": "Building independently",
+          "body": "SeeUs is an independent project. It is not backed by a media company, an advertising network, or a venture fund. We pay for our own infrastructure, set our own roadmap, and answer for our own mistakes. That independence is not a marketing position. It is the only way we know to keep a product honest: when there is no pressure to sell your attention, there is no structural reason to compromise on it."
+        },
+        {
+          "heading": "The first working version",
+          "body": "The first version of SeeUs did one thing: it let you mark a movie or series as watched. No ratings, no social graph, no calendar. A single list, owned by you, kept on your account. That was enough to know the idea was worth building. The <a href=\"/\">homepage</a> now lists what the product has grown into since then. We write about the changes as they ship on the <a href=\"/blog\">blog</a>."
+        }
+      ]
+    },
+    "why": {
+      "title": "Why SeeUs Exists",
+      "subtitle": "A private movie tracker built around what was missing in the way we watch, and remember what we watched.",
+      "blocks": [
+        {
+          "heading": "The problem we kept hitting",
+          "body": "Keeping a meaningful watch history should not be hard. In practice it is. A film watched on a flight goes into a notes app. A series a friend recommended gets added to a watchlist that nobody revisits. The next episode of a season we meant to finish simply disappears, because no single place remembers it. Over a year, what we actually watched ends up fragmented across services, spreadsheets, and memory, and the meaningful record of it is gone."
+        },
+        {
+          "heading": "What was missing",
+          "body": "What we wanted was straightforward: a unified place to track movies and series, a calendar to organize what we planned to watch next, social interaction without the noise of an ad-driven feed, and real control over our own data. We wanted personal movie tracking that stayed personal: a private alternative to movie tracking apps that fold ad units into the experience."
+        },
+        {
+          "heading": "The principle we chose",
+          "body": "The principle we settled on is the one we still build against: what you record about what you watch should remain under your control. SeeUs does not sell personal data. There is no behavioral profiling and no cross-site tracking. You can read the full commitments in the <a href=\"/about#about-privacy\">Privacy &amp; Security</a> section, and how they shape what we will and will not build."
+        }
+      ]
+    },
+    "mission": {
+      "title": "Mission",
+      "subtitle": "To give people a private, ad-free place to track the films and series they watch, and to build that product in a way that respects the people using it more than the incentives around it.",
+      "blocks": [
+        {
+          "statement": true,
+          "body": "We build SeeUs so that what someone watches, and what they think about it, stays theirs. That mission shapes three commitments we use to decide what to build next, and what to leave alone."
+        },
+        {
+          "heading": "Build for real usage",
+          "body": "A feature belongs in SeeUs when it solves a real part of tracking what you watch, not when it pads a release notes list or moves an engagement metric. For context on where we are heading next, see the <a href=\"/about#about-vision\">Vision</a> section."
+        },
+        {
+          "heading": "Keep personal data under user control",
+          "body": "Your watch history is personal, and it should stay that way. SeeUs does not sell personal data, does not run behavioral profiling, and does not place cross-site tracking. That commitment is the same one behind the longer list of specifics in the <a href=\"/about#about-privacy\">Privacy &amp; Security</a> section."
+        },
+        {
+          "heading": "Explain what we change and why",
+          "body": "Product decisions are not always obvious from the outside, so when we change something that affects how people use SeeUs, we write about it. Development updates and the thinking behind product changes live on the <a href=\"/blog\">Blog</a>."
+        }
+      ]
+    },
+    "vision": {
+      "title": "Vision",
+      "subtitle": "Where we want SeeUs to be headed in the long run, and the lines we do not intend to cross.",
+      "blocks": [
+        {
+          "heading": "Where we are heading",
+          "body": "We want SeeUs to become a stable personal record of what someone watches, available wherever they watch it. That means an experience that holds up across devices, social features that let people share watch history without turning it into a performance, deeper calendar and organization tools, and a product that keeps tracking at its center. See the features on the <a href=\"/#features\">homepage</a> for what is there today."
+        },
+        {
+          "heading": "What we will not build",
+          "body": "Some directions are off the table on purpose. We are not building an advertising network. We are not licensing content or turning SeeUs into a streaming service. We do not sell behavioral data, and a recommendation engine whose main job is to monetize how people behave is not the kind of tracking we want to do."
+        },
+        {
+          "heading": "How we will measure success",
+          "body": "We judge direction by whether people keep using SeeUs over time, not by raw activity numbers. Voluntary export and real control over their own record are part of the goal, not an afterthought. The concrete work toward that direction lives in the <a href=\"/about#about-roadmap\">Development Roadmap</a>."
+        }
+      ]
+    },
+    "technologies": {
+      "title": "Technologies",
+      "subtitle": "The stack behind SeeUs, chosen for long-term maintainability, a small contributor footprint, and a runtime that stays light on the device.",
+      "items": [
+        {
+          "name": "Vue 3 + TypeScript",
+          "description": "The frontend is authored in Vue 3 with the Composition API and end-to-end TypeScript. Type checking runs as part of the Vite build, so type errors fail the build rather than slipping through to runtime."
+        },
+        {
+          "name": "Vite",
+          "description": "Vite powers local development and the production build. The dev server keeps iteration fast, and the built bundle is what gets deployed to Vercel."
+        },
+        {
+          "name": "vue-router",
+          "description": "Client-side routing is handled by vue-router. Most routes are static, and a few dynamic routes are declared explicitly so they cannot be shadowed by catch-all segments."
+        },
+        {
+          "name": "vue-i18n",
+          "description": "Interface copy lives in vue-i18n locale files for English, Spanish, and Portuguese, including this About page long-form copy."
+        },
+        {
+          "name": "@unhead/vue",
+          "description": "Page title and meta tags are managed with @unhead/vue so each route can set document head without fighting the router."
+        },
+        {
+          "name": "Supabase (Postgres)",
+          "description": "The frontend talks to Supabase through @supabase/supabase-js. Auth, blog, and comment data use Supabase services; there is no custom API in this frontend repository."
+        }
+      ]
+    },
+    "how": {
+      "title": "How SeeUs Works",
+      "subtitle": "This section describes what SeeUs does today, based on what is actually running. The <a href=\"/#features\">feature overview on the homepage</a> describes what we are working toward; <a href=\"/about#about-technologies\">the technologies behind SeeUs</a> are covered separately.",
+      "blocks": [
+        {
+          "heading": "The five things SeeUs actually does",
+          "body": "We group the current functionality into five areas. Some are shipped, others exist only as homepage copy while we build them."
+        },
+        {
+          "heading": "Discovery",
+          "body": "You can browse a curated grid of popular and top-rated titles on the <a href=\"/movies\">movies page</a> and open any title for a detail page with poster, synopsis, genres, year, runtime, and an aggregate rating. Discovery today is browse and detail: there is no search field, no filters, and no recommendation engine. The homepage card calls this \"Smart Discovery\"; the smart layer is not built yet."
+        },
+        {
+          "heading": "Tracking",
+          "body": "Tracking is the area most often described in our marketing copy and least often implemented in the code. There is currently no watchlist, no \"mark as watched\" control, and no viewing-status picker. This is the next large piece of work on the roadmap."
+        },
+        {
+          "heading": "Social",
+          "body": "The only social surface today is the comment thread under <a href=\"/blog\">blog posts</a>: read and write comments, reply, and mention other readers. There are no user profiles, no follow graph, and no shared watchlists."
+        },
+        {
+          "heading": "Calendar",
+          "body": "There is no calendar feature in the repository: no calendar page, route, or component. The homepage card describes a \"Release Calendar\" with premiere alerts; that is roadmap language, not a shipped capability."
+        },
+        {
+          "heading": "Ratings",
+          "body": "Movie pages display a single TMDB aggregate score, shown as a star rating out of ten with the vote count. There is no user-submitted rating system, no review text, and no IMDb, Rotten Tomatoes, or Metacritic aggregation, despite the homepage card describing the latter."
+        },
+        {
+          "heading": "The data model in plain language",
+          "body": "Because tracking and user ratings are not yet shipped, the per-user data SeeUs stores today is limited to blog comments: identity, display name, avatar seed, replies, and mentions. Movie and series metadata is read from TMDB through the app data layer and is not authored by you. SeeUs does not host, stream, or store video. We do not provide a data export tool today; until tracking ships, we will not claim exportable history."
+        },
+        {
+          "heading": "What happens when you sign in",
+          "body": "Authentication is handled by Supabase Auth. On the comment surface you can sign in with Google or Facebook through Supabase OAuth, or participate anonymously without an account. Anonymous and OAuth identities are separate providers: signing in with Google or Facebook switches your active comment identity, it does not merge previous anonymous comments into that account. The anonymous identifier is held in your browser, not cryptographically bound to a server-side account, so it should not be treated as a security boundary."
+        },
+        {
+          "body": "The movie browse page is the most complete view of SeeUs: <a href=\"/movies\">browse the live demo</a>."
+        }
+      ]
+    },
+    "roadmap": {
+      "title": "Development Roadmap",
+      "subtitle": "The roadmap represents our development direction. Planned items are intentions, not guarantees. You can <a href=\"/#roadmap\">view the roadmap on the homepage</a> for the visual version.",
+      "blocks": [
+        {
+          "heading": "Where we are",
+          "body": "We are early in the build. The web application is live with movie and series metadata browse, blog comments, and authentication. The homepage roadmap frames the rest of 2026 around social features, mobile, and a recommendation engine, with desktop and integrations planned for 2027. The current quarter on the homepage timeline is Q2 2026 (Social Features), marked as in-progress."
+        },
+        {
+          "heading": "What shipped",
+          "body": "<strong>Q1 2026: Core Platform Launch.</strong> The web application shipped, with the movie and series browse pages, detail pages, blog comments with anonymous, Google, and Facebook identities, and Supabase Auth. The original Q1 description also names \"basic tracking\" and \"cross-platform watchlist sync\"; the codebase does not yet contain a watchlist or tracking surface, so only the published half of the Q1 scope has actually shipped."
+        },
+        {
+          "heading": "What is next",
+          "body": "<strong>Q2 2026: Social Features</strong> is the current quarter and is in-progress: friend lists, shared watchlists, activity feeds, and comment threads. Today only blog comments are live; the friends and shared-watchlist layer is not. Beyond Q2, the roadmap targets <strong>Q3 2026: Mobile Apps</strong> and <strong>Q4 2026: Recommendation Engine</strong>. Q1 2027 Windows Desktop App and Q2 2027 API & Integrations appear in locale data, but they are not currently rendered on the homepage timeline, so we treat them as draft stages rather than committed plans."
+        },
+        {
+          "heading": "What changed since the original plan",
+          "body": "The most material change is that the \"basic tracking and cross-platform watchlist sync\" called out in the Q1 2026 scope did not ship. We chose to ship the public-facing browse, detail, blog, and auth surfaces first, and we are now building tracking as part of the current Q2 work. Roadmap priorities can continue to move as development progresses; we will update this section when stages change."
+        },
+        {
+          "body": "<a href=\"/blog\">Follow progress -></a>"
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy & Security",
+      "subtitle": "The short version: we do not sell your personal data, we do not run behavioral profiling, and we do not place cross-site tracking. For the legal text, read the <a href=\"/privacy-policy\">Privacy Policy</a> and the <a href=\"/cookies-policy\">Cookies Policy</a>.",
+      "blocks": [
+        {
+          "heading": "What we collect",
+          "body": "When you create an account we store your email address and the hashed credentials Supabase Auth uses to authenticate you. When you sign in with Google or Facebook, the OAuth provider shares the identity we need to recognize you on the comment surface; we do not pull your contact list or your feed. On the comment surface we store your display name, avatar seed, the comment text you write, likes, and reports. Movie and series metadata is sourced from TMDB and is not authored by you. We run GA4 analytics to understand aggregate traffic; the cookies involved are described in the <a href=\"/cookies-policy\">Cookies Policy</a>."
+        },
+        {
+          "heading": "What we do not collect",
+          "body": "We do not sell personal data. We do not run behavioral profiling or cross-site tracking. We do not host, stream, or store video: SeeUs tracks metadata only. We do not place advertising on the site. Because tracking and personal ratings are not yet shipped, we do not today collect your watch history, your watchlist, or your ratings."
+        },
+        {
+          "heading": "How your data is stored",
+          "body": "Account and comment data live in Supabase Postgres, accessed through the Supabase JS client over HTTPS. Tables that hold user-authored content are created with migration files and Row Level Security where applicable. Anonymous comment identity is a UUID generated in your browser and stored in localStorage; it is not cryptographically bound to a server-side account. Signing in with Google or Facebook switches your active comment identity; it does not merge previous anonymous comments into that account."
+        },
+        {
+          "heading": "How you can leave",
+          "body": "You can stop using SeeUs at any time. The Privacy Policy describes your rights: access, correction, deletion, portability, opposition, and consent revocation, and you can exercise them by emailing privacy@watchnext.app. There is no self-service \"delete my account\" button in the repository today, and there is no in-product data export tool. Account deletion is handled as a manual request via that email."
+        },
+        {
+          "heading": "Known limitations we are honest about",
+          "body": "Three limitations are worth naming directly. First, the anonymous comment token is a plaintext UUID in localStorage with no server binding; anyone with access to your browser can read it, and a cleared store means a new identity. Second, we can confirm HTTPS in transit, but we have not audited Supabase at-rest encryption ourselves, so we will not claim it as a SeeUs implementation. Third, we have not wired a self-service account deletion or export flow; both are tracked as work items. The <a href=\"/about#about-community\">Community</a> section explains where we post updates."
+        }
+      ]
+    },
+    "community": {
+      "title": "Community",
+      "subtitle": "SeeUs is small and honest about it. We do not publish user or download counts, and we will not pretend to be a crowded platform when we are not. What we do have are real, working channels for feedback and interaction.",
+      "blocks": [
+        {
+          "heading": "How people use SeeUs",
+          "body": "Today the public web app lets you browse movie and series content, open detail pages, and read practical guidance on our <a href=\"/blog\">blog</a>. The blog is where we post release notes and progress notes, and it is also where the comment surface lives. Anyone can comment anonymously through a browser-generated identity, or signed in with Google or Facebook. Tracking, watchlists, ratings, and social features are not shipped yet, so we are not describing them here."
+        },
+        {
+          "heading": "How to reach us",
+          "body": "The primary direct channel is the <a href=\"/feedback\">feedback form</a>. It accepts everything from bugs and usability problems to accessibility issues and security concerns. There is no formal support team and no guaranteed response time; if a message needs a reply, we send one."
+        },
+        {
+          "heading": "How to contribute",
+          "body": "At the moment, feedback is the practical contribution path. We cannot point to a public repository accepting pull requests yet, so we are not claiming an open-source contributor community. If you find a bug or have an idea you want to see built, the <a href=\"/feedback\">feedback form</a> is where that input currently lands."
+        },
+        {
+          "heading": "Moderation & reporting",
+          "body": "To keep the comment surface usable we rely on a reporting path built into the comment system. Comments can be reported with a category: spam, harassment, offensive language, or other. This is not a claim of 24/7 or automated moderation; it is a simple channel for flagging content."
+        }
+      ]
+    },
+    "faq": {
+      "title": "FAQ",
+      "subtitle": "Straight answers to the questions we are most often asked. Where something overlaps with another page, we keep the answer short and link to the detail.",
+      "items": [
+        {
+          "question": "Is SeeUs free?",
+          "answer": "Yes. SeeUs has a free tier that covers the core browsing experience. A Premium tier is available at <a href=\"/#premium\">$9.90 per month</a>. We do not currently present an annual plan."
+        },
+        {
+          "question": "Which platforms does SeeUs support?",
+          "answer": "The product data currently declares web, Windows, and Android as the supported surfaces; you can see the full breakdown in the <a href=\"/#platforms\">platforms</a> section of the homepage. Store and download URLs are loaded from configuration at runtime rather than hardcoded, and we have not published an iOS app yet."
+        },
+        {
+          "question": "Can I export my data?",
+          "answer": "Not yet. There is no working data-export tool in the product today. Export is tracked as a roadmap item, and we will call it out here and in the <a href=\"/privacy-policy\">Privacy Policy</a> the moment it ships. We have not promised a date."
+        },
+        {
+          "question": "Do you sell my data?",
+          "answer": "No. We do not sell personal data, we do not build behavioral profiles of you, and we do not track you across other sites. These commitments are laid out in the <a href=\"/privacy-policy\">Privacy Policy</a>."
+        },
+        {
+          "question": "How do I delete my account?",
+          "answer": "There is no self-service \"delete my account\" button in the product today. The Privacy Policy describes your rights to deletion and a manual path through <a href=\"/privacy-policy\">our privacy contact</a>. A self-service flow is on the roadmap."
+        },
+        {
+          "question": "Is there a mobile app?",
+          "answer": "Not as a native release yet. Android is declared as a supported surface in the product data, and the roadmap includes desktop and mobile work, but we are not announcing store availability that we cannot point to. The <a href=\"/#platforms\">platforms section</a> reflects what is real today."
+        },
+        {
+          "question": "How do I report a bug or abuse?",
+          "answer": "Use the product <a href=\"/feedback\">feedback form</a>. It accepts bug reports, usability and accessibility issues, security concerns, and content reports for the comment system."
+        },
+        {
+          "question": "How can I follow SeeUs updates?",
+          "answer": "The <a href=\"/blog\">blog</a> is where we post release notes and progress notes. We do not rely on external social profiles to announce changes, so the blog is the reliable place to keep up."
+        }
+      ]
+    },
+    "download": {
+      "title": "Try SeeUs",
+      "subtitle": "You now know what SeeUs is, how it works, and where it is heading. The quickest way to judge it is to open it up and browse for yourself.",
+      "cta": "Open SeeUs"
+    }
   }
 }
