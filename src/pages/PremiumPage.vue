@@ -143,7 +143,12 @@ const plans = [
     transition: all $transition-fast;
     min-height: 100%;
 
-    &--premium {
+    &--free {
+      grid-column: 1 / -1;
+    }
+
+    &--premium,
+    &--premium-annual {
       border-color: $color-primary;
       background: linear-gradient(135deg, rgba($color-primary, 0.1) 0%, rgba($color-surface, 0.95) 100%);
     }
