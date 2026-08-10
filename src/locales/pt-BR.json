@@ -121,6 +121,17 @@
         },
         "footer": "Disponível em breve para Android, Web e Windows."
       },
+      "annual": {
+        "badge": "Melhor economia",
+        "title": "Premium Anual",
+        "price": "R$ 99,90",
+        "period": "/ano",
+        "description": "Todos os benefícios do Premium com um desconto no pagamento anual.",
+        "savings": "Economize R$ 18,90 — equivale a R$ 8,33/mês.",
+        "features": {
+          "sameBenefits": "Todos os benefícios do Premium"
+        }
+      },
       "monthly": "Mensal",
       "yearly": "Anual",
       "price999": "R$ 49,90",

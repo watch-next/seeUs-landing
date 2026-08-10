@@ -121,6 +121,17 @@
         },
         "footer": "Coming soon for Android, Web and Windows."
       },
+      "annual": {
+        "badge": "Best savings",
+        "title": "Premium Annual",
+        "price": "$99.90",
+        "period": "/year",
+        "description": "All Premium benefits with a discount on annual billing.",
+        "savings": "Save $18.90 — that's $8.33/month.",
+        "features": {
+          "sameBenefits": "All Premium benefits"
+        }
+      },
       "monthly": "Monthly",
       "yearly": "Yearly",
       "price999": "$9.99",
