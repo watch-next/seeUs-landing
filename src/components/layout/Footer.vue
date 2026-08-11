@@ -3,7 +3,7 @@
     <div class="container">
       <div class="footer__grid">
         <div class="footer__brand">
-          <span class="footer__logo">See<span class="footer__logo-sub">Us</span></span>
+          <img class="footer__logo" src="@/images/logo/favicon.ico" alt="SeeUs" />
 
           <p class="footer__description">{{ footerSection.brandDescription }}</p>
           <ul class="footer__social">
@@ -133,13 +133,10 @@ const year = new Date().getFullYear()
   }
 
   &__logo {
-    font-size: $text-xl;
-    font-weight: $weight-bold;
-    color: $color-text;
-
-    &-sub {
-      color: $brand-highlight;
-    }
+    display: block;
+    height: $space-16;
+    width: auto;
+    object-fit: contain;
   }
 
   &__description {
