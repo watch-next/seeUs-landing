@@ -12,7 +12,11 @@
     "roadmap": "Hoja de Ruta",
     "blog": "Blog",
     "about": "Sobre Nosotros",
-    "login": "Iniciar Sesión"
+    "login": "Iniciar Sesión",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "selectLanguage": "Seleccionar idioma",
+    "navigation": "Navegación"
   },
   "hero": {
     "headline": "Mira Junto.\nEn Cualquier Lugar, en Cualquier Momento.",

@@ -12,7 +12,11 @@
     "roadmap": "Roadmap",
     "blog": "Blog",
     "about": "Sobre Nós",
-    "login": "Entrar"
+    "login": "Entrar",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "selectLanguage": "Selecionar idioma",
+    "navigation": "Navegação"
   },
   "hero": {
     "headline": "Seu Acompanhador Universal de Streaming.\nRastreie Filmes e Séries em Todo Lugar.",

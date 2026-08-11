@@ -12,7 +12,11 @@
     "roadmap": "Roadmap",
     "blog": "Blog",
     "about": "About Us",
-    "login": "Login"
+    "login": "Login",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "selectLanguage": "Select language",
+    "navigation": "Navigation"
   },
   "hero": {
     "headline": "Your Universal Streaming Watchlist.\nTrack Movies & Series Everywhere.",

@@ -31,7 +31,11 @@
           <h3 class="footer__group-title">{{ group.heading }}</h3>
           <ul class="footer__group-list">
             <li v-for="link in group.links" :key="link.label">
-              <a :href="link.href" class="footer__link link-hover" @click="handleFooterLinkClick(link.label, link.href)">{{ link.label }}</a>
+              <router-link
+                :to="link.href.startsWith('#') ? '/' + link.href : link.href"
+                class="footer__link link-hover"
+                @click="handleFooterLinkClick(link.label, link.href)"
+              >{{ link.label }}</router-link>
             </li>
           </ul>
         </div>
@@ -48,17 +52,13 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import { trackEvent, trackFooterLink, trackSocialClick } from '@/services/analytics'
 
 const { t } = useI18n()
-const router = useRouter()
 
 function handleFooterLinkClick(label: string, href: string) {
+  // A navegação é feita pelo router-link; aqui apenas registramos o evento de analytics
   trackEvent(trackFooterLink(label, href))
-  if (href.startsWith('/')) {
-    router.push(href)
-  }
 }
 
 function handleSocialClick(label: string, href: string) {
