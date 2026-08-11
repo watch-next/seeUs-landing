@@ -10,8 +10,7 @@
         </button>
 
         <div class="header__logo">
-          <span class="header__logo-text">See</span>
-          <span class="header__logo-text-sub">Us</span>
+          <img class="header__logo-image" src="@/images/logo/favicon.ico" alt="SeeUs" />
         </div>
         <nav class="header__nav" role="navigation" aria-label="Main navigation">
           <ul class="header__nav-list">
@@ -44,7 +43,7 @@
             <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__drawer-link"
               @click="handleNavClick(link)">{{ link.label }}</router-link>
             <router-link v-else :to="link.href" class="header__drawer-link" @click="handleNavClick(link)">{{ link.label
-            }}</router-link>
+              }}</router-link>
           </li>
         </ul>
         <button class="header__login-btn" @click="handleLoginClick">{{ t('navigation.login') }}</button>
@@ -73,9 +72,9 @@ const headerNavigation = [
 ]
 
 const drawerNavigation = [
-  { label: t('navigation.platforms'), href: '#platforms' },
-  { label: t('navigation.premium'), href: '#premium' },
-  { label: t('navigation.roadmap'), href: '#roadmap' },
+  { label: t('navigation.platforms'), href: '#platforms', isRoute: false },
+  { label: t('navigation.premium'), href: '#premium', isRoute: false },
+  { label: t('navigation.roadmap'), href: '#roadmap', isRoute: false },
 ]
 
 const languages = [
@@ -167,6 +166,8 @@ onUnmounted(() => {
     transition: none;
   }
 
+
+
   &__inner {
     display: flex;
     align-items: center;
@@ -191,16 +192,11 @@ onUnmounted(() => {
     align-items: center;
   }
 
-  &__logo-text {
-    font-size: $text-xl;
-    font-weight: $weight-bold;
-    color: $color-text;
-  }
-
-  &__logo-text-sub {
-    font-size: $text-xl;
-    font-weight: $weight-bold;
-    color: $brand-highlight;
+  &__logo-image {
+    display: block;
+    height: 67px;
+    width: auto;
+    object-fit: contain;
   }
 
   &__nav {
