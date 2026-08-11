@@ -1,23 +1,33 @@
 <template>
   <header class="header" :data-scrolled="scrolled" role="banner">
     <div class="container header__inner">
-      <div class="header__logo">
-        <span class="header__logo-text">See</span>
-        <span class="header__logo-text-sub">Us</span>
+      <div class="header__brand">
+        <button class="header__menu-toggle" aria-label="Toggle menu" :aria-expanded="menuOpen" aria-controls="main-nav"
+          @click="toggleMenu">
+          <span class="header__menu-bar"></span>
+          <span class="header__menu-bar"></span>
+          <span class="header__menu-bar"></span>
+        </button>
+
+        <div class="header__logo">
+          <span class="header__logo-text">See</span>
+          <span class="header__logo-text-sub">Us</span>
+        </div>
+        <nav class="header__nav" role="navigation" aria-label="Main navigation">
+          <ul class="header__nav-list">
+            <li v-for="link in headerNavigation" :key="link.href" class="header__nav-item">
+              <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__nav-link link-hover"
+                @click="handleNavClick(link)">{{ link.label }}</router-link>
+              <router-link v-else :to="link.href" class="header__nav-link link-hover" @click="handleNavClick(link)">{{
+                link.label }}</router-link>
+            </li>
+          </ul>
+        </nav>
       </div>
-
-      <nav class="header__nav" :class="{ 'header__nav--open': menuOpen }" role="navigation" aria-label="Main navigation" id="main-nav">
-        <ul class="header__nav-list">
-          <li v-for="link in navLinks" :key="link.href" class="header__nav-item">
-            <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__nav-link link-hover" @click="handleNavClick(link)">{{ link.label }}</router-link>
-            <router-link v-else :to="link.href" class="header__nav-link link-hover" @click="handleNavClick(link)">{{ link.label }}</router-link>
-          </li>
-        </ul>
-        <button class="header__login-btn">{{ t('navigation.login') }}</button>
-
+      <div class="header__actions">
         <div class="header__lang-switcher">
           <button class="header__lang-btn" @click="toggleLangMenu" aria-label="Select language">
-            {{ languages.find(l => l.code === currentLang)?.label }}
+            {{languages.find(l => l.code === currentLang)?.label}}
           </button>
           <ul v-if="showLangMenu" class="header__lang-dropdown">
             <li v-for="lang in languages" :key="lang.code">
@@ -25,13 +35,20 @@
             </li>
           </ul>
         </div>
-      </nav>
+      </div>
 
-      <button class="header__menu-toggle" aria-label="Toggle menu" :aria-expanded="menuOpen" aria-controls="main-nav" @click="toggleMenu">
-        <span class="header__menu-bar"></span>
-        <span class="header__menu-bar"></span>
-        <span class="header__menu-bar"></span>
-      </button>
+      <aside class="header__drawer" :class="{ 'header__drawer--open': menuOpen }" role="navigation"
+        aria-label="Drawer navigation" id="main-nav">
+        <ul class="header__drawer-list">
+          <li v-for="link in drawerNavigation" :key="link.href" class="header__drawer-item">
+            <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__drawer-link"
+              @click="handleNavClick(link)">{{ link.label }}</router-link>
+            <router-link v-else :to="link.href" class="header__drawer-link" @click="handleNavClick(link)">{{ link.label
+            }}</router-link>
+          </li>
+        </ul>
+        <button class="header__login-btn" @click="handleLoginClick">{{ t('navigation.login') }}</button>
+      </aside>
 
       <div v-if="menuOpen" class="header__overlay" @click="closeMenu"></div>
     </div>
@@ -49,14 +66,16 @@ const menuOpen = ref(false)
 const scrolled = ref(false)
 const showLangMenu = ref(false)
 
-const navLinks = [
+const headerNavigation = [
   { label: t('navigation.home'), href: '#hero' },
-  { label: t('navigation.features'), href: '#features' },
+  { label: t('navigation.blog'), href: '/blog', isRoute: true },
+  { label: t('navigation.about'), href: '/about', isRoute: true },
+]
+
+const drawerNavigation = [
   { label: t('navigation.platforms'), href: '#platforms' },
   { label: t('navigation.premium'), href: '#premium' },
   { label: t('navigation.roadmap'), href: '#roadmap' },
-  { label: t('navigation.blog'), href: '/blog', isRoute: true },
-  { label: t('navigation.about'), href: '/about', isRoute: true },
 ]
 
 const languages = [
@@ -77,6 +96,11 @@ function closeMenu() {
 
 function handleNavClick(link: { label: string; href: string }) {
   trackEvent(trackNavigation(link.label, 'header'))
+  closeMenu()
+}
+
+function handleLoginClick() {
+  trackEvent(trackNavigation(t('navigation.login'), 'header'))
   closeMenu()
 }
 
@@ -150,6 +174,18 @@ onUnmounted(() => {
     height: 64px;
   }
 
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $space-8;
+  }
+
   &__logo {
     display: flex;
     align-items: center;
@@ -173,33 +209,13 @@ onUnmounted(() => {
     gap: $space-8;
 
     @media (max-width: 767px) {
-      position: fixed;
-      top: 64px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: $color-overlay-darker;
-      flex-direction: column;
-      padding: $space-8;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity $transition-base;
-
-      &--open {
-        opacity: 1;
-        pointer-events: all;
-      }
+      display: none;
     }
   }
 
   &__nav-list {
     display: flex;
     gap: $space-6;
-
-    @media (max-width: 767px) {
-      flex-direction: column;
-      align-items: center;
-    }
   }
 
   &__nav-link {
@@ -253,16 +269,12 @@ onUnmounted(() => {
   }
 
   &__menu-toggle {
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 5px;
     padding: $space-2;
     background: none;
     border: none;
-
-    @media (max-width: 767px) {
-      display: flex;
-    }
   }
 
   &__menu-bar {
@@ -278,11 +290,47 @@ onUnmounted(() => {
     position: fixed;
     inset: 0;
     background: rgba($color-background, 0.5);
-    z-index: $z-below;
+    z-index: $z-sticky;
+  }
 
-    @media (max-width: 767px) {
-      position: absolute;
-      top: 100%;
+  &__drawer {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    bottom: 0;
+    width: min(280px, 84vw);
+    display: flex;
+    flex-direction: column;
+    gap: $space-6;
+    padding: $space-8;
+    background: $color-surface;
+    border-right: 1px solid $color-border;
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.3);
+    transform: translateX(-100%);
+    pointer-events: none;
+    transition: transform $transition-base;
+    z-index: $z-sticky + 1;
+
+    &--open {
+      transform: translateX(0);
+      pointer-events: all;
+    }
+  }
+
+  &__drawer-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &__drawer-link {
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    color: $color-text-secondary;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-text;
     }
   }
 
