@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Layout principal da landing page
-const HomeLayout = () => import('./App.vue')
+// Layout global que envolve todas as páginas públicas com Header + Footer
+const AppLayout = () => import('./components/layout/AppLayout.vue')
+// Página inicial (Home)
+const HomePage = () => import('./App.vue')
 // Páginas jurídicas com layout próprio
 const AboutPage = () => import('./pages/AboutPage.vue')
 const PrivacyPolicy = () => import('./pages/PrivacyPolicy.vue')
@@ -22,62 +24,70 @@ const AdminBlogTrash = () => import('./pages/admin/AdminBlogTrash.vue')
 const AdminBlogSettings = () => import('./pages/admin/AdminBlogSettings.vue')
 
 const routes = [
+  // Layout global que fornece Header + Footer a todas as páginas públicas
   {
     path: '/',
-    name: 'Home',
-    component: HomeLayout,
+    component: AppLayout,
+    children: [
+      {
+        path: '',
+        name: 'Home',
+        component: HomePage,
+      },
+      {
+        path: 'feedback',
+        name: 'Feedback',
+        component: FeedbackPage,
+      },
+      {
+        path: 'blog',
+        name: 'Blog',
+        component: BlogPage,
+      },
+      {
+        path: 'blog/:slug',
+        name: 'BlogPost',
+        component: BlogPostPage,
+        props: true,
+      },
+      {
+        path: 'about',
+        name: 'About',
+        component: AboutPage,
+      },
+      {
+        path: 'movies',
+        name: 'Movies',
+        component: MoviesPage,
+      },
+      {
+        path: 'movies/:slug',
+        name: 'Movie',
+        component: MoviePage,
+        props: false,
+      },
+      {
+        path: 'privacy-policy',
+        name: 'PrivacyPolicy',
+        component: PrivacyPolicy,
+      },
+      {
+        path: 'terms-of-service',
+        name: 'TermsOfService',
+        component: TermsOfService,
+      },
+      {
+        path: 'cookies-policy',
+        name: 'CookiesPolicy',
+        component: CookiesPolicy,
+      },
+    ],
   },
-  {
-    path: '/feedback',
-    name: 'Feedback',
-    component: FeedbackPage,
-  },
-  {
-    path: '/blog',
-    name: 'Blog',
-    component: BlogPage,
-  },
-  {
-    path: '/blog/:slug',
-    name: 'BlogPost',
-    component: BlogPostPage,
-    props: true,
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: AboutPage,
-  },
+  // Rota de autenticação fora do layout global
   {
     path: '/auth/callback',
     name: 'AuthCallback',
     component: AuthCallbackPage,
-  },
-  {
-    path: '/movies',
-    name: 'Movies',
-    component: MoviesPage,
-  },
-  {
-    path: '/movies/:slug',
-    name: 'Movie',
-    component: MoviePage,
-    props: false,
-  },
-  {
-    path: '/privacy-policy',
-    name: 'PrivacyPolicy',
-    component: PrivacyPolicy,
-  },
-  {
-    path: '/terms-of-service',
-    name: 'TermsOfService',
-    component: TermsOfService,
-  },
-  {
-    path: '/cookies-policy',
-    name: 'CookiesPolicy',
-    component: CookiesPolicy,
   },
   // Admin routes
   {

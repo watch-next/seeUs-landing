@@ -9,7 +9,7 @@
       <nav class="header__nav" :class="{ 'header__nav--open': menuOpen }" role="navigation" aria-label="Main navigation" id="main-nav">
         <ul class="header__nav-list">
           <li v-for="link in navLinks" :key="link.href" class="header__nav-item">
-            <a v-if="!link.isRoute" :href="link.href" class="header__nav-link link-hover" @click="handleNavClick(link)">{{ link.label }}</a>
+            <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__nav-link link-hover" @click="handleNavClick(link)">{{ link.label }}</router-link>
             <router-link v-else :to="link.href" class="header__nav-link link-hover" @click="handleNavClick(link)">{{ link.label }}</router-link>
           </li>
         </ul>
