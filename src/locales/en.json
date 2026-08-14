@@ -2,7 +2,8 @@
   "common": {
     "home": "Home",
     "loading": "Loading...",
-    "error": "An unexpected error occurred."
+    "error": "An unexpected error occurred.",
+    "processing": "Processing..."
   },
   "navigation": {
     "home": "Home",
@@ -94,10 +95,11 @@
       "earlyAccess": "Early access to new features"
     },
     "cta": "Upgrade Now",
+    "subscribe": "Subscribe",
     "plans": {
       "title": "Choose Your Plan",
       "subtitle": "Everything you need to organize what you want to watch.",
-      "startFree": "Start Free",
+      "startFree": "Start Premium",
       "comingSoonLabel": "Coming Soon",
       "badge": "Most Popular",
       "free": {

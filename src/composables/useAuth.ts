@@ -167,4 +167,4 @@ export function useAuth() {
 }
 
 // Export for direct use (optional)
-export { currentUser, isAuthenticated, initAuth } from './authService';
+export { getCurrentUser, isAuthenticated } from '@/services/authService';

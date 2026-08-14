@@ -2,7 +2,8 @@
   "common": {
     "home": "Inicio",
     "loading": "Cargando...",
-    "error": "Ocurrió un error inesperado."
+    "error": "Ocurrió un error inesperado.",
+    "processing": "Procesando..."
   },
   "navigation": {
     "home": "Inicio",
@@ -75,7 +76,7 @@
     "plans": {
       "title": "Elige Tu Plan",
       "subtitle": "Todo lo que necesitas para organizar lo que quieres ver.",
-      "startFree": "Comenzar Gratuitamente",
+      "startFree": "Comenzar Premium",
       "comingSoonLabel": "Próximamente",
       "badge": "Más popular",
       "free": {
