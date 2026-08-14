@@ -2,7 +2,8 @@
   "common": {
     "home": "Início",
     "loading": "Carregando...",
-    "error": "Ocorreu um erro inesperado."
+    "error": "Ocorreu um erro inesperado.",
+    "processing": "Processando..."
   },
   "navigation": {
     "home": "Início",
@@ -94,10 +95,11 @@
       "earlyAccess": "Acesso antecipado a novos recursos"
     },
     "cta": "Fazer Upgrade Agora",
+    "subscribe": "Assinar",
     "plans": {
       "title": "Escolha Seu Plano",
       "subtitle": "Tudo o que você precisa para organizar o que deseja assistir.",
-      "startFree": "Começar Gratuitamente",
+      "startFree": "Começar Premium",
       "comingSoonLabel": "Em breve",
       "badge": "Mais popular",
       "free": {

@@ -10,7 +10,7 @@
  * - Password recovery
  */
 
-import { httpClient, setTokens, clearTokens } from '../http/client';
+import { httpClient, setTokens, clearTokens } from '../lib/http/client';
 import type { User } from './types';
 
 // LocalStorage key for user data

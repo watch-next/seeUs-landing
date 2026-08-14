@@ -16,7 +16,7 @@ const DEFAULT_TIMEOUT = 30000; // 30 seconds
  * Falls back to localhost:8000 for development.
  */
 function getApiUrl(): string {
-  const envUrl = import.meta.env.VITE_API_URL;
+  const envUrl = import.meta.env.VITE_FASTAPI_URL;
 
   if (envUrl) {
     return envUrl.trim().replace(/\/$/, ''); // Remove trailing slash
@@ -24,7 +24,7 @@ function getApiUrl(): string {
 
   // Default for local development
   console.warn('[HTTP Config] VITE_API_URL not set, using default http://localhost:8000/api/v1');
-  return 'http://localhost:8000/api/v1';
+  return import.meta.env.VITE_FASTAPI_URL || 'http://localhost:8001/api/v1';
 }
 
 /**
@@ -39,5 +39,5 @@ export const httpConfig: HttpClientConfig = {
  * Check if API URL is configured.
  */
 export function isApiConfigured(): boolean {
-  return !!import.meta.env.VITE_API_URL;
+  return !!import.meta.env.VITE_FASTAPI_URL;
 }
