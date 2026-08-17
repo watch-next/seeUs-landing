@@ -29,7 +29,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useAdSense } from '@/composables/useAdSense'
 import { useAuth } from '@/composables/useAuth'
-import premiumService from '@/services/premium.service'
+import { usePremiumService } from '@/composables/usePremiumService'
 import type { AdSlotOptions } from '@/composables/useAdSense'
 import type { PremiumSubscriptionDTO } from '@/types/premium'
 
@@ -74,6 +74,7 @@ const containerClass = computed(() => {
 // Check if user is premium active
 const isPremiumActive = ref(false)
 const isCheckingPremium = ref(false)
+const { getSubscription } = usePremiumService()
 
 async function checkPremiumStatus() {
   if (!isAuthenticated.value || !user.value) {
@@ -83,7 +84,7 @@ async function checkPremiumStatus() {
 
   isCheckingPremium.value = true
   try {
-    const subscription = await premiumService.getSubscription()
+    const subscription = await getSubscription()
     // If subscription is null/undefined (not found or API error), treat as not premium
     // If subscription.status !== 'active', treat as not premium
     // Only if subscription exists AND status === 'active', treat as premium

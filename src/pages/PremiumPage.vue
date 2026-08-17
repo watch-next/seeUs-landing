@@ -1,5 +1,5 @@
 <template>
-  <div class="premium-page">
+  <div class="premium-page" v-if="!isShowingAuthForm">
     <div class="premium-page__intro">
       <h3 class="premium-page__title">{{ $t('premium.plans.title') }}</h3>
       <p class="premium-page__subtitle">{{ $t('premium.plans.subtitle') }}</p>
@@ -20,6 +20,11 @@
 
     <!-- Content -->
     <div v-else>
+      <!-- Auth notice banner (non-fatal, e.g. email confirmation) -->
+      <div v-if="authNotice" class="premium-page__auth-notice">
+        {{ authNotice }}
+      </div>
+
       <!-- Premium Status Banner -->
       <div v-if="isPremiumActive" class="premium-page__premium-banner">
         <div class="premium-page__premium-content">
@@ -27,6 +32,19 @@
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
           </svg>
           <span>{{ $t('premium.status.active') }}</span>
+        </div>
+      </div>
+
+      <!-- Authenticated User Indicator with Logout -->
+      <div v-else-if="isAppAuthenticated" class="premium-page__user-banner">
+        <div class="premium-page__user-content">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="premium-page__user-icon">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
+          <span>{{ $t('premium.status.authenticated') }}</span>
+          <button type="button" class="btn btn-outline btn-sm" @click="handleSignOut">
+            {{ $t('auth.logout') }}
+          </button>
         </div>
       </div>
 
@@ -70,7 +88,7 @@
             'btn-primary',
             isPremiumActive ? 'btn-success' : ''
           ]" :disabled="isPremiumActive || checkoutLoading"
-            @click="() => handleCheckout(plan.id as Exclude<PremiumPlanId, 'free'>)">
+            @click="handleCheckoutOrShowAuth(plan.id as Exclude<PremiumPlanId, 'free'>)">
             <template v-if="isPremiumActive">
               {{ $t('common.active') }}
             </template>
@@ -96,20 +114,115 @@
       </div>
     </div>
   </div>
+
+  <!-- Authentication form shown when the user is not authenticated -->
+  <div v-if="isShowingAuthForm" class="premium-page__auth">
+    <button
+      type="button"
+      class="premium-page__auth-close"
+      :aria-label="$t('auth.close')"
+      @click="closeAuthModal"
+    >
+      &times;
+    </button>
+
+    <h3 class="premium-page__auth-title">
+      {{ authMode === 'login' ? $t('auth.loginTitle') : $t('auth.signupTitle') }}
+    </h3>
+    <p class="premium-page__auth-subtitle">
+      {{ authMode === 'login' ? $t('auth.loginSubtitle') : $t('auth.signupSubtitle') }}
+    </p>
+
+    <form class="premium-page__auth-form" @submit.prevent="handleAuthSubmit">
+      <label class="premium-page__auth-field">
+        <span>{{ $t('auth.email') }}</span>
+        <input
+          v-model="authForm.email"
+          type="email"
+          name="email"
+          :placeholder="$t('auth.email')"
+          autocomplete="email"
+          required
+        />
+      </label>
+
+      <label class="premium-page__auth-field">
+        <span>{{ $t('auth.password') }}</span>
+        <input
+          v-model="authForm.password"
+          type="password"
+          name="password"
+          :placeholder="$t('auth.password')"
+          autocomplete="current-password"
+          required
+        />
+      </label>
+
+      <div v-if="error" class="premium-page__auth-error">
+        {{ error }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary premium-page__auth-submit"
+        :disabled="isAppLoading"
+      >
+        {{ isAppLoading
+          ? $t('common.processing')
+          : (authMode === 'login' ? $t('auth.login') : $t('auth.signup')) }}
+      </button>
+    </form>
+
+    <p class="premium-page__auth-toggle">
+      {{ authMode === 'login' ? $t('auth.noAccount') : $t('auth.haveAccount') }}
+      <button type="button" class="premium-page__auth-toggle-link" @click="toggleAuthMode">
+        {{ authMode === 'login' ? $t('auth.signup') : $t('auth.login') }}
+      </button>
+    </p>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { premiumService } from '@/services/premium.service'
+import { usePremiumService } from '@/composables/usePremiumService'
 import { useAuth } from '@/composables/useAuth'
+import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
 import { useRouter } from 'vue-router'
-import { PremiumNotImplementedError } from '@/types/premium'
+import { supabaseApp } from '@/lib/supabase-app'
 import type { PremiumPlanDTO, PremiumSubscriptionDTO, CreateCheckoutRequest, CheckoutResponse, PremiumPlanId, CancelSubscriptionResponse } from '@/types/premium'
+import { PremiumNotImplementedError } from '@/types/premium'
 
 const { t } = useI18n()
 const router = useRouter()
-const { isAuthenticated } = useAuth()
+const { isAuthenticated: isLandingAuthenticated } = useAuth()
+const {
+  currentUser: appUser,
+  isAuthenticated: isAppAuthenticated,
+  isLoadingAuth: isAppLoading,
+  initAuth: initSupabaseAppAuth,
+  signIn: appSignIn,
+  signUp: appSignUp,
+  signOut: appSignOut,
+  getSession: getAppSession
+} = useSupabaseAppAuth()
+
+const {
+  listPlans,
+  getSubscription,
+  createCheckout,
+  cancelSubscription,
+} = usePremiumService()
+
+// Auth form state
+const isShowingAuthForm = ref(false)
+const authMode = ref<'login' | 'signup'>('login')
+const pendingPlanId = ref<Exclude<PremiumPlanId, 'free'> | null>(null)
+const authForm = reactive({
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
 
 // Translation key mapping for premium plans
 const getTranslationKey = (planId: string) => {
@@ -183,6 +296,8 @@ const plans = ref<any[]>([])
 const subscription = ref<PremiumSubscriptionDTO | null>(null)
 const loading = ref<boolean>(true)
 const error = ref<string | null>(null)
+// Non-fatal auth notice shown in the plans view, e.g. "confirm your email".
+const authNotice = ref<string | null>(null)
 const checkoutLoading = ref<boolean>(false)
 
 // Computed
@@ -190,14 +305,13 @@ const isPremiumActive = computed(() => subscription.value?.status === 'active')
 
 // Methods
 async function fetchPlans() {
-  console.log('[PremiumPage] fetchPlans start')
-  const data = await premiumService.listPlans()
+  const data = await listPlans()
   plans.value = transformPlans(data)
 }
 
 async function fetchSubscription() {
   try {
-    const data = await premiumService.getSubscription()
+    const data = await getSubscription()
     subscription.value = data
   } catch (err) {
     error.value = 'Failed to load subscription'
@@ -206,17 +320,15 @@ async function fetchSubscription() {
 }
 
 async function fetchData() {
-  console.log('[PremiumPage] fetchData start')
-  console.log('[PremiumPage] fetchData start')
   error.value = null
   loading.value = true
   try {
     // Always fetch plans (public endpoint).
-    const plansData = await premiumService.listPlans()
+    const plansData = await listPlans()
     plans.value = transformPlans(plansData)
 
-    if (isAuthenticated.value) {
-      const subscriptionData = await premiumService.getSubscription()
+    if (isAppAuthenticated.value) {
+      const subscriptionData = await getSubscription()
       subscription.value = subscriptionData
     } else {
       subscription.value = null
@@ -233,7 +345,7 @@ async function handleFreePlan() {
   // Free plan doesn't require backend activation in current implementation
   alert(t('premium.messages.freeActivated'))
   // Refresh subscription status only if user is authenticated
-  if (isAuthenticated.value) {
+  if (isAppAuthenticated.value) {
     await fetchSubscription()
   }
 }
@@ -245,22 +357,43 @@ async function handleCheckout(planId: Exclude<PremiumPlanId, 'free'>) {
   error.value = null
 
   try {
-    const request: CreateCheckoutRequest = {
-      planId,
-      // These URLs would typically come from route or config
-      successUrl: window.location.origin + '/premium/success',
-      failureUrl: window.location.origin + '/premium/cancel',
-      pendingUrl: window.location.origin + '/premium/pending'
+    // Verify Supabase App session exists and has valid access token
+    const { data: { session } } = await supabaseApp.auth.getSession()
+    if (!session?.access_token || !session?.user?.id) {
+      error.value = 'Please sign in to continue with checkout.'
+      console.warn('[PremiumPage] No valid Supabase App session for checkout')
+      return
     }
 
-    const response = await premiumService.createCheckout(request)
+    const checkoutRequest: CreateCheckoutRequest = { plan_id: planId }
+    const checkout = await createCheckout(checkoutRequest)
+    const initPoint = typeof checkout === 'string'
+      ? checkout
+      : (checkout as Partial<{ init_point?: string; sandbox_init_point?: string; checkout_url?: string }>).init_point
+        ?? (checkout as Partial<{ init_point?: string; sandbox_init_point?: string; checkout_url?: string }>).sandbox_init_point
+        ?? (checkout as Partial<{ init_point?: string; sandbox_init_point?: string; checkout_url?: string }>).checkout_url
+
+    if (!initPoint) {
+      throw new Error('Missing checkout URL in checkout response')
+    }
 
     // Redirect to Mercado Pago checkout
-    window.location.href = response.initPoint
+    window.location.href = initPoint
   } catch (err) {
-    error.value = err instanceof PremiumNotImplementedError
-      ? err.message
-      : 'Checkout failed. Please try again.'
+    // Provide more specific error message for common cases
+    if (err instanceof Error) {
+      if (err.message.includes('401') || err.message.includes('Unauthorized') || err.message.includes('Invalid token')) {
+        error.value = 'Authentication expired. Please sign in again.'
+      } else if (err.message.includes('400') || err.message.includes('Bad Request')) {
+        error.value = 'Invalid plan selection. Please try again.'
+      } else if (err.message.includes('Missing checkout URL')) {
+        error.value = 'Checkout configuration error. Please contact support.'
+      } else {
+        error.value = 'Checkout failed. Please try again.'
+      }
+    } else {
+      error.value = 'Checkout failed. Please try again.'
+    }
     console.error('Checkout error:', err)
   } finally {
     checkoutLoading.value = false
@@ -271,25 +404,37 @@ async function handleCancelSubscription() {
   if (!subscription.value) return
 
   try {
-    await premiumService.cancelSubscription()
+    await cancelSubscription()
     // Refresh subscription status after cancellation
     await fetchSubscription()
     alert(t('premium.messages.cancelled'))
   } catch (err) {
-    error.value = err instanceof PremiumNotImplementedError
-      ? err.message
-      : 'Cancellation failed. Please try again.'
+    error.value = 'Cancellation failed. Please try again.'
     console.error('Cancellation error:', err)
   }
 }
 
+const PREMIUM_PLAN_KEY = 'premium_pending_plan'
+
 // Lifecycle
 onMounted(() => {
+  // Initialize Supabase App authentication state
+  initSupabaseAppAuth()
+
+  // Check for plan query parameter (e.g., after email confirmation redirect)
+  const routePlan = new URLSearchParams(window.location.search).get('plan')
+  if (routePlan) {
+    pendingPlanId.value = routePlan as PremiumPlanId
+    // Clean URL
+    const cleanUrl = `${window.location.pathname}`
+    window.history.replaceState({}, document.title, cleanUrl)
+  }
+
   fetchData()
 })
 
 // React to auth state changes (login/logout)
-watch(isAuthenticated, (newVal) => {
+watch(isAppAuthenticated, (newVal) => {
   if (newVal) {
     // User just logged in - fetch subscription data
     fetchSubscription()
@@ -298,6 +443,103 @@ watch(isAuthenticated, (newVal) => {
     subscription.value = null
   }
 })
+
+// Debug: watch isShowingAuthForm to see when it changes
+watch(isShowingAuthForm, (newVal) => {
+  console.log('[PremiumPage] isShowingAuthForm changed to:', newVal)
+})
+
+// Auth Methods
+function showAuthModal(planId: Exclude<PremiumPlanId, 'free'>) {
+  pendingPlanId.value = planId
+  authForm.email = ''
+  authForm.password = ''
+  isShowingAuthForm.value = true
+}
+
+function closeAuthModal() {
+  isShowingAuthForm.value = false
+  pendingPlanId.value = null
+}
+
+async function handleAuthSubmit() {
+  if (authMode.value === 'login') {
+    await handleLogin()
+  } else {
+    await handleSignup()
+  }
+}
+
+async function handleLogin() {
+  try {
+    await appSignIn(authForm.email, authForm.password)
+    // Capture the plan id before closeAuthModal clears pendingPlanId
+    const planIdSel = pendingPlanId.value
+    closeAuthModal()
+
+    // After successful login, proceed with checkout
+    if (planIdSel) {
+      await handleCheckout(planIdSel)
+    }
+  } catch (err) {
+    error.value = 'Invalid email or password'
+    console.error('Login error:', err)
+  }
+}
+
+async function handleSignup() {
+  try {
+    const { session } = await appSignUp(authForm.email, authForm.password)
+
+    // Email confirmation required -> do NOT resume checkout now.
+    // Store the pending plan in sessionStorage so it survives the email confirmation redirect.
+    if (!session) {
+      if (pendingPlanId.value) {
+        try {
+          sessionStorage.setItem(PREMIUM_PLAN_KEY, pendingPlanId.value)
+        } catch {
+          /* ignore */
+        }
+      }
+      isShowingAuthForm.value = false
+      authNotice.value = t('auth.emailConfirmation')
+      return
+    }
+
+    // Capture the plan id before closeAuthModal clears pendingPlanId
+    const planIdSel = pendingPlanId.value
+    closeAuthModal()
+
+    if (planIdSel) {
+      await handleCheckout(planIdSel)
+    }
+  } catch (err) {
+    error.value = 'Signup failed. Please try again.'
+    console.error('Signup error:', err)
+  }
+}
+
+function toggleAuthMode() {
+  authMode.value = authMode.value === 'login' ? 'signup' : 'login'
+  // Clear form when switching modes
+  authForm.email = ''
+  authForm.password = ''
+  authForm.confirmPassword = ''
+  authNotice.value = null
+}
+
+// New method to handle checkout or show auth
+async function handleCheckoutOrShowAuth(planId: Exclude<PremiumPlanId, 'free'>) {
+  if (isAppAuthenticated.value) {
+    await handleCheckout(planId)
+  } else {
+    showAuthModal(planId)
+  }
+}
+
+async function handleSignOut() {
+  await appSignOut()
+}
 </script>
 
 <style scoped lang="scss">
@@ -358,6 +600,37 @@ watch(isAuthenticated, (newVal) => {
         font-weight: $weight-semibold;
         color: $color-text;
       }
+    }
+  }
+
+  &__user-banner {
+    background: linear-gradient(135deg, rgba($color-primary, 0.1) 0%, rgba($color-surface, 0.95) 100%);
+    border: 1px solid $color-primary;
+    border-radius: $radius-lg;
+    padding: $space-4;
+    margin-bottom: $space-6;
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+
+    .premium-page__user-content {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      flex: 1;
+
+      .premium-page__user-icon {
+        color: $color-primary;
+      }
+
+      span {
+        font-weight: $weight-semibold;
+        color: $color-text;
+      }
+    }
+
+    .btn-outline {
+      flex-shrink: 0;
     }
   }
 
@@ -542,6 +815,98 @@ watch(isAuthenticated, (newVal) => {
     color: $color-text-secondary;
     text-align: center;
     line-height: $leading-relaxed;
+  }
+}
+
+.premium-page__auth {
+  position: relative;
+  padding: $space-6;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+
+  &-close {
+    position: absolute;
+    top: $space-3;
+    right: $space-3;
+    background: none;
+    border: none;
+    font-size: $text-2xl;
+    line-height: 1;
+    color: $color-text-secondary;
+    cursor: pointer;
+    padding: $space-1;
+  }
+
+  &-title {
+    font-size: $text-xl;
+    font-weight: $weight-bold;
+    color: $color-text;
+    margin: 0 0 $space-2 0;
+  }
+
+  &-subtitle {
+    font-size: $text-sm;
+    color: $color-text-secondary;
+    margin: 0 0 $space-6 0;
+  }
+
+  &-form {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &-field {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+
+    span {
+      font-size: $text-sm;
+      font-weight: $weight-medium;
+      color: $color-text;
+    }
+
+    input {
+      padding: $space-3;
+      font-size: $text-base;
+      color: $color-text;
+      background: $color-surface;
+      border: 1px solid $color-border;
+      border-radius: $radius-md;
+      transition: border-color $transition-fast;
+
+      &:focus {
+        outline: none;
+        border-color: $color-primary;
+      }
+    }
+  }
+
+  &-error {
+    font-size: $text-sm;
+    color: $color-text-secondary;
+  }
+
+  &-submit {
+    width: 100%;
+  }
+
+  &-toggle {
+    margin-top: $space-4;
+    text-align: center;
+    font-size: $text-sm;
+    color: $color-text-secondary;
+
+    &-link {
+      background: none;
+      border: none;
+      color: $color-primary;
+      font-weight: $weight-semibold;
+      cursor: pointer;
+      padding: 0 $space-1;
+    }
   }
 }
 </style>

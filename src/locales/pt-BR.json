@@ -96,6 +96,10 @@
     },
     "cta": "Fazer Upgrade Agora",
     "subscribe": "Assinar",
+    "status": {
+      "active": "Premium ativo",
+      "authenticated": "Usuário autenticado"
+    },
     "plans": {
       "title": "Escolha Seu Plano",
       "subtitle": "Tudo o que você precisa para organizar o que deseja assistir.",
@@ -154,6 +158,22 @@
         "exclusiveContent": "Conteúdo e recompensas exclusivas"
       }
     }
+  },
+  "auth": {
+    "loginTitle": "Entrar",
+    "loginSubtitle": "Entre para concluir sua assinatura Premium.",
+    "signupTitle": "Criar uma conta",
+    "signupSubtitle": "Crie uma conta para concluir sua assinatura Premium.",
+    "email": "E-mail",
+    "password": "Senha",
+    "login": "Entrar",
+    "signup": "Cadastrar",
+    "noAccount": "Não tem uma conta?",
+    "haveAccount": "Já tem uma conta?",
+    "close": "Fechar",
+    "confirmPassword": "Confirmar senha",
+    "emailConfirmation": "Quase lá! Verifique seu e-mail para confirmar sua conta e depois entre.",
+    "logout": "Sair / Trocar conta"
   },
   "roadmap": {
     "title": "O Que Vem Por Aí",
