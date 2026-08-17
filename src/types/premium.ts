@@ -101,7 +101,7 @@ export interface PremiumSubscriptionDTO {
 
 /** Body for (future) POST /v1/premium/checkout. */
 export interface CreateCheckoutRequest {
-  planId: Exclude<PremiumPlanId, 'free'>;
+  plan_id: Exclude<PremiumPlanId, 'free'>;
   /** Where Mercado Pago should redirect after approval. */
   successUrl?: string;
   /** Where Mercado Pago should redirect on failure/cancel. */
@@ -139,7 +139,7 @@ export interface PremiumService {
   /** Get the current user's subscription; null if never subscribed. */
   getSubscription(): Promise<PremiumSubscriptionDTO | null>;
   /** Create a Mercado Pago checkout for a paid plan. */
-  createCheckout(req: CreateCheckoutRequest): Promise<CheckoutResponse>;
+  createCheckout(req: CreateCheckoutRequest, accessToken: string): Promise<CheckoutResponse>;
   /** Cancel the active subscription. */
   cancelSubscription(): Promise<CancelSubscriptionResponse>;
 }

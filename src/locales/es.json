@@ -73,6 +73,10 @@
       "earlyAccess": "Acceso anticipado a nuevas funciones"
     },
     "cta": "Actualizar Ahora",
+    "status": {
+      "active": "Premium activo",
+      "authenticated": "Usuario autenticado"
+    },
     "plans": {
       "title": "Elige Tu Plan",
       "subtitle": "Todo lo que necesitas para organizar lo que quieres ver.",
@@ -131,6 +135,23 @@
         "exclusiveContent": "Contenido y recompensas exclusivas"
       }
     }
+  },
+  "auth": {
+    "loginTitle": "Iniciar sesión",
+    "loginSubtitle": "Inicia sesión para completar tu suscripción Premium.",
+    "signupTitle": "Crear una cuenta",
+    "signupSubtitle": "Crea una cuenta para completar tu suscripción Premium.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "noAccount": "¿No tienes una cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "close": "Cerrar",
+    "confirmPassword": "Confirmar contraseña",
+    "emailConfirmation": "¡Ya casi está! Revisa tu correo para confirmar tu cuenta y luego inicia sesión.",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "logout": "Cerrar sesión / Cambiar cuenta"
   },
   "roadmap": {
     "title": "Lo Que Viene Próximamente",

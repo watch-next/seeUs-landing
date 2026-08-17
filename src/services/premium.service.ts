@@ -23,7 +23,7 @@ import {
  *   annual   R$ 99,90/ano (economize R$ 18,90 = R$ 8,33/mês)
  *
  * Free plan is included so listPlans() returns the full matrix; UI filters
- * it out of checkout flows via CreateCheckoutRequest.planId typing.
+ * it out of checkout flows via CreateCheckoutRequest.plan_id typing.
  */
 const PLAN_CATALOG: PremiumPlanDTO[] = [
   {
@@ -75,9 +75,18 @@ export const premiumService: PremiumService = {
 
   async createCheckout(
     req: CreateCheckoutRequest,
+    accessToken: string,
   ): Promise<CheckoutResponse> {
     try {
-      const response = await httpClient.post<CheckoutResponse>('/premium/checkout', req);
+      const response = await httpClient.post<CheckoutResponse>(
+        '/premium/checkout',
+        req,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
       return response.data;
     } catch (error) {
       throw handleApiError(error);

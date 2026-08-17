@@ -96,6 +96,10 @@
     },
     "cta": "Upgrade Now",
     "subscribe": "Subscribe",
+    "status": {
+      "active": "Premium active",
+      "authenticated": "User authenticated"
+    },
     "plans": {
       "title": "Choose Your Plan",
       "subtitle": "Everything you need to organize what you want to watch.",
@@ -154,6 +158,23 @@
         "exclusiveContent": "Exclusive content & rewards"
       }
     }
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "loginSubtitle": "Sign in to complete your Premium subscription.",
+    "signupTitle": "Create an account",
+    "signupSubtitle": "Create an account to complete your Premium subscription.",
+    "email": "Email",
+    "password": "Password",
+    "login": "Sign in",
+    "signup": "Sign up",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "close": "Close",
+    "confirmPassword": "Confirm password",
+    "emailConfirmation": "Almost there! Check your email to confirm your account, then sign in.",
+    "passwordMismatch": "Passwords do not match.",
+    "logout": "Sign out / Switch account"
   },
   "roadmap": {
     "title": "What's Coming Next",

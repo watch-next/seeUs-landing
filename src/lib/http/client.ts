@@ -105,6 +105,12 @@ axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
 
+    // Caller-provided Authorization header (e.g. premium checkout with the
+    // Supabase App token) takes precedence over the landing token.
+    if (config.headers && config.headers.Authorization) {
+      return config;
+    }
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }

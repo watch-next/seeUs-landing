@@ -10,13 +10,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { supabaseApp } from '@/lib/supabase-app'
 import { commentsSupabase } from '@/services/comments/client'
 import { providerRegistry } from '@/services/comments/providers/registry'
 
 const router = useRouter()
 const RETURN_URL_KEY = 'comment_auth_return_url'
+const PREMIUM_PLAN_KEY = 'premium_pending_plan'
 
-const status = ref('Connecting your account...')
+const status = ref('Processing authentication...')
 const error = ref<string | null>(null)
 
 function readReturnUrl(): string {
@@ -58,9 +60,74 @@ function readOAuthHashSession():
   }
 }
 
+/**
+ * Attempt to handle premium email confirmation using supabaseApp.
+ * Returns true if successful, false if the code was not for premium email confirmation.
+ */
+async function handlePremiumEmailConfirmation(code: string): Promise<boolean> {
+  try {
+    const { data, error: exchangeError } = await supabaseApp.auth.exchangeCodeForSession(code)
+    if (exchangeError) {
+      // If the error indicates the code is not for this project/session type,
+      // return false to fall through to OAuth handling
+      if (
+        exchangeError.message.includes('invalid') ||
+        exchangeError.message.includes('expired') ||
+        exchangeError.message.includes('not found')
+      ) {
+        return false
+      }
+      throw exchangeError
+    }
+
+    if (!data.session?.user) {
+      return false
+    }
+
+    // Premium email confirmation successful!
+    status.value = 'Email confirmed. Redirecting to Premium...'
+
+    // Clear any OAuth return URL since we're in premium flow
+    try {
+      sessionStorage.removeItem(RETURN_URL_KEY)
+    } catch {
+      /* ignore */
+    }
+
+    // Get the pending plan ID and redirect to premium
+    const pendingPlanId = sessionStorage.getItem(PREMIUM_PLAN_KEY)
+    try {
+      sessionStorage.removeItem(PREMIUM_PLAN_KEY)
+    } catch {
+      /* ignore */
+    }
+
+    const targetUrl = pendingPlanId ? `/premium?plan=${pendingPlanId}` : '/premium'
+    await router.replace(targetUrl)
+    return true
+  } catch (e) {
+    // If it's a network error or unexpected error, re-throw
+    if (e instanceof Error && !e.message.includes('invalid') && !e.message.includes('expired') && !e.message.includes('not found')) {
+      throw e
+    }
+    return false
+  }
+}
+
 onMounted(async () => {
   try {
     const code = new URLSearchParams(window.location.search).get('code')
+    if (code) {
+      // First, try premium email confirmation flow
+      const premiumHandled = await handlePremiumEmailConfirmation(code)
+      if (premiumHandled) {
+        return // Successfully handled premium confirmation
+      }
+    }
+
+    // Fall back to OAuth flow for comments (Google/Facebook)
+    status.value = 'Connecting your account...'
+
     if (code) {
       const { error: exchangeError } = await commentsSupabase.auth.exchangeCodeForSession(code)
       if (exchangeError) {
@@ -127,7 +194,7 @@ onMounted(async () => {
 
     await router.replace(returnUrl)
   } catch (callbackError) {
-    console.error('[AuthCallbackPage] OAuth callback failed', callbackError)
+    console.error('[AuthCallbackPage] Callback failed', callbackError)
     clearUrlFragment()
     error.value = 'Unable to complete sign-in. Please try again.'
     status.value = 'Authentication failed.'
