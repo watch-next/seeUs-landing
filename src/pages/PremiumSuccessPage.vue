@@ -35,7 +35,7 @@ async function fetchStatus(): Promise<void> {
       return;
     }
 
-    const subscription = await premiumService.getSubscriptionStatus(preapprovalId.value, session.access_token);
+    const subscription = await premiumService.getSubscriptionStatus(preapprovalId.value);
     if (!subscription) {
       // No authenticated session or backend reported no subscription —
       // we cannot confirm activation, so surface an error.
