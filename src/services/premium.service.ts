@@ -87,7 +87,25 @@ export const premiumService: PremiumService = {
           },
         },
       );
-      return response.data;
+      // Map snake_case API response to camelCase frontend model
+      const data = response.data;
+      const initPoint = data.init_point ?? data.initPoint;
+      const sandboxInitPoint = data.sandbox_init_point ?? data.sandboxInitPoint;
+      const preapprovalId = data.preapproval_id ?? data.preapprovalId;
+
+      // Validate that we have an initPoint (required for checkout)
+      if (!initPoint) {
+        throw new Error('API did not provide a checkout URL (init_point missing from response)');
+      }
+
+      // Return the appropriate init point based on environment
+      return {
+        initPoint: import.meta.env.PROD
+          ? initPoint
+          : (sandboxInitPoint ?? initPoint),
+        sandboxInitPoint,
+        preapprovalId,
+      };
     } catch (error) {
       throw handleApiError(error);
     }
