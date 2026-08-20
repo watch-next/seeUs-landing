@@ -157,6 +157,39 @@
         "earlyAccess": "Acesso antecipado a novos recursos",
         "exclusiveContent": "Conteúdo e recompensas exclusivas"
       }
+    },
+    "success": {
+      "loading": {
+        "title": "Confirmando assinatura...",
+        "description": "Aguarde enquanto confirmamos o status do seu pagamento."
+      },
+      "confirmed": {
+        "title": "Pagamento confirmado!",
+        "description": "Sua assinatura Premium está ativa. Aproveite todos os benefícios!",
+        "continue": "Continuar para o Premium"
+      },
+      "pending": {
+        "title": "Pagamento pendente",
+        "description": "Seu pagamento ainda não foi confirmado. Tente novamente em instantes.",
+        "retry": "Verificar novamente"
+      },
+      "rejected": {
+        "title": "Pagamento não aprovado",
+        "description": "Não foi possível confirmar seu pagamento. Você pode tentar novamente na página do Premium."
+      },
+      "canceled": {
+        "title": "Assinatura cancelada",
+        "description": "Sua assinatura foi cancelada. Nenhum benefício Premium está ativo."
+      },
+      "errors": {
+        "title": "Algo deu errado",
+        "generic": "Ocorreu um erro ao verificar sua assinatura. Tente novamente.",
+        "noId": "Não foi possível identificar a assinatura neste link.",
+        "retry": "Tentar novamente"
+      },
+      "actions": {
+        "goToPremium": "Ir para o Premium"
+      }
     }
   },
   "auth": {

@@ -95,6 +95,7 @@ const axiosInstance: AxiosInstance = axios.create({
   timeout: httpConfig.timeout,
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
   },
 });
 

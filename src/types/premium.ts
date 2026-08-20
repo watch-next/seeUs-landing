@@ -145,6 +145,14 @@ export interface PremiumService {
   createCheckout(req: CreateCheckoutRequest, accessToken: string): Promise<CheckoutResponse>;
   /** Cancel the active subscription. */
   cancelSubscription(): Promise<CancelSubscriptionResponse>;
+  /**
+   * Query the backend for the subscription status tied to a Mercado Pago
+   * preapproval. Used by the /premium/success return page.
+   */
+  getSubscriptionStatus(
+    preapprovalId: string,
+    accessToken: string,
+  ): Promise<PremiumSubscriptionDTO | null>;
 }
 
 /** Typed error emitted by the placeholder service when backend is absent. */

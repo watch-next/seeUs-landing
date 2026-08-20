@@ -119,6 +119,26 @@ export const premiumService: PremiumService = {
       throw handleApiError(error);
     }
   },
+
+  async getSubscriptionStatus(
+    preapprovalId: string,
+    accessToken: string,
+  ): Promise<PremiumSubscriptionDTO | null> {
+    try {
+      const response = await httpClient.get<PremiumSubscriptionDTO>(
+        '/premium/subscription/status',
+        {
+          params: { preapproval_id: preapprovalId },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
 };
 
 export default premiumService;
