@@ -204,7 +204,6 @@ const {
   signIn: appSignIn,
   signUp: appSignUp,
   signOut: appSignOut,
-  getSession: getAppSession
 } = useSupabaseAppAuth()
 
 const {
@@ -365,13 +364,12 @@ async function handleCheckout(planId: Exclude<PremiumPlanId, 'free'>) {
       return
     }
 
-    const checkoutRequest: CreateCheckoutRequest = { plan_id: planId }
+    const checkoutRequest: CreateCheckoutRequest = { plan_id: planId, user_email: session.user.email || '' }
     const checkout = await createCheckout(checkoutRequest)
-    const initPoint = typeof checkout === 'string'
-      ? checkout
-      : (checkout as Partial<{ init_point?: string; sandbox_init_point?: string; checkout_url?: string }>).init_point
-        ?? (checkout as Partial<{ init_point?: string; sandbox_init_point?: string; checkout_url?: string }>).sandbox_init_point
-        ?? (checkout as Partial<{ init_point?: string; sandbox_init_point?: string; checkout_url?: string }>).checkout_url
+    const checkoutResponse = checkout as CheckoutResponse
+
+    // Use the initPoint already resolved by the service (environment-aware)
+    const initPoint = checkoutResponse.initPoint
 
     if (!initPoint) {
       throw new Error('Missing checkout URL in checkout response')
@@ -388,6 +386,9 @@ async function handleCheckout(planId: Exclude<PremiumPlanId, 'free'>) {
         error.value = 'Invalid plan selection. Please try again.'
       } else if (err.message.includes('Missing checkout URL')) {
         error.value = 'Checkout configuration error. Please contact support.'
+      } else if (err.message.includes('Mercado Pago plan ID configured')) {
+        // Backend configuration error - pass through as-is
+        error.value = err.message
       } else {
         error.value = 'Checkout failed. Please try again.'
       }
@@ -423,8 +424,8 @@ onMounted(() => {
 
   // Check for plan query parameter (e.g., after email confirmation redirect)
   const routePlan = new URLSearchParams(window.location.search).get('plan')
-  if (routePlan) {
-    pendingPlanId.value = routePlan as PremiumPlanId
+  if (routePlan && (routePlan === 'premium' || routePlan === 'premium-annual')) {
+    pendingPlanId.value = routePlan as Exclude<PremiumPlanId, 'free'>
     // Clean URL
     const cleanUrl = `${window.location.pathname}`
     window.history.replaceState({}, document.title, cleanUrl)

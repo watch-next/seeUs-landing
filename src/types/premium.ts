@@ -102,6 +102,7 @@ export interface PremiumSubscriptionDTO {
 /** Body for (future) POST /v1/premium/checkout. */
 export interface CreateCheckoutRequest {
   plan_id: Exclude<PremiumPlanId, 'free'>;
+  user_email: string;
   /** Where Mercado Pago should redirect after approval. */
   successUrl?: string;
   /** Where Mercado Pago should redirect on failure/cancel. */
@@ -112,10 +113,12 @@ export interface CreateCheckoutRequest {
 
 /** Response from (future) POST /v1/premium/checkout. */
 export interface CheckoutResponse {
-  /** Mercado Pago Checkout Pro init point to redirect the user to. */
+  /** Mercado Pago Preapproval init point to redirect the user to. */
   initPoint: string;
-  /** Mercado Pago preference/preapproval id. */
-  preferenceId: string;
+  /** Mercado Pago Preapproval init point for sandbox/test environment. */
+  sandboxInitPoint?: string | null;
+  /** Mercado Pago preapproval id. */
+  preapprovalId: string;
 }
 
 /** Response from (future) POST /v1/premium/subscription/cancel. */
