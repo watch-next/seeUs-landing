@@ -137,35 +137,38 @@
     },
     "success": {
       "loading": {
-        "title": "Confirmando suscripción...",
-        "description": "Espera mientras confirmamos el estado de tu pago."
+        "title": "Confirmando su suscripción...",
+        "description": ""
       },
       "confirmed": {
-        "title": "¡Pago confirmado!",
-        "description": "Tu suscripción Premium ya está activa. ¡Disfruta de todos los beneficios!",
-        "continue": "Continuar a Premium"
+        "title": "¡Suscripción confirmada!",
+        "description": "Su plan Premium está activo.",
+        "continue": "Continuar a la app"
       },
       "pending": {
-        "title": "Pago pendiente",
-        "description": "Tu pago aún no se ha confirmado. Inténtalo de nuevo en un momento.",
-        "retry": "Comprobar de nuevo"
-      },
-      "rejected": {
-        "title": "Pago no aprobado",
-        "description": "No pudimos confirmar tu pago. Puedes intentarlo de nuevo en la página de Premium."
+        "title": "Pago recibido.",
+        "description": "La confirmación de su suscripción aún está siendo procesada.",
+        "retry": "Intentar de nuevo"
       },
       "canceled": {
         "title": "Suscripción cancelada",
-        "description": "Tu suscripción ha sido cancelada. Ningún beneficio Premium está activo."
+        "description": "Su suscripción ha sido cancelada.",
+        "back": "Volver a los planes"
       },
-      "errors": {
-        "title": "Algo salió mal",
-        "generic": "Ocurrió un error al verificar tu suscripción. Inténtalo de nuevo.",
-        "noId": "No pudimos identificar la suscripción desde este enlace.",
+      "rejected": {
+        "title": "Suscripción rechazada",
+        "description": "No pudimos procesar su suscripción.",
+        "back": "Volver a los planes"
+      },
+      "error": {
+        "title": "No se pudo verificar su suscripción",
+        "description": "",
         "retry": "Intentar de nuevo"
       },
-      "actions": {
-        "goToPremium": "Ir a Premium"
+      "errors": {
+        "noId": "ID de preaprobación no encontrado.",
+        "generic": "Ocurrió un error al verificar su suscripción.",
+        "noSession": "Necesita iniciar sesión para verificar su suscripción."
       }
     }
   },
