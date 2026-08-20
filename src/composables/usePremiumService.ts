@@ -112,6 +112,22 @@ export function usePremiumService() {
   /**
    * Check if user has an active subscription
    */
+  async function getSubscriptionStatus(
+    preapprovalId: string,
+  ): Promise<PremiumSubscriptionDTO | null> {
+    try {
+      const { data: { session } } = await supabaseApp.auth.getSession()
+
+      if (!session?.access_token) {
+        return null
+      }
+
+      return premiumService.getSubscriptionStatus(preapprovalId, session.access_token)
+    } catch (error) {
+      throw error
+    }
+  }
+
   async function hasActiveSubscription(): Promise<boolean> {
     try {
       const subscription = await getSubscription()
@@ -126,6 +142,7 @@ export function usePremiumService() {
   return {
     listPlans,
     getSubscription,
+    getSubscriptionStatus,
     createCheckout,
     cancelSubscription,
     hasActiveSubscription,

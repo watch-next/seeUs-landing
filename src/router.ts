@@ -13,6 +13,7 @@ const FeedbackPage = () => import('./pages/FeedbackPage.vue')
 const BlogPage = () => import('./pages/BlogPage.vue')
 const BlogPostPage = () => import('./pages/BlogPostPage.vue')
 const AuthCallbackPage = () => import('./pages/AuthCallbackPage.vue')
+const PremiumSuccessPage = () => import('./pages/PremiumSuccessPage.vue')
 // Movies pages
 const MoviesPage = () => import('./pages/MoviesPage.vue')
 const MoviePage = () => import('./pages/MoviePage.vue')
@@ -80,6 +81,11 @@ const routes = [
         path: 'cookies-policy',
         name: 'CookiesPolicy',
         component: CookiesPolicy,
+      },
+      {
+        path: 'premium/success',
+        name: 'PremiumSuccess',
+        component: PremiumSuccessPage,
       },
     ],
   },

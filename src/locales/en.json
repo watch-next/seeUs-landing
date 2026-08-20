@@ -157,6 +157,39 @@
         "earlyAccess": "Early access to new features",
         "exclusiveContent": "Exclusive content & rewards"
       }
+    },
+    "success": {
+      "loading": {
+        "title": "Confirming subscription...",
+        "description": "Please wait while we confirm your payment status."
+      },
+      "confirmed": {
+        "title": "Payment confirmed!",
+        "description": "Your Premium subscription is now active. Enjoy all the benefits!",
+        "continue": "Continue to Premium"
+      },
+      "pending": {
+        "title": "Payment pending",
+        "description": "Your payment has not been confirmed yet. Please try again shortly.",
+        "retry": "Check again"
+      },
+      "rejected": {
+        "title": "Payment not approved",
+        "description": "We couldn't confirm your payment. You can try again on the Premium page."
+      },
+      "canceled": {
+        "title": "Subscription canceled",
+        "description": "Your subscription has been canceled. No Premium benefits are active."
+      },
+      "errors": {
+        "title": "Something went wrong",
+        "generic": "An error occurred while checking your subscription. Please try again.",
+        "noId": "We couldn't identify the subscription from this link.",
+        "retry": "Try again"
+      },
+      "actions": {
+        "goToPremium": "Go to Premium"
+      }
     }
   },
   "auth": {
