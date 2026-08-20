@@ -13,7 +13,7 @@ const DEFAULT_TIMEOUT = 30000; // 30 seconds
 
 /**
  * Load API URL from environment variable.
- * Falls back to localhost:8000 for development.
+ * Falls back to localhost:8001/api/v1 for development.
  */
 function getApiUrl(): string {
   const envUrl = import.meta.env.VITE_FASTAPI_URL;
@@ -22,9 +22,8 @@ function getApiUrl(): string {
     return envUrl.trim().replace(/\/$/, ''); // Remove trailing slash
   }
 
-  // Default for local development
-  console.warn('[HTTP Config] VITE_API_URL not set, using default http://localhost:8000/api/v1');
-  return import.meta.env.VITE_FASTAPI_URL || 'http://localhost:8001/api/v1';
+  // Default for local development (when not using ngrok)
+  return 'http://localhost:8001/api/v1';
 }
 
 /**
