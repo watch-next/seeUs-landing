@@ -160,35 +160,38 @@
     },
     "success": {
       "loading": {
-        "title": "Confirmando assinatura...",
-        "description": "Aguarde enquanto confirmamos o status do seu pagamento."
+        "title": "Confirmando sua assinatura...",
+        "description": ""
       },
       "confirmed": {
-        "title": "Pagamento confirmado!",
-        "description": "Sua assinatura Premium está ativa. Aproveite todos os benefícios!",
-        "continue": "Continuar para o Premium"
+        "title": "Assinatura confirmada!",
+        "description": "Seu plano Premium está ativo.",
+        "continue": "Continuar para o app"
       },
       "pending": {
-        "title": "Pagamento pendente",
-        "description": "Seu pagamento ainda não foi confirmado. Tente novamente em instantes.",
-        "retry": "Verificar novamente"
-      },
-      "rejected": {
-        "title": "Pagamento não aprovado",
-        "description": "Não foi possível confirmar seu pagamento. Você pode tentar novamente na página do Premium."
+        "title": "Pagamento recebido.",
+        "description": "A confirmação da assinatura ainda está sendo processada.",
+        "retry": "Tentar novamente"
       },
       "canceled": {
         "title": "Assinatura cancelada",
-        "description": "Sua assinatura foi cancelada. Nenhum benefício Premium está ativo."
+        "description": "Sua assinatura foi cancelada.",
+        "back": "Voltar aos planos"
       },
-      "errors": {
-        "title": "Algo deu errado",
-        "generic": "Ocorreu um erro ao verificar sua assinatura. Tente novamente.",
-        "noId": "Não foi possível identificar a assinatura neste link.",
+      "rejected": {
+        "title": "Assinatura rejeitada",
+        "description": "Não conseguimos processar sua assinatura.",
+        "back": "Voltar aos planos"
+      },
+      "error": {
+        "title": "Não foi possível verificar sua assinatura",
+        "description": "",
         "retry": "Tentar novamente"
       },
-      "actions": {
-        "goToPremium": "Ir para o Premium"
+      "errors": {
+        "noId": "ID de pré-aprovação não encontrado.",
+        "generic": "Ocorreu um erro ao verificar sua assinatura.",
+        "noSession": "Você precisa estar conectado para verificar sua assinatura."
       }
     }
   },

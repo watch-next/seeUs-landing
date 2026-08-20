@@ -160,35 +160,38 @@
     },
     "success": {
       "loading": {
-        "title": "Confirming subscription...",
-        "description": "Please wait while we confirm your payment status."
+        "title": "Confirming your subscription...",
+        "description": ""
       },
       "confirmed": {
-        "title": "Payment confirmed!",
-        "description": "Your Premium subscription is now active. Enjoy all the benefits!",
-        "continue": "Continue to Premium"
+        "title": "Subscription confirmed!",
+        "description": "Your Premium plan is active.",
+        "continue": "Continue to app"
       },
       "pending": {
-        "title": "Payment pending",
-        "description": "Your payment has not been confirmed yet. Please try again shortly.",
-        "retry": "Check again"
-      },
-      "rejected": {
-        "title": "Payment not approved",
-        "description": "We couldn't confirm your payment. You can try again on the Premium page."
-      },
-      "canceled": {
-        "title": "Subscription canceled",
-        "description": "Your subscription has been canceled. No Premium benefits are active."
-      },
-      "errors": {
-        "title": "Something went wrong",
-        "generic": "An error occurred while checking your subscription. Please try again.",
-        "noId": "We couldn't identify the subscription from this link.",
+        "title": "Payment received.",
+        "description": "Your subscription confirmation is still being processed.",
         "retry": "Try again"
       },
-      "actions": {
-        "goToPremium": "Go to Premium"
+      "canceled": {
+        "title": "Subscription cancelled",
+        "description": "Your subscription has been cancelled.",
+        "back": "Back to plans"
+      },
+      "rejected": {
+        "title": "Subscription rejected",
+        "description": "We could not process your subscription.",
+        "back": "Back to plans"
+      },
+      "error": {
+        "title": "Could not verify your subscription",
+        "description": "",
+        "retry": "Try again"
+      },
+      "errors": {
+        "noId": "Pre-approval ID not found.",
+        "generic": "An error occurred while verifying your subscription.",
+        "noSession": "You need to be signed in to verify your subscription."
       }
     }
   },

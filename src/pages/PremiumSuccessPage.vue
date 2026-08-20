@@ -2,11 +2,11 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { usePremiumService } from '@/composables/usePremiumService';
+import { supabaseApp } from '@/lib/supabase-app';
+import premiumService from '@/services/premium.service';
 
 const { t } = useI18n();
 const router = useRouter();
-const { getSubscriptionStatus } = usePremiumService();
 
 /**
  * Mercado Pago returns the user to this page after the preapproval flow,
@@ -25,17 +25,17 @@ const preapprovalId = computed(
 );
 
 async function fetchStatus(): Promise<void> {
-  if (!preapprovalId.value) {
-    // No preapproval id in the URL — treat as an invalid/erroneous return.
-    state.value = 'error';
-    errorMessage.value = t('premium.success.errors.noId');
-    loading.value = false;
-    return;
-  }
-
   loading.value = true;
   try {
-    const subscription = await getSubscriptionStatus(preapprovalId.value);
+    const { data: session } = await supabaseApp.auth.getSession()
+    if (!session?.user) {
+      state.value = 'error';
+      errorMessage.value = t('premium.success.errors.noSession');
+      loading.value = false;
+      return;
+    }
+
+    const subscription = await premiumService.getSubscriptionStatus(preapprovalId.value, session.access_token);
     if (!subscription) {
       // No authenticated session or backend reported no subscription —
       // we cannot confirm activation, so surface an error.
@@ -75,7 +75,6 @@ onMounted(() => {
   void fetchStatus();
 });
 </script>
-
 <template>
   <section class="success-page">
     <div class="success-card">
@@ -98,179 +97,43 @@ onMounted(() => {
 
       <!-- Pending payment -->
       <div v-else-if="state === 'pending'" class="success-state" data-testid="premium-success-pending">
-        <span class="state-icon state-icon--pending" aria-hidden="true">&#9889;</span>
+        <span class="state-icon state-icon--pending" aria-hidden="true">&#8634;</span>
         <h1 class="state-title">{{ t('premium.success.pending.title') }}</h1>
         <p class="state-description">{{ t('premium.success.pending.description') }}</p>
-        <div class="success-actions">
-          <button class="btn btn--primary" type="button" @click="retry">
-            {{ t('premium.success.pending.retry') }}
-          </button>
-          <button class="btn btn--secondary" type="button" @click="goToPremium">
-            {{ t('premium.success.actions.goToPremium') }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Rejected payment -->
-      <div v-else-if="state === 'rejected'" class="success-state" data-testid="premium-success-rejected">
-        <span class="state-icon state-icon--rejected" aria-hidden="true">&#10007;</span>
-        <h1 class="state-title">{{ t('premium.success.rejected.title') }}</h1>
-        <p class="state-description">{{ t('premium.success.rejected.description') }}</p>
-        <button class="btn btn--primary" type="button" @click="goToPremium">
-          {{ t('premium.success.actions.goToPremium') }}
+        <button class="btn btn--outline" type="button" @click="retry">
+          {{ t('premium.success.pending.retry') }}
         </button>
       </div>
 
-      <!-- Canceled subscription -->
+      <!-- Canceled -->
       <div v-else-if="state === 'canceled'" class="success-state" data-testid="premium-success-canceled">
-        <span class="state-icon state-icon--canceled" aria-hidden="true">&#10006;</span>
+        <span class="state-icon state-icon--error" aria-hidden="true">&#10006;</span>
         <h1 class="state-title">{{ t('premium.success.canceled.title') }}</h1>
         <p class="state-description">{{ t('premium.success.canceled.description') }}</p>
-        <button class="btn btn--primary" type="button" @click="goToPremium">
-          {{ t('premium.success.actions.goToPremium') }}
+        <button class="btn btn--outline" type="button" @click="goToPremium">
+          {{ t('premium.success.canceled.back') }}
+        </button>
+      </div>
+
+      <!-- Rejected -->
+      <div v-else-if="state === 'rejected'" class="success-state" data-testid="premium-success-rejected">
+        <span class="state-icon state-icon--error" aria-hidden="true">&#10006;</span>
+        <h1 class="state-title">{{ t('premium.success.rejected.title') }}</h1>
+        <p class="state-description">{{ t('premium.success.rejected.description') }}</p>
+        <button class="btn btn--outline" type="button" @click="goToPremium">
+          {{ t('premium.success.rejected.back') }}
         </button>
       </div>
 
       <!-- Error -->
-      <div v-else class="success-state" data-testid="premium-success-error">
-        <span class="state-icon state-icon--error" aria-hidden="true">&#9888;</span>
-        <h1 class="state-title">{{ t('premium.success.errors.title') }}</h1>
-        <p class="state-description">{{ errorMessage }}</p>
-        <div class="success-actions">
-          <button class="btn btn--primary" type="button" @click="retry">
-            {{ t('premium.success.errors.retry') }}
-          </button>
-          <button class="btn btn--secondary" type="button" @click="goToPremium">
-            {{ t('premium.success.actions.goToPremium') }}
-          </button>
-        </div>
+      <div v-else-if="state === 'error'" class="success-state" data-testid="premium-success-error">
+        <span class="state-icon state-icon--error" aria-hidden="true">&#10006;</span>
+        <h1 class="state-title">{{ t('premium.success.error.title') }}</h1>
+        <p class="state-description">{{ errorMessage.value || t('premium.success.error.description') }}</p>
+        <button class="btn btn--outline" type="button" @click="retry">
+          {{ t('premium.success.error.retry') }}
+        </button>
       </div>
     </div>
   </section>
 </template>
-
-<style scoped lang="scss">
-@use '@/style/variables' as *;
-
-.success-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: $space-16 $space-4;
-  min-height: 70vh;
-}
-
-.success-card {
-  width: 100%;
-  max-width: 480px;
-  padding: $space-12 $space-8;
-  background: $color-surface;
-  border: 1px solid $color-border;
-  border-radius: $radius-card-lg;
-  text-align: center;
-  box-shadow: $shadow-card;
-}
-
-.success-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $space-4;
-}
-
-.state-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: $radius-full;
-  font-size: 1.75rem;
-  font-weight: 700;
-}
-
-.state-icon--success {
-  color: $color-success;
-  border: 2px solid $color-success;
-}
-
-.state-icon--pending {
-  color: $color-warning;
-  border: 2px solid $color-warning;
-}
-
-.state-icon--rejected,
-.state-icon--error {
-  color: $color-error;
-  border: 2px solid $color-error;
-}
-
-.state-icon--spin {
-  border: 3px solid $color-border;
-  border-top-color: $color-primary;
-  border-radius: $radius-full;
-  animation: premium-spin 0.8s linear infinite;
-}
-
-@keyframes premium-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.state-title {
-  margin: 0;
-  color: $color-text;
-  font-family: $font-primary;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.state-description {
-  margin: 0;
-  color: $color-text-secondary;
-  font-family: $font-primary;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.success-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $space-3;
-  justify-content: center;
-  margin-top: $space-2;
-}
-
-.btn {
-  padding: $space-3 $space-6;
-  border-radius: $radius-button-lg;
-  font-family: $font-primary;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: $transition-base;
-
-  &--primary {
-    color: $color-text;
-    background: $color-primary;
-    border: 1px solid $color-primary;
-
-    &:hover {
-      background: $color-primary-hover;
-      border-color: $color-primary-hover;
-    }
-  }
-
-  &--secondary {
-    color: $color-text;
-    background: transparent;
-    border: 1px solid $color-border;
-
-    &:hover {
-      background: $color-surface-hover;
-      border-color: $color-text-secondary;
-    }
-  }
-}
-</style>
