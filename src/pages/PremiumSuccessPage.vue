@@ -2,7 +2,6 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { supabaseApp } from '@/lib/supabase-app';
 import premiumService from '@/services/premium.service';
 
 const { t } = useI18n();
@@ -27,18 +26,10 @@ const preapprovalId = computed(
 async function fetchStatus(): Promise<void> {
   loading.value = true;
   try {
-    const { data: session } = await supabaseApp.auth.getSession()
-    if (!session?.user) {
-      state.value = 'error';
-      errorMessage.value = t('premium.success.errors.noSession');
-      loading.value = false;
-      return;
-    }
-
+    // Backend endpoint /premium/subscription/status is public - no authentication required
     const subscription = await premiumService.getSubscriptionStatus(preapprovalId.value);
     if (!subscription) {
-      // No authenticated session or backend reported no subscription —
-      // we cannot confirm activation, so surface an error.
+      // Backend reported no subscription found for this preapproval_id
       state.value = 'error';
       errorMessage.value = t('premium.success.errors.generic');
       return;
@@ -50,7 +41,7 @@ async function fetchStatus(): Promise<void> {
     } else if (subscription.status === 'cancelled') {
       state.value = 'canceled';
     } else {
-      // Any other state (rejected, expired, paused) remains unchecked.
+      // other state (rejected, expired, paused) remains unchecked.
       state.value = 'rejected';
     }
   } catch (error) {
