@@ -81,8 +81,11 @@ onMounted(() => {
         <span class="state-icon state-icon--success" aria-hidden="true">&#10003;</span>
         <h1 class="state-title">{{ t('premium.success.confirmed.title') }}</h1>
         <p class="state-description">{{ t('premium.success.confirmed.description') }}</p>
-        <button class="btn btn--primary" type="button" @click="goToPremium">
-          {{ t('premium.success.confirmed.continue') }}
+        <a href="/#platforms" class="btn btn-primary success-state__actions--primary">
+          {{ t('premium.success.confirmed.downloadPlatform') }}
+        </a>
+        <button class="btn btn-ghost success-state__actions--secondary" type="button" @click="goToPremium">
+          {{ t('premium.success.confirmed.backToStart') }}
         </button>
       </div>
 
@@ -128,3 +131,29 @@ onMounted(() => {
     </div>
   </section>
 </template>
+
+<style lang="scss" scoped>
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  :deep(.btn) {
+    width: 100%;
+    max-width: 340px;
+    margin-top: 0.75rem;
+  }
+
+  :deep(.btn-primary) {
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    :deep(.btn) {
+      width: auto;
+      min-width: 220px;
+    }
+  }
+}
+</style>
