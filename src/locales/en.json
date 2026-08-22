@@ -3,7 +3,8 @@
     "home": "Home",
     "loading": "Loading...",
     "error": "An unexpected error occurred.",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "active": "Active"
   },
   "navigation": {
     "home": "Home",
@@ -98,7 +99,11 @@
     "subscribe": "Subscribe",
     "status": {
       "active": "Premium active",
-      "authenticated": "User authenticated"
+      "authenticated": "User authenticated",
+      "current": "Current plan"
+    },
+    "actions": {
+      "cancel": "Cancel subscription"
     },
     "plans": {
       "title": "Choose Your Plan",
@@ -166,7 +171,9 @@
       "confirmed": {
         "title": "Subscription confirmed!",
         "description": "Your Premium plan is active.",
-        "continue": "Continue to app"
+        "continue": "Continue to app",
+        "downloadPlatform": "Download / Access SeeUs",
+        "backToStart": "Back to start"
       },
       "pending": {
         "title": "Payment received.",

@@ -3,7 +3,8 @@
     "home": "Início",
     "loading": "Carregando...",
     "error": "Ocorreu um erro inesperado.",
-    "processing": "Processando..."
+    "processing": "Processando...",
+    "active": "Ativo"
   },
   "navigation": {
     "home": "Início",
@@ -98,7 +99,11 @@
     "subscribe": "Assinar",
     "status": {
       "active": "Premium ativo",
-      "authenticated": "Usuário autenticado"
+      "authenticated": "Usuário autenticado",
+      "current": "Plano atual"
+    },
+    "actions": {
+      "cancel": "Cancelar assinatura"
     },
     "plans": {
       "title": "Escolha Seu Plano",
@@ -166,7 +171,9 @@
       "confirmed": {
         "title": "Assinatura confirmada!",
         "description": "Seu plano Premium está ativo.",
-        "continue": "Continuar para o app"
+        "continue": "Continuar para o app",
+        "downloadPlatform": "Baixar / Acessar o SeeUs",
+        "backToStart": "Voltar ao início"
       },
       "pending": {
         "title": "Pagamento recebido.",

@@ -1,5 +1,6 @@
 {
   "common": {
+    "active": "Activo",
     "home": "Inicio",
     "loading": "Cargando...",
     "error": "Ocurrió un error inesperado.",
@@ -75,7 +76,11 @@
     "cta": "Actualizar Ahora",
     "status": {
       "active": "Premium activo",
-      "authenticated": "Usuario autenticado"
+      "authenticated": "Usuario autenticado",
+      "current": "Plan actual"
+    },
+    "actions": {
+      "cancel": "Cancelar suscripción"
     },
     "plans": {
       "title": "Elige Tu Plan",
@@ -143,7 +148,9 @@
       "confirmed": {
         "title": "¡Suscripción confirmada!",
         "description": "Su plan Premium está activo.",
-        "continue": "Continuar a la app"
+        "continue": "Continuar a la app",
+        "downloadPlatform": "Descargar / Acceder a SeeUs",
+        "backToStart": "Volver al inicio"
       },
       "pending": {
         "title": "Pago recibido.",
