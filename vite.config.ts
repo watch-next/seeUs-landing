@@ -302,7 +302,7 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       strictPort: false,
       allowedHosts: [
-        '79a9-2804-d59-aa1d-7a00-f92d-1f57-e5e3-821.ngrok-free.app',
+        '93d7-2804-d59-aa1d-7a00-f13f-4272-fe7f-c1bb.ngrok-free.app',
        
       ],
     }

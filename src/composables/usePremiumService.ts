@@ -102,7 +102,8 @@ export function usePremiumService() {
       }
 
       // Delegate to premiumService which handles the backend call
-      return premiumService.cancelSubscription()
+      // Pass the access token for authentication
+      return premiumService.cancelSubscription(session.access_token)
     } catch (error) {
       console.error('Error in cancelSubscription:', error)
       throw error

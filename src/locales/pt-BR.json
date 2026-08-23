@@ -169,11 +169,15 @@
         "description": ""
       },
       "confirmed": {
-        "title": "Assinatura confirmada!",
-        "description": "Seu plano Premium está ativo.",
+        "title": "Assinatura Confirmada",
+        "description": "Seja Bem vindo. Sua conta já está ativa e você tem o acesso total a todos os recursos do seu plano.",
         "continue": "Continuar para o app",
         "downloadPlatform": "Baixar / Acessar o SeeUs",
-        "backToStart": "Voltar ao início"
+        "backToStart": "Voltar ao início",
+        "summary": {
+          "plan": "Plano",
+          "renewal": "Renovação"
+        }
       },
       "pending": {
         "title": "Pagamento recebido.",
