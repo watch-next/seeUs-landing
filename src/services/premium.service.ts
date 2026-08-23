@@ -111,9 +111,17 @@ export const premiumService: PremiumService = {
     }
   },
 
-  async cancelSubscription(): Promise<CancelSubscriptionResponse> {
+  async cancelSubscription(accessToken: string): Promise<CancelSubscriptionResponse> {
     try {
-      const response = await httpClient.post<CancelSubscriptionResponse>('/premium/subscription/cancel');
+      const response = await httpClient.post<CancelSubscriptionResponse>(
+        '/premium/subscription/cancel',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
       return response.data;
     } catch (error) {
       throw handleApiError(error);

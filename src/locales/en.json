@@ -173,7 +173,11 @@
         "description": "Your Premium plan is active.",
         "continue": "Continue to app",
         "downloadPlatform": "Download / Access SeeUs",
-        "backToStart": "Back to start"
+        "backToStart": "Back to start",
+        "summary": {
+          "plan": "Plan",
+          "renewal": "Renewal"
+        }
       },
       "pending": {
         "title": "Payment received.",
