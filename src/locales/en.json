@@ -4,7 +4,8 @@
     "loading": "Loading...",
     "error": "An unexpected error occurred.",
     "processing": "Processing...",
-    "active": "Active"
+    "active": "Active",
+    "retry": "Try again"
   },
   "navigation": {
     "home": "Home",
@@ -100,7 +101,8 @@
     "status": {
       "active": "Premium active",
       "authenticated": "User authenticated",
-      "current": "Current plan"
+      "current": "Current plan",
+      "cancelled": "Subscription cancelled"
     },
     "actions": {
       "cancel": "Cancel subscription"
@@ -114,6 +116,7 @@
       "free": {
         "title": "Free",
         "description": "Everything you need to organize what you want to watch.",
+        "savings": "",
         "features": {
           "favorites": "Favorites",
           "unlimitedWatchlist": "Unlimited watchlist",

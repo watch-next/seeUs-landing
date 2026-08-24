@@ -4,7 +4,8 @@
     "loading": "Carregando...",
     "error": "Ocorreu um erro inesperado.",
     "processing": "Processando...",
-    "active": "Ativo"
+    "active": "Ativo",
+    "retry": "Tentar novamente"
   },
   "navigation": {
     "home": "Início",
@@ -100,7 +101,8 @@
     "status": {
       "active": "Premium ativo",
       "authenticated": "Usuário autenticado",
-      "current": "Plano atual"
+      "current": "Plano atual",
+      "cancelled": "Assinatura cancelada"
     },
     "actions": {
       "cancel": "Cancelar assinatura"
@@ -114,6 +116,7 @@
       "free": {
         "title": "Grátis",
         "description": "Tudo o que você precisa para organizar o que deseja assistir.",
+        "savings": "",
         "features": {
           "favorites": "Favoritos",
           "unlimitedWatchlist": "Watchlist ilimitada",
