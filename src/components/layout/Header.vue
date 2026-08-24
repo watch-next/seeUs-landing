@@ -43,7 +43,7 @@
             <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__drawer-link"
               @click="handleNavClick(link)">{{ link.label }}</router-link>
             <router-link v-else :to="link.href" class="header__drawer-link" @click="handleNavClick(link)">{{ link.label
-              }}</router-link>
+            }}</router-link>
           </li>
         </ul>
         <button class="header__login-btn" @click="handleLoginClick">{{ t('navigation.login') }}</button>
@@ -169,6 +169,7 @@ onUnmounted(() => {
 
 
   &__inner {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -178,7 +179,7 @@ onUnmounted(() => {
   &__brand {
     display: flex;
     align-items: center;
-    gap: $space-3;
+    min-width: 0;
   }
 
   &__actions {
@@ -194,24 +195,32 @@ onUnmounted(() => {
 
   &__logo-image {
     display: block;
-    height: 67px;
+    height: 72px;
     width: auto;
     object-fit: contain;
   }
 
   &__nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: $space-8;
+    gap: $space-4;
 
-    @media (max-width: 767px) {
-      display: none;
+    @media (max-width: 1100px) {
+      gap: $space-2;
     }
+
+    @media (max-width: 900px) {
+      gap: $space-1;
+    }
+
   }
 
   &__nav-list {
     display: flex;
-    gap: $space-6;
+    gap: $space-3;
   }
 
   &__nav-link {
@@ -363,6 +372,77 @@ onUnmounted(() => {
     }
   }
 
+  @media (max-width: 359px) {
+    &__inner {
+      gap: $space-2;
+    }
+
+    &__brand {
+      gap: $space-2;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+
+    &__logo-image {
+      height: 48px;
+    }
+
+    &__actions {
+      gap: $space-2;
+    }
+
+    &__lang-btn {
+      padding: $space-2 $space-3;
+    }
+  }
+
+  @media (max-width: 359px) {
+    &__brand {
+      gap: $space-2;
+    }
+
+    &__logo-image {
+      height: 40px;
+    }
+
+    &__actions {
+      gap: $space-2;
+    }
+
+    &__lang-btn {
+      padding: $space-2;
+    }
+
+    &__lang-dropdown {
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 359px) {
+    &__inner {
+      height: 56px;
+    }
+
+    &__brand {
+      gap: $space-2;
+    }
+
+    &__logo-image {
+      height: 48px;
+    }
+
+    &__actions {
+      gap: $space-2;
+    }
+
+    &__lang-btn {
+      padding: $space-2 $space-3;
+      font-size: $text-xs;
+      white-space: nowrap;
+      overflow-wrap: anywhere;
+    }
+  }
+
   &__lang-dropdown {
     position: absolute;
     top: calc(100% + #{$space-2});
@@ -394,6 +474,24 @@ onUnmounted(() => {
           background: rgba($color-primary, 0.1);
         }
       }
+    }
+  }
+
+  @media (max-width: 359px) {
+    &__brand {
+      gap: $space-2;
+    }
+
+    &__logo-image {
+      height: 48px;
+    }
+
+    &__actions {
+      gap: $space-3;
+    }
+
+    &__lang-btn {
+      padding: $space-2 $space-3;
     }
   }
 }
