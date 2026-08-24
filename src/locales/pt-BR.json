@@ -21,6 +21,9 @@
     "selectLanguage": "Selecionar idioma",
     "navigation": "Navegação"
   },
+  "header": {
+    "premium": "Premium"
+  },
   "hero": {
     "headline": "Seu Acompanhador Universal de Streaming.\nRastreie Filmes e Séries em Todo Lugar.",
     "subtitle": "Descubra, acompanhe e compartilhe filmes e séries no Netflix, Prime Video, Disney+ e muito mais. O ultimate movie tracker e guia de streaming—tudo em um só lugar.",

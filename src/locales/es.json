@@ -21,6 +21,9 @@
     "selectLanguage": "Seleccionar idioma",
     "navigation": "Navegación"
   },
+  "header": {
+    "premium": "Premium"
+  },
   "hero": {
     "headline": "Mira Junto.\nEn Cualquier Lugar, en Cualquier Momento.",
     "subtitle": "Descubre, sigue y comparte tus películas y series favoritas con amigos. Tu próxima maratón está a solo un clic de distancia.",

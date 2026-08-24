@@ -21,6 +21,9 @@
     "selectLanguage": "Select language",
     "navigation": "Navigation"
   },
+  "header": {
+    "premium": "Premium"
+  },
   "hero": {
     "headline": "Your Universal Streaming Watchlist.\nTrack Movies & Series Everywhere.",
     "subtitle": "Discover, track, and share movies and series across Netflix, Prime Video, Disney+, and more. The ultimate movie tracker and streaming guide—all in one place.",
