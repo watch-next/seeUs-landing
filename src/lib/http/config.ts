@@ -16,7 +16,7 @@ const DEFAULT_TIMEOUT = 30000; // 30 seconds
  * Falls back to localhost:8001/api/v1 for development.
  */
 function getApiUrl(): string {
-  const envUrl = import.meta.env.VITE_FASTAPI_URL;
+  const envUrl = import.meta.env.VITE_API_URL;
 
   if (envUrl) {
     return envUrl.trim().replace(/\/$/, ''); // Remove trailing slash
