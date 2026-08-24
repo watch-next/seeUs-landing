@@ -4,7 +4,8 @@
     "home": "Inicio",
     "loading": "Cargando...",
     "error": "Ocurrió un error inesperado.",
-    "processing": "Procesando..."
+    "processing": "Procesando...",
+    "retry": "Intentar de nuevo"
   },
   "navigation": {
     "home": "Inicio",
@@ -77,7 +78,8 @@
     "status": {
       "active": "Premium activo",
       "authenticated": "Usuario autenticado",
-      "current": "Plan actual"
+      "current": "Plan actual",
+      "cancelled": "Suscripción cancelada"
     },
     "actions": {
       "cancel": "Cancelar suscripción"
@@ -91,6 +93,7 @@
       "free": {
         "title": "Gratis",
         "description": "Todo lo que necesitas para organizar lo que quieres ver.",
+        "savings": "",
         "features": {
           "favorites": "Favoritos",
           "unlimitedWatchlist": "Lista ilimitada",
