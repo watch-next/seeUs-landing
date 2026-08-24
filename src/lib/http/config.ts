@@ -16,14 +16,14 @@ const DEFAULT_TIMEOUT = 30000; // 30 seconds
  * Falls back to localhost:8001/api/v1 for development.
  */
 function getApiUrl(): string {
-  const envUrl = import.meta.env.VITE_API_URL;
+  const envUrl = import.meta.env.VITE_FASTAPI_URL;
 
   if (envUrl) {
     return envUrl.trim().replace(/\/$/, ''); // Remove trailing slash
   }
 
   // Default for local development (when not using ngrok)
-  return envUrl || 'http://localhost:8001/api/v1';
+  return envUrl ||'http://localhost:8001/api/v1';
 }
 
 /**
@@ -38,5 +38,5 @@ export const httpConfig: HttpClientConfig = {
  * Check if API URL is configured.
  */
 export function isApiConfigured(): boolean {
-  return !!import.meta.env.VITE_API_URL;
+  return !!import.meta.env.VITE_FASTAPI_URL;
 }
