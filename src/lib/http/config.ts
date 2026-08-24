@@ -23,7 +23,7 @@ function getApiUrl(): string {
   }
 
   // Default for local development (when not using ngrok)
-  return envUrl || 'http://localhost:8001/api/v1';
+  return envUrl;
 }
 
 /**
