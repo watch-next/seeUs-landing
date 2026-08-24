@@ -302,8 +302,7 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       strictPort: false,
       allowedHosts: [
-        '93d7-2804-d59-aa1d-7a00-f13f-4272-fe7f-c1bb.ngrok-free.app',
-       
+        'https://see-us-landing.vercel.app',
       ],
     }
   }
