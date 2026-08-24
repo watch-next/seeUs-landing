@@ -23,7 +23,7 @@ function getApiUrl(): string {
   }
 
   // Default for local development (when not using ngrok)
-  return envUrl || 'http://localhost:8001/api/v1';
+  return envUrl;
 }
 
 /**
@@ -38,5 +38,5 @@ export const httpConfig: HttpClientConfig = {
  * Check if API URL is configured.
  */
 export function isApiConfigured(): boolean {
-  return !!import.meta.env.VITE_FASTAPI_URL;
+  return !!import.meta.env.VITE_API_URL;
 }
