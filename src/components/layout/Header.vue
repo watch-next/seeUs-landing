@@ -24,6 +24,10 @@
         </nav>
       </div>
       <div class="header__actions">
+        <!-- Premium badge (only shown when authenticated and active) -->
+        <div v-if="isPremiumActive && !isCheckingPremium" class="header__premium-badge">
+          <span class="badge">{{ t('header.premium') }}</span>
+        </div>
         <div class="header__lang-switcher">
           <button class="header__lang-btn" @click="toggleLangMenu" aria-label="Select language">
             {{languages.find(l => l.code === currentLang)?.label}}
@@ -55,15 +59,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
+import { usePremiumService } from '@/composables/usePremiumService'
 import { trackEvent, trackNavigation, trackLanguageChange } from '@/services/analytics'
 
 const { t, locale } = useI18n()
+const { isAuthenticated, isLoadingAuth } = useSupabaseAppAuth()
+const { hasActiveSubscription } = usePremiumService()
 
 const menuOpen = ref(false)
 const scrolled = ref(false)
 const showLangMenu = ref(false)
+const isPremiumActive = ref(false)
+const isCheckingPremium = ref(false)
 
 const headerNavigation = [
   { label: t('navigation.home'), href: '#hero' },
@@ -116,12 +126,35 @@ function selectLang(code: string) {
   trackEvent(trackLanguageChange(from, code))
 }
 
+// Premium badge logic
+async function checkPremiumStatus() {
+  if (!isAuthenticated.value || isLoadingAuth.value) {
+    isPremiumActive.value = false
+    return
+  }
+
+  isCheckingPremium.value = true
+  try {
+    isPremiumActive.value = await hasActiveSubscription()
+  } catch (error) {
+    console.error('[Header] Error checking premium status:', error)
+    isPremiumActive.value = false
+  } finally {
+    isCheckingPremium.value = false
+  }
+}
+
+watch([isAuthenticated, isLoadingAuth], () => {
+  checkPremiumStatus()
+})
+
 onMounted(() => {
   const savedLang = localStorage.getItem('watchnext-locale')
   if (savedLang && ['en', 'pt-BR', 'es'].includes(savedLang)) {
     locale.value = savedLang
     currentLang.value = savedLang
   }
+  checkPremiumStatus()
 })
 
 // Scroll detection for header animation
@@ -476,6 +509,27 @@ onUnmounted(() => {
       }
     }
   }
+
+&__premium-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  font-size: $text-sm;
+  font-weight: $weight-medium;
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-1;
+    padding: $space-1 $space-2;
+    background: $color-success;
+    color: $color-text;
+    border-radius: $radius-sm;
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    white-space: nowrap;
+  }
+}
 
   @media (max-width: 359px) {
     &__brand {
