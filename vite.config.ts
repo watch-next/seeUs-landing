@@ -302,7 +302,7 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       strictPort: false,
       allowedHosts: [
-        'https://see-us-landing.vercel.app',
+        'watch-next-api-6d43.onrender.com',
       ],
     }
   }
