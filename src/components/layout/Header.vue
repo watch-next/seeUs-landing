@@ -24,10 +24,6 @@
         </nav>
       </div>
       <div class="header__actions">
-        <!-- Premium badge (only shown when authenticated and active) -->
-        <div v-if="isPremiumActive && !isCheckingPremium" class="header__premium-badge">
-          <span class="badge">{{ t('header.premium') }}</span>
-        </div>
         <div class="header__lang-switcher">
           <button class="header__lang-btn" @click="toggleLangMenu" aria-label="Select language">
             {{languages.find(l => l.code === currentLang)?.label}}
@@ -48,6 +44,17 @@
               @click="handleNavClick(link)">{{ link.label }}</router-link>
             <router-link v-else :to="link.href" class="header__drawer-link" @click="handleNavClick(link)">{{ link.label
             }}</router-link>
+          </li>
+          <li class="header__drawer-item">
+            <router-link :to="{ path: '/about', isRoute: true }" class="header__drawer-link" @click="handleNavClick({ label: t('navigation.about'), href: '/about' })">{{ t('navigation.about') }}</router-link>
+          </li>
+          <li v-if="isPremiumActive && !isCheckingPremium" class="header__drawer-item">
+            <div class="header__premium-badge">
+              <span class="badge">
+                <span class="badge__status-dot" aria-hidden="true"></span>
+                {{ t('header.premium') }}
+              </span>
+            </div>
           </li>
         </ul>
         <button class="header__login-btn" @click="handleLoginClick">{{ t('navigation.login') }}</button>
@@ -78,7 +85,6 @@ const isCheckingPremium = ref(false)
 const headerNavigation = [
   { label: t('navigation.home'), href: '#hero' },
   { label: t('navigation.blog'), href: '/blog', isRoute: true },
-  { label: t('navigation.about'), href: '/about', isRoute: true },
 ]
 
 const drawerNavigation = [
@@ -429,6 +435,32 @@ onUnmounted(() => {
     }
   }
 
+  @media (min-width: 360px) and (max-width: 374px) {
+    &__inner {
+      gap: $space-2;
+      height: 56px;
+    }
+
+    &__brand {
+      gap: $space-2;
+    }
+
+    &__logo-image {
+      height: 48px;
+    }
+
+    &__actions {
+      gap: $space-2;
+    }
+
+    &__lang-btn {
+      padding: $space-2 $space-3;
+      font-size: $text-xs;
+      white-space: nowrap;
+      overflow-wrap: anywhere;
+    }
+  }
+
   @media (max-width: 359px) {
     &__brand {
       gap: $space-2;
@@ -522,7 +554,7 @@ onUnmounted(() => {
     align-items: center;
     gap: $space-1;
     padding: $space-1 $space-2;
-    background: $color-success;
+    background: transparent;
     color: $color-text;
     border-radius: $radius-sm;
     font-size: $text-sm;
