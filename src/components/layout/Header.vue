@@ -46,7 +46,7 @@
             }}</router-link>
           </li>
           <li class="header__drawer-item">
-            <router-link :to="{ path: '/about', isRoute: true }" class="header__drawer-link" @click="handleNavClick({ label: t('navigation.about'), href: '/about' })">{{ t('navigation.about') }}</router-link>
+            <router-link to="/about" class="header__drawer-link" @click="handleNavClick({ label: t('navigation.about'), href: '/about' })">{{ t('navigation.about') }}</router-link>
           </li>
           <li v-if="isPremiumActive && !isCheckingPremium" class="header__drawer-item">
             <div class="header__premium-badge">
@@ -341,12 +341,11 @@ onUnmounted(() => {
     position: fixed;
     top: 64px;
     left: 0;
-    bottom: 0;
-    width: min(280px, 84vw);
+    width: min(180px, 84vw);
     display: flex;
     flex-direction: column;
     gap: $space-6;
-    padding: $space-8;
+    padding: $space-8 $space-6;
     background: $color-surface;
     border-right: 1px solid $color-border;
     box-shadow: 8px 0 24px rgba(0, 0, 0, 0.3);
@@ -365,6 +364,9 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     gap: $space-4;
+    flex: 1;
+    min-height: 0;
+  
   }
 
   &__drawer-link {
@@ -414,6 +416,7 @@ onUnmounted(() => {
   @media (max-width: 359px) {
     &__inner {
       gap: $space-2;
+      height: 56px;
     }
 
     &__brand {
@@ -432,6 +435,13 @@ onUnmounted(() => {
 
     &__lang-btn {
       padding: $space-2 $space-3;
+      font-size: $text-xs;
+      white-space: nowrap;
+      overflow-wrap: anywhere;
+    }
+
+    &__lang-dropdown {
+      min-width: 0;
     }
   }
 
@@ -459,52 +469,9 @@ onUnmounted(() => {
       white-space: nowrap;
       overflow-wrap: anywhere;
     }
-  }
 
-  @media (max-width: 359px) {
-    &__brand {
-      gap: $space-2;
-    }
-
-    &__logo-image {
-      height: 40px;
-    }
-
-    &__actions {
-      gap: $space-2;
-    }
-
-    &__lang-btn {
-      padding: $space-2;
-    }
-
-    &__lang-dropdown {
-      min-width: 0;
-    }
-  }
-
-  @media (max-width: 359px) {
-    &__inner {
-      height: 56px;
-    }
-
-    &__brand {
-      gap: $space-2;
-    }
-
-    &__logo-image {
-      height: 48px;
-    }
-
-    &__actions {
-      gap: $space-2;
-    }
-
-    &__lang-btn {
-      padding: $space-2 $space-3;
-      font-size: $text-xs;
-      white-space: nowrap;
-      overflow-wrap: anywhere;
+    &__drawer {
+      width: min(180px, 84vw);
     }
   }
 
