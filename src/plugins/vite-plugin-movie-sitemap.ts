@@ -1,25 +1,49 @@
 import { Plugin } from 'vite';
+import { slugify } from '../lib/content/slugify';
 
 const SITE_URL = 'https://see-us-landing.vercel.app';
 
-/**
- * Generate slug from movie title (same logic as MoviePage)
- */
-function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim();
+interface MovieSitemapEntry {
+  id: string;
+  title: string;
+  updatedAt?: string;
+  release_date?: string | null;
 }
 
-function generateMovieSitemap(movies: Array<{ id: string; title: string; updatedAt?: string }>) {
+/**
+ * Extract the release year from the release date (YYYY-MM-DD).
+ * Returns undefined when the date is missing or not a plausible year,
+ * so a year is never invented for the URL.
+ */
+function extractYear(releaseDate?: string | null): string | undefined {
+  if (!releaseDate || typeof releaseDate !== 'string') return undefined;
+
+  const match = releaseDate.match(/^(\d{4})/);
+  if (!match) return undefined;
+
+  const year = parseInt(match[1], 10);
+  const currentYear = new Date().getFullYear();
+  if (year < 1800 || year > currentYear + 5) return undefined;
+
+  return String(year);
+}
+
+/**
+ * Build the canonical movie path: /movies/{id}-{slug}-{year}
+ * The year segment is only appended when a valid release date exists,
+ * falling back to the app's existing {id}-{slug} format otherwise.
+ */
+function buildMoviePath(movie: MovieSitemapEntry): string {
+  const slug = slugify(movie.title);
+  const year = extractYear(movie.release_date);
+  return `${SITE_URL}/movies/${movie.id}-${slug}${year ? `-${year}` : ''}`;
+}
+
+function generateMovieSitemap(movies: MovieSitemapEntry[]) {
   const urls = movies.map((movie) => {
-    const slug = generateSlug(movie.title);
     const lastmod = movie.updatedAt || new Date().toISOString().split('T')[0];
     return `  <url>
-    <loc>${SITE_URL}/movies/${slug}</loc>
+    <loc>${buildMoviePath(movie)}</loc>
     <lastmod>${lastmod}</lastmod>
   </url>`;
   });
@@ -30,7 +54,7 @@ ${urls.join('\n')}
 </urlset>`;
 }
 
-async function fetchMoviesForSitemap(): Promise<Array<{ id: string; title: string; updatedAt?: string }>> {
+async function fetchMoviesForSitemap(): Promise<MovieSitemapEntry[]> {
   const baseUrl = process.env.VITE_API_URL;
 
   if (!baseUrl) {
@@ -38,7 +62,7 @@ async function fetchMoviesForSitemap(): Promise<Array<{ id: string; title: strin
     return [];
   }
 
-  const movies: Array<{ id: string; title: string; updatedAt?: string }> = [];
+  const movies: MovieSitemapEntry[] = [];
   const pagesToFetch = 5; // Fetch first 5 pages (up to 100 movies)
 
   console.log('[Movie Sitemap Plugin] Fetching movies from backend...');
@@ -61,13 +85,17 @@ async function fetchMoviesForSitemap(): Promise<Array<{ id: string; title: strin
       }
 
       for (const movie of data.data) {
-        if (movie.title && typeof movie.title === 'string') {
-          movies.push({
-            id: movie.id || String(movie.tmdb_id),
-            title: movie.title,
-            updatedAt: new Date().toISOString().split('T')[0],
-          });
+        // A valid id is required to avoid malformed URLs such as /movies--title-year
+        const id = movie.tmdb_id || movie.id;
+        if (!movie.title || typeof movie.title !== 'string' || !id) {
+          continue;
         }
+        movies.push({
+          id: String(id),
+          title: movie.title,
+          updatedAt: new Date().toISOString().split('T')[0],
+          release_date: movie.release_date,
+        });
       }
 
       if (data.total_pages && page >= data.total_pages) {
