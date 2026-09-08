@@ -29,6 +29,13 @@
         />
       </div>
 
+      <!-- Adsterra Banner -->
+      <AdsterraBanner
+        format="468x60"
+        mobile-format="320x50"
+        class="blog-page__adsterra"
+      />
+
       <BlogList
         :posts="posts"
         :filtered-slugs="paginatedSlugs"
@@ -86,6 +93,7 @@ import BlogList from '@/components/blog/BlogList.vue'
 import BlogCategories from '@/components/blog/BlogCategories.vue'
 import BlogTags from '@/components/blog/BlogTags.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
+import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 
 const { t } = useI18n()
 

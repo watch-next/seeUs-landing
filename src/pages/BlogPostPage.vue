@@ -67,6 +67,13 @@
         class="blog-post__ad"
       />
 
+      <!-- Adsterra Banner após a imagem de capa -->
+      <AdsterraBanner
+        format="468x60"
+        mobile-format="320x50"
+        class="blog-post__adsterra"
+      />
+
       <div class="blog-post__content">
         <MarkdownRenderer :content="post.content" />
       </div>
@@ -120,6 +127,7 @@ import BlogMeta from '@/components/blog/BlogMeta.vue'
 import BlogCard from '@/components/blog/BlogCard.vue'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
+import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import CommentSection from '@/components/comments/CommentSection.vue'
 
 const { t } = useI18n()
