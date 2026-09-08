@@ -30,11 +30,7 @@
       </div>
 
       <!-- Adsterra Banner -->
-      <AdsterraBanner
-        format="468x60"
-        mobile-format="320x50"
-        class="blog-page__adsterra"
-      />
+      <AdsterraBanner class="blog-page__adsterra" />
 
       <BlogList
         :posts="posts"

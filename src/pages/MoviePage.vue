@@ -117,11 +117,7 @@
       </div>
 
       <!-- Adsterra Banner -->
-      <AdsterraBanner
-        format="300x250"
-        mobile-format="320x50"
-        class="movie-page__adsterra"
-      />
+      <AdsterraBanner class="movie-page__adsterra" />
 
       <!-- AdSense Banner -->
       <AdSenseAd
