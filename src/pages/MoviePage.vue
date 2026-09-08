@@ -34,16 +34,16 @@
 
           <div class="movie-page__meta">
             <span class="movie-page__year" v-if="releaseYear">
-              📅 {{ releaseYear }}
+              {{ releaseYear }}
             </span>
             <span class="movie-page__duration" v-if="movie.runtime_minutes">
-              ⏱️ {{ formatDuration(movie.runtime_minutes) }}
+              {{ formatDuration(movie.runtime_minutes) }}
             </span>
             <span class="movie-page__status" v-if="movie.status">
               {{ movie.status }}
             </span>
             <span class="movie-page__popularity" v-if="movie.popularity">
-              🔥 {{ t('movie.popularity') }}: {{ movie.popularity.toFixed(0) }}
+              {{ t('movie.popularity') }}: {{ movie.popularity.toFixed(0) }}
             </span>
           </div>
 
@@ -107,12 +107,11 @@
           <span class="external-link-icon">↗</span>
         </a>
         <button
+          type="button"
           @click="showWatchModal = true"
           class="movie-page__btn movie-page__btn--watch"
-          :disabled="isLoadingProviders"
         >
-          <span v-if="isLoadingProviders">{{ t('common.loading') }}...</span>
-          <span v-else>📺 {{ t('movie.watch_now') }}</span>
+          📺 {{ t('movie.watch_now') }}
         </button>
       </div>
 
@@ -144,46 +143,109 @@
     <p>{{ error === 404 ? t('movie.not_found') : t('common.error') }}</p>
   </div>
 
-  <!-- Watch Providers Modal -->
-  <div v-if="showWatchModal" class="modal-overlay" @click="showWatchModal = false">
-    <div class="modal" @click.stop>
+  <!-- Watch Dialog: platform choice + streaming providers -->
+  <div
+    v-if="showWatchModal"
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="watch-modal-title"
+    @click="showWatchModal = false"
+    @keydown.esc="showWatchModal = false"
+  >
+    <div class="modal modal--watch" @click.stop>
       <div class="modal__header">
-        <h2>{{ t('movie.watch_now') }}</h2>
-        <button class="modal__close" @click="showWatchModal = false">×</button>
+        <div>
+          <h2 id="watch-modal-title">{{ t('movie.watch_dialog.title') }}</h2>
+          <p class="modal__subtitle">{{ t('movie.watch_dialog.subtitle') }}</p>
+        </div>
+        <button
+          class="modal__close"
+          :aria-label="t('movie.watch_dialog.close')"
+          @click="showWatchModal = false"
+        >
+          ×
+        </button>
       </div>
 
       <div class="modal__content">
-        <div v-if="isLoadingProviders" class="providers__loading">
-          <p>{{ t('common.loading') }}...</p>
-        </div>
-
-        <div v-else-if="!hasProviders" class="providers__empty">
-          <p>{{ t('movie.no_providers') }}</p>
-        </div>
-
-        <div v-else class="providers">
-          <section
-            v-for="section in providerSections"
-            :key="section.key"
-            class="providers__category"
+        <!-- Platform choice -->
+        <div class="watch-platforms">
+          <a
+            v-if="downloadWeb"
+            :href="downloadWeb"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="watch-platform watch-platform--web"
           >
-            <h3>{{ t(section.label) }}</h3>
-            <div class="providers__grid">
-              <div
-                v-for="provider in section.providers"
-                :key="provider.id"
-                class="provider__card"
-              >
-                <img
-                  v-if="provider.logo_path"
-                  :src="getProviderImageUrl(provider.logo_path)"
-                  :alt="provider.name"
-                  class="provider__logo"
-                />
-                <span class="provider__name">{{ provider.name }}</span>
-              </div>
+            <span class="watch-platform__icon" aria-hidden="true">🌐</span>
+            <span class="watch-platform__body">
+              <span class="watch-platform__title">{{ t('movie.watch_dialog.web_app') }}</span>
+              <span class="watch-platform__desc">{{ t('movie.watch_dialog.web_app_desc') }}</span>
+            </span>
+          </a>
+
+          <a
+            v-if="downloadAndroid"
+            :href="downloadAndroid"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="watch-platform watch-platform--android"
+          >
+            <span class="watch-platform__icon" aria-hidden="true">▶</span>
+            <span class="watch-platform__body">
+              <span class="watch-platform__title">{{ t('movie.watch_dialog.android_app') }}</span>
+              <span class="watch-platform__desc">{{ t('movie.watch_dialog.android_app_desc') }}</span>
+            </span>
+          </a>
+        </div>
+
+        <!-- Streaming providers (collapsible) -->
+        <div class="watch-streams">
+          <button
+            type="button"
+            class="watch-streams__toggle"
+            :aria-expanded="showStreams"
+            @click="showStreams = !showStreams"
+          >
+            <span>{{ t('watch.stream_label') }}</span>
+            <span class="watch-streams__chevron" aria-hidden="true">{{ showStreams ? '▲' : '▼' }}</span>
+          </button>
+
+          <div v-show="showStreams">
+            <div v-if="isLoadingProviders" class="providers__loading">
+              <p>{{ t('common.loading') }}...</p>
             </div>
-          </section>
+
+            <div v-else-if="!hasProviders" class="providers__empty">
+              <p>{{ t('movie.no_providers') }}</p>
+            </div>
+
+            <div v-else class="providers">
+              <section
+                v-for="section in providerSections"
+                :key="section.key"
+                class="providers__category"
+              >
+                <h3>{{ t(section.label) }}</h3>
+                <div class="providers__grid">
+                  <div
+                    v-for="provider in section.providers"
+                    :key="provider.id"
+                    class="provider__card"
+                  >
+                    <img
+                      v-if="provider.logo_path"
+                      :src="getProviderImageUrl(provider.logo_path)"
+                      :alt="provider.name"
+                      class="provider__logo"
+                    />
+                    <span class="provider__name">{{ provider.name }}</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -202,9 +264,19 @@ import Chip from '@/components/Chip.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import { getMovieByUuid, getTmdbImageUrl, type MovieDetail } from '@/services/movie.service'
+import { loadDownloadConfig } from '@/services/downloads'
 
 const { t } = useI18n()
 const route = useRoute()
+
+// Watch dialog state: platform choice first, streaming providers below (collapsible)
+const showStreams = ref(true)
+const downloadWeb = ref('')
+const downloadAndroid = ref('')
+loadDownloadConfig().then((cfg) => {
+  downloadWeb.value = cfg.web || ''
+  downloadAndroid.value = cfg.android || ''
+})
 
 // Composable para watch providers
 const {
@@ -376,6 +448,11 @@ useSeo({
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
       gap: 1.5rem;
+
+      .movie-page__poster {
+        max-width: 300px;
+        margin: 0 auto;
+      }
     }
   }
 
@@ -438,15 +515,12 @@ useSeo({
   }
 
   &__title {
-    font-size: 2.5rem;
+    font-size: clamp(1.9rem, 1.5vw + 1.4rem, 2.5rem);
     font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
     margin: 0;
-    line-height: 1.2;
-
-    @media (max-width: 768px) {
-      font-size: 1.75rem;
-    }
+    line-height: 1.15;
   }
 
   &__original-title {
@@ -629,6 +703,11 @@ useSeo({
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
 
     &--homepage {
       background: var(--brand-primary);
@@ -852,6 +931,175 @@ useSeo({
     text-align: center;
     font-weight: 500;
     line-height: 1.3;
+  }
+}
+
+// Watch dialog: platform-first layout
+.modal--watch {
+  max-width: 560px;
+}
+
+.modal__subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.watch-platforms {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.watch-platform {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    background: var(--bg-tertiary);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  &__desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  &--web {
+    background: var(--brand-accent);
+    box-shadow: 0 6px 18px rgba(var(--brand-accent-rgb), 0.25);
+
+    &:hover {
+      box-shadow: 0 8px 22px rgba(var(--brand-accent-rgb), 0.4);
+    }
+
+    .watch-platform__title {
+      color: #fff;
+    }
+
+    .watch-platform__desc {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .watch-platform__icon {
+      background: rgba(255, 255, 255, 0.18);
+    }
+  }
+
+  &--android {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+.watch-streams {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.625rem 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  }
+
+  &__chevron {
+    font-size: 0.75rem;
+  }
+}
+
+// Mobile dialog: near full width, bottom sheet feel
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 0.75rem;
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modal__header {
+    padding: 1.25rem 1.25rem 1rem;
+  }
+
+  .modal__content {
+    padding: 1.25rem;
+  }
+
+  .watch-platform {
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-platform,
+  .watch-streams__toggle,
+  .provider__card,
+  .movie-page__btn {
+    transition: none;
   }
 }
 </style>

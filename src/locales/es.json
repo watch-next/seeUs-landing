@@ -426,7 +426,20 @@
       "ads": "Con Anuncios",
       "rent": "Alquilar",
       "buy": "Comprar"
+    },
+    "watch_dialog": {
+      "title": "Mira en SeeUs",
+      "subtitle": "Elige cómo quieres ver",
+      "web_app": "Abrir Web App",
+      "web_app_desc": "Mira directamente en tu navegador.",
+      "android_app": "Obtén la App de Android",
+      "android_app_desc": "Disfruta SeeUs en tu dispositivo Android.",
+      "close": "Cerrar",
+      "toggle_providers": "Plataformas de streaming"
     }
+  },
+  "watch": {
+    "stream_label": "Plataformas de streaming"
   },
   "waitlist": {
     "error": {

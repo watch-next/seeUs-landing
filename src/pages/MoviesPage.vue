@@ -31,18 +31,45 @@
       />
 
       <!-- Loading State -->
-      <div v-if="loading" class="movies-page__empty">
-        <p>{{ t('common.loading') }}</p>
+      <div
+        v-if="loading"
+        class="movies-page__grid"
+        aria-hidden="true"
+      >
+        <div
+          v-for="n in 8"
+          :key="n"
+          class="movie-card movie-card--skeleton"
+        >
+          <div class="movie-card__poster-wrapper">
+            <div class="movie-card__skeleton-block"></div>
+          </div>
+          <div class="movie-card__content">
+            <div class="movie-card__skeleton-line movie-card__skeleton-line--title"></div>
+            <div class="movie-card__skeleton-line movie-card__skeleton-line--meta"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Error State -->
       <div v-else-if="error" class="movies-page__empty">
-        <p>Unable to load movies. Please try again later.</p>
+        <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
+        <p class="movies-page__empty-title">Unable to load movies</p>
+        <p class="movies-page__empty-text">Please try again later.</p>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="loadMovies"
+        >
+          Try again
+        </button>
       </div>
 
       <!-- Empty State -->
       <div v-else-if="movies.length === 0" class="movies-page__empty">
-        <p>No movies available yet. Check back soon!</p>
+        <div class="movies-page__empty-icon" aria-hidden="true">∅</div>
+        <p class="movies-page__empty-title">No movies available yet</p>
+        <p class="movies-page__empty-text">Check back soon!</p>
       </div>
 
       <!-- Movies Grid -->
@@ -68,6 +95,11 @@
             <h2 class="movie-card__title">{{ movie.title }}</h2>
             <p class="movie-card__meta">
               <span class="movie-card__year">{{ movie.releaseYear }}</span>
+              <span
+                v-if="movie.duration"
+                class="movie-card__separator"
+                aria-hidden="true"
+              >·</span>
               <span v-if="movie.duration" class="movie-card__duration">
                 {{ formatDuration(movie.duration) }}
               </span>
@@ -110,10 +142,10 @@ function formatDuration(minutes: number): string {
 }
 
 // Load movies
-onMounted(async () => {
+async function loadMovies() {
+  loading.value = true
+  error.value = false
   try {
-    loading.value = true
-    error.value = false
     movies.value = await getMovies()
   } catch (err) {
     error.value = true
@@ -121,7 +153,9 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
-})
+}
+
+onMounted(loadMovies)
 
 // SEO
 // SEO setup (run during component setup, before async operations)
@@ -134,49 +168,81 @@ useSeo({
 
 <style lang="scss" scoped>
 .movies-page {
-  padding: 2rem 0 4rem;
+  padding: clamp(1rem, 2vw + 0.5rem, 2rem) 0 4rem;
 
   &__header {
-    margin-bottom: 3rem;
+    margin-bottom: clamp(1.5rem, 3vw + 0.5rem, 3rem);
   }
 
   &__breadcrumb {
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(0.75rem, 1vw + 0.5rem, 1.5rem);
+    font-size: clamp(0.875rem, 2vw, 0.975rem);
   }
 
   &__title {
-    font-size: 2.5rem;
+    font-size: clamp(1.6rem, 2.5vw + 1rem, 2.75rem);
     font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
     margin: 0 0 0.5rem 0;
-    line-height: 1.2;
-
-    @media (max-width: 768px) {
-      font-size: 1.75rem;
-    }
+    line-height: 1.15;
   }
 
   &__subtitle {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 1vw + 0.8rem, 1.25rem);
     color: var(--text-secondary);
     margin: 0;
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
 
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
+    @media (min-width: 520px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (min-width: 992px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (min-width: 1440px) {
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 
+  &__ad {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
   &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 30vh;
+    padding: clamp(3rem, 8vw, 5rem) 1rem;
     text-align: center;
-    padding: 4rem 0;
     color: var(--text-secondary);
+  }
+
+  &__empty-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.6;
+  }
+
+  &__empty-title {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  &__empty-text {
+    margin: 0 0 0.5rem;
   }
 }
 
@@ -189,9 +255,14 @@ useSeo({
   text-decoration: none;
   color: inherit;
 
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   }
 
   &__poster-wrapper {
@@ -205,41 +276,61 @@ useSeo({
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease;
   }
 
   &:hover &__poster {
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
 
   &__rating {
     position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: rgba(0, 0, 0, 0.8);
+    top: 0.625rem;
+    right: 0.625rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(11, 13, 45, 0.85);
     color: var(--accent);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    font-size: clamp(0.75rem, 0.5vw + 0.65rem, 0.875rem);
     font-weight: 600;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+
+    @media (max-width: 480px) {
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.1875rem 0.5rem;
+    }
   }
 
   &__content {
-    padding: 1.25rem;
+    padding: clamp(0.75rem, 1vw, 1.25rem);
   }
 
   &__title {
-    font-size: 1.15rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    min-height: calc(1.3em * 2);
+    font-size: clamp(1rem, 0.6vw + 0.9rem, 1.25rem);
     font-weight: 600;
+    line-height: 1.3;
     color: var(--text-primary);
     margin: 0 0 0.5rem 0;
-    line-height: 1.3;
+    overflow-wrap: anywhere;
   }
 
   &__meta {
     display: flex;
-    gap: 1rem;
-    font-size: 0.875rem;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    font-size: clamp(0.75rem, 0.4vw + 0.7rem, 0.875rem);
     color: var(--text-secondary);
     margin-bottom: 0.75rem;
   }
@@ -247,6 +338,11 @@ useSeo({
   &__year,
   &__duration {
     font-weight: 500;
+  }
+
+  &__separator {
+    color: var(--text-secondary);
+    opacity: 0.5;
   }
 
   &__description {
@@ -273,6 +369,57 @@ useSeo({
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 500;
+  }
+
+  // Skeleton loading
+  &--skeleton {
+    pointer-events: none;
+  }
+
+  &__skeleton-block {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__skeleton-line {
+    border-radius: 6px;
+  }
+
+  &__skeleton-line--title {
+    height: 1.05rem;
+    width: 85%;
+    margin-bottom: 0.5rem;
+  }
+
+  &__skeleton-line--meta {
+    height: 0.85rem;
+    width: 45%;
+  }
+
+  &__skeleton-block,
+  &__skeleton-line {
+    background: linear-gradient(90deg, var(--bg-tertiary) 25%, #1a1f55 50%, var(--bg-tertiary) 75%);
+    background-size: 200% 100%;
+    animation: movieCardShimmer 1.4s linear infinite;
+  }
+}
+
+@keyframes movieCardShimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .movie-card,
+  .movie-card__poster,
+  .movie-card__skeleton-block,
+  .movie-card__skeleton-line {
+    animation: none;
+    transition: none;
   }
 }
 
