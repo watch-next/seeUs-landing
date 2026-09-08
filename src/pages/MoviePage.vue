@@ -116,6 +116,13 @@
         </button>
       </div>
 
+      <!-- Adsterra Banner -->
+      <AdsterraBanner
+        format="300x250"
+        mobile-format="320x50"
+        class="movie-page__adsterra"
+      />
+
       <!-- AdSense Banner -->
       <AdSenseAd
         format="auto"
@@ -197,6 +204,7 @@ import { useWatchProviders } from '@/composables/useWatchProviders'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Chip from '@/components/Chip.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
+import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import { getMovieByUuid, getTmdbImageUrl, type MovieDetail } from '@/services/movie.service'
 
 const { t } = useI18n()
