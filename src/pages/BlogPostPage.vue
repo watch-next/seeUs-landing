@@ -68,11 +68,7 @@
       />
 
       <!-- Adsterra Banner após a imagem de capa -->
-      <AdsterraBanner
-        format="468x60"
-        mobile-format="320x50"
-        class="blog-post__adsterra"
-      />
+      <AdsterraBanner class="blog-post__adsterra" />
 
       <div class="blog-post__content">
         <MarkdownRenderer :content="post.content" />
