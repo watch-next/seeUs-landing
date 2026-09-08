@@ -5,6 +5,7 @@
     <PlatformsSection />
     <PremiumSection />
     <RoadmapSection />
+    <AdsterraNative />
     <NewsletterSection />
     <FaqSection />
   </div>
@@ -18,4 +19,5 @@ import PlatformsSection from '@/sections/PlatformsSection.vue'
 import PremiumSection from '@/sections/PremiumSection.vue'
 import RoadmapSection from '@/sections/RoadmapSection.vue'
 import NewsletterSection from '@/sections/NewsletterSection.vue'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 </script>
