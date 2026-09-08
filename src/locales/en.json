@@ -460,7 +460,20 @@
       "ads": "Ads",
       "rent": "Rent",
       "buy": "Buy"
+    },
+    "watch_dialog": {
+      "title": "Watch on SeeUs",
+      "subtitle": "Choose how you'd like to watch",
+      "web_app": "Open Web App",
+      "web_app_desc": "Watch directly in your browser.",
+      "android_app": "Get the Android App",
+      "android_app_desc": "Enjoy SeeUs on your Android device.",
+      "close": "Close",
+      "toggle_providers": "Streaming providers"
     }
+  },
+  "watch": {
+    "stream_label": "Streaming providers"
   },
   "waitlist": {
     "error": {
