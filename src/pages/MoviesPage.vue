@@ -10,63 +10,30 @@
 
       <!-- Search Box -->
       <div class="movies-page__search">
-       
+
         <div class="movies-page__search-field">
-          <svg
-            class="movies-page__search-icon"
-            aria-hidden="true"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+          <svg class="movies-page__search-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
-          <input
-            id="movie-search"
-            v-model="searchQuery"
-            type="search"
-            :placeholder="t('movies.searchPlaceholder')"
-            autocomplete="off"
-            class="movies-page__search-input"
-          />
-          <button
-            v-if="searchQuery"
-            type="button"
-            class="movies-page__search-clear"
-            @click="searchQuery = ''"
-            :aria-label="t('movies.clearSearch')"
-          >
-            <svg
-              aria-hidden="true"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+          <input id="movie-search" v-model="searchQuery" type="search" :placeholder="t('movies.searchPlaceholder')"
+            autocomplete="off" class="movies-page__search-input" />
+          <button v-if="searchQuery" type="button" class="movies-page__search-clear" @click="searchQuery = ''"
+            :aria-label="t('movies.clearSearch')">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
       </div>
+      <!-- Adsterra Banner -->
+      <AdsterraBanner class="movies-page__adsterra" />
 
-        <!-- AdSense Banner -->
-      <AdSenseAd
-        format="auto"
-        layout="in-feed"
-        responsive
-        class="movies-page__ad"
-      />
+      <!-- AdSense Banner -->
+      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
 
       <!-- Search Results Counter -->
       <div v-if="movies.length > 0 && searchQuery" class="movies-page__search-results">
@@ -74,18 +41,10 @@
       </div>
 
       <!-- Loading State -->
-      <div
-        v-if="loading"
-        class="movies-page__loading"
-        aria-live="polite"
-      >
+      <div v-if="loading" class="movies-page__loading" aria-live="polite">
         <p class="movies-page__loading-message">{{ t('movies.loading') }}</p>
         <div class="movies-page__grid" aria-hidden="true">
-          <div
-            v-for="n in 8"
-            :key="n"
-            class="movie-card movie-card--skeleton"
-          >
+          <div v-for="n in 8" :key="n" class="movie-card movie-card--skeleton">
             <div class="movie-card__poster-wrapper">
               <div class="movie-card__skeleton-block"></div>
             </div>
@@ -104,11 +63,7 @@
         <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
         <p class="movies-page__empty-title">{{ t('movies.loadError') }}</p>
         <p class="movies-page__empty-text">{{ t('movies.loadErrorDescription') }}</p>
-        <button
-          type="button"
-          class="btn btn-secondary"
-          @click="loadMovies"
-        >
+        <button type="button" class="btn btn-secondary" @click="loadMovies">
           {{ t('movies.retry') }}
         </button>
       </div>
@@ -122,19 +77,9 @@
 
       <!-- Movies Grid -->
       <div v-else class="movies-page__grid">
-        <router-link
-          v-for="movie in filteredMovies"
-          :key="movie.slug"
-          :to="`/movies/${movie.slug}`"
-          class="movie-card"
-        >
+        <router-link v-for="movie in filteredMovies" :key="movie.slug" :to="`/movies/${movie.slug}`" class="movie-card">
           <div class="movie-card__poster-wrapper">
-            <img
-              :src="movie.cover"
-              :alt="movie.title"
-              class="movie-card__poster"
-              loading="lazy"
-            />
+            <img :src="movie.cover" :alt="movie.title" class="movie-card__poster" loading="lazy" />
             <div v-if="formatRating(movie.rating)" class="movie-card__rating">
               <span aria-hidden="true">★</span>
               <span>{{ formatRating(movie.rating) }}</span>
@@ -144,16 +89,12 @@
             <h2 class="movie-card__title">{{ movie.title }}</h2>
             <p class="movie-card__meta">
               <span class="movie-card__year">{{ movie.releaseYear }}</span>
-              <span
-                v-if="movie.duration"
-                class="movie-card__separator"
-                aria-hidden="true"
-              >·</span>
+              <span v-if="movie.duration" class="movie-card__separator" aria-hidden="true">·</span>
               <span v-if="movie.duration" class="movie-card__duration">
                 {{ formatDuration(movie.duration) }}
               </span>
             </p>
-    <!--        <p class="movie-card__description">{{ movie.description }}</p>
+            <!--        <p class="movie-card__description">{{ movie.description }}</p>
             <div v-if="movie.tags && movie.tags.length" class="movie-card__tags">
               <span
                 v-for="tag in movie.tags.slice(0, 3)"
@@ -177,6 +118,7 @@ import { getMovies } from '@/lib/content/MovieRepository'
 import type { Movie } from '@/lib/content/types'
 import { useSeo } from '@/composables/useSeo'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
+import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 
 const { t } = useI18n()
@@ -528,12 +470,14 @@ useSeo({
   from {
     background-position: 200% 0;
   }
+
   to {
     background-position: -200% 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .movie-card,
   .movie-card__poster,
   .movie-card__skeleton-block,
