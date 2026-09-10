@@ -90,7 +90,7 @@ export async function getMovieByUuid(uuid: string): Promise<Movie | null> {
 
   try {
     // Fetch movie details from backend using UUID
-    const movieDetail: BackendMovieDetail = await api.fetchMovieDetails(uuid);
+    const movieDetail: BackendMovieDetail = await api.fetchMovieDetails(Number(uuid));
 
     // Map to domain model
     const movie: Movie = {

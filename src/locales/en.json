@@ -475,6 +475,22 @@
   "watch": {
     "stream_label": "Streaming providers"
   },
+  "movies": {
+    "title": "Movies",
+    "subtitle": "Discover our curated collection of films",
+    "search": "Search movies",
+    "searchPlaceholder": "Search movies...",
+    "clearSearch": "Clear search",
+    "loading": "Loading movies...",
+    "loadError": "Unable to load movies",
+    "loadErrorDescription": "We couldn't load the movie catalog right now. Please try again.",
+    "retry": "Try again",
+    "noMoviesFound": "No movies found",
+    "noMoviesFoundDescription": "We couldn't find any movies matching \"{query}\".",
+    "noMoviesAvailable": "No movies available yet",
+    "noMoviesAvailableDescription": "Check back soon!",
+    "searchResults": "{count} results for \"{query}\""
+  },
   "waitlist": {
     "error": {
       "emailRequired": "Email is required",
