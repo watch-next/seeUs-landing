@@ -7,7 +7,16 @@
         <h1 class="movies-page__title">{{ t('movies.title') }}</h1>
         <p class="movies-page__subtitle">{{ t('movies.subtitle') }}</p>
       </header>
+  <!-- Adsterra Banner -->
+      <AdsterraBanner class="movies-page__adsterra" />
 
+        <!-- AdSense Banner -->
+      <AdSenseAd
+        format="auto"
+        layout="in-feed"
+        responsive
+        class="movies-page__ad"
+      />
       <!-- Search Box -->
       <div class="movies-page__search">
        
@@ -60,13 +69,7 @@
         </div>
       </div>
 
-        <!-- AdSense Banner -->
-      <AdSenseAd
-        format="auto"
-        layout="in-feed"
-        responsive
-        class="movies-page__ad"
-      />
+    
 
       <!-- Search Results Counter -->
       <div v-if="movies.length > 0 && searchQuery" class="movies-page__search-results">
@@ -177,6 +180,7 @@ import { getMovies } from '@/lib/content/MovieRepository'
 import type { Movie } from '@/lib/content/types'
 import { useSeo } from '@/composables/useSeo'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
+import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 
 const { t } = useI18n()
