@@ -107,6 +107,11 @@
           </div>
         </router-link>
       </div>
+       <!-- Adsterra Banner -->
+      <AdsterraBanner class="movies-page__adsterra" />
+
+      <!-- AdSense Banner -->
+      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
     </div>
   </div>
 </template>
@@ -510,11 +515,15 @@ useSeo({
   padding: 0 1rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
-  max-width: 520px;
+  max-width: 100%;
 
   &:focus-within {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(114, 85, 255, 0.2);
+  }
+
+  @media (min-width: 576px) {
+    max-width: none;
   }
 }
 
@@ -539,6 +548,15 @@ useSeo({
   &::placeholder {
     color: var(--text-secondary);
     opacity: 0.6;
+  }
+
+  &::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  &::-webkit-search-decoration {
+    -webkit-appearance: none;
   }
 }
 
