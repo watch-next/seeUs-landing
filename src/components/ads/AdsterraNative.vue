@@ -75,7 +75,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: $space-6 $space-4;
+  padding: 1.5rem 1rem;
   overflow: hidden;
   box-sizing: border-box;
 }

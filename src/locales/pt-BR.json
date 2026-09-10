@@ -468,6 +468,23 @@
   "watch": {
     "stream_label": "Provedores de streaming"
   },
+  "movies": {
+    "title": "Filmes",
+    "subtitle": "Descubra nossa coleção de filmes",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar filmes...",
+    "clearSearch": "Limpar busca",
+    "loading": "Carregando filmes...",
+    "loadError": "Não foi possível carregar os filmes",
+    "loadErrorDescription": "Não conseguimos carregar o catálogo de filmes no momento. Tente novamente.",
+    "retry": "Tentar novamente",
+    "noMoviesFound": "Nenhum filme encontrado",
+    "noMoviesFoundDescription": "Não encontramos filmes correspondentes a \"{query}\".",
+    "noMoviesAvailable": "Nenhum filme disponível ainda",
+    "noMoviesAvailableDescription": "Volte em breve!",
+    "searchResults": "{count} resultados para \"{query}\"",
+    "totalResults": "{count} filmes"
+  },
   "waitlist": {
     "error": {
       "emailRequired": "E-mail é obrigatório",

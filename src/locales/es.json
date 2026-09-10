@@ -441,6 +441,22 @@
   "watch": {
     "stream_label": "Plataformas de streaming"
   },
+  "movies": {
+    "title": "Películas",
+    "subtitle": "Descubre nuestra colección de películas",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar películas...",
+    "clearSearch": "Limpiar búsqueda",
+    "loading": "Cargando películas...",
+    "loadError": "No se pudieron cargar las películas",
+    "loadErrorDescription": "No pudimos cargar el catálogo de películas en este momento. Inténtalo de nuevo.",
+    "retry": "Intentar de nuevo",
+    "noMoviesFound": "No se encontraron películas",
+    "noMoviesFoundDescription": "No pudimos encontrar ninguna película que coincida con \"{query}\".",
+    "noMoviesAvailable": "No hay películas disponibles aún",
+    "noMoviesAvailableDescription": "¡Vuelve pronto!",
+    "searchResults": "{count} resultados para \"{query}\""
+  },
   "waitlist": {
     "error": {
       "emailRequired": "El correo electrónico es obligatorio",

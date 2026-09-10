@@ -67,7 +67,26 @@
               :label="genre.name"
             />
           </div>
-
+           <!-- Action Buttons (aligned in block) -->
+      <div class="movie-page__actions">
+        <a
+          v-if="movie.homepage"
+          :href="movie.homepage"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="movie-page__btn movie-page__btn--homepage"
+        >
+          🌐 {{ t('movie.official_site') }}
+          <span class="external-link-icon">↗</span>
+        </a>
+        <button
+          type="button"
+          @click="showWatchModal = true"
+          class="movie-page__btn movie-page__btn--watch"
+        >
+          📺 {{ t('movie.watch_now') }}
+        </button>
+      </div>
           <!-- Synopsis -->
           <section class="movie-page__synopsis">
             <h2 class="synopsis__title">{{ t('movie.synopsis') }}</h2>
@@ -94,26 +113,7 @@
         </div>
       </header>
 
-      <!-- Action Buttons (aligned in block) -->
-      <div class="movie-page__actions">
-        <a
-          v-if="movie.homepage"
-          :href="movie.homepage"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="movie-page__btn movie-page__btn--homepage"
-        >
-          🌐 {{ t('movie.official_site') }}
-          <span class="external-link-icon">↗</span>
-        </a>
-        <button
-          type="button"
-          @click="showWatchModal = true"
-          class="movie-page__btn movie-page__btn--watch"
-        >
-          📺 {{ t('movie.watch_now') }}
-        </button>
-      </div>
+     
 
       <!-- Adsterra Banner -->
       <AdsterraBanner class="movie-page__adsterra" />
@@ -324,11 +324,11 @@ const canonicalUrl = computed(() => {
 })
 
 const posterUrl = computed(() => {
-  return getTmdbImageUrl(movie.value?.poster_path, 'w500')
+  return getTmdbImageUrl(movie.value?.poster_path ?? null, 'w500')
 })
 
 const backdropUrl = computed(() => {
-  return getTmdbImageUrl(movie.value?.backdrop_path, 'original')
+  return getTmdbImageUrl(movie.value?.backdrop_path ?? null, 'original')
 })
 
 const releaseYear = computed(() => {
@@ -396,7 +396,7 @@ watchEffect(() => {
 // Setup SEO
 const seoTitle = computed(() => movie.value ? `${movie.value.title} | SeeUs` : 'Movies | SeeUs')
 const seoDescription = computed(() => movie.value?.overview || 'Discover our curated collection of films')
-const seoImage = computed(() => getTmdbImageUrl(movie.value?.poster_path))
+const seoImage = computed(() => getTmdbImageUrl(movie.value?.poster_path ?? null))
 const ogType = computed(() => 'video.movie')
 
 // Movie JSON-LD structured data
