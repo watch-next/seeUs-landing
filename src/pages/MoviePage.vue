@@ -51,8 +51,15 @@
           <div class="movie-page__ratings" v-if="movie">
             <div class="movie-page__rating-circle" :style="{
               background: ratingPercentage !== null
-                ? `conic-gradient(from -90deg, #3E8BFF 0%, #3E8BFF ${ratingPercentage}%, #1A1F55 ${ratingPercentage}%, #1A1F55 100%)`
-                : undefined
+                ? `conic-gradient(
+                    from -90deg,
+                    #3E8BFF 0%,
+                    #3E8BFF ${ratingPercentage}%,
+                    #1A1F55 ${ratingPercentage}%,
+                    #1A1F55 100%
+                  )`
+                : '#1A1F55',
+              boxShadow: ratingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
             }">
               <div class="movie-page__rating-circle__inner">
                 <span class="movie-page__rating-circle__rating-value">{{ ratingPercentage !== null ?
@@ -769,13 +776,13 @@ useSeo({
 }
 
 .movie-page__rating-circle {
-  width: 80px;
-  height: 80px;
-  min-width: 80px;
-  min-height: 80px;
-  max-width: 80px;
-  max-height: 80px;
-  flex: 0 0 80px;
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  min-height: 72px;
+  max-width: 72px;
+  max-height: 72px;
+  flex: 0 0 72px;
   display: grid;
   place-items: center;
   position: relative;
@@ -785,10 +792,10 @@ useSeo({
 }
 
 .movie-page__rating-circle__inner {
-  width: 70px;
-  height: 70px;
-  min-width: 70px;
-  min-height: 70px;
+  width: 62px;
+  height: 62px;
+  min-width: 62px;
+  min-height: 62px;
   border-radius: 50%;
   background: var(--bg-primary);
   display: grid;
@@ -805,11 +812,13 @@ useSeo({
   white-space: nowrap;
   color: var(--text-primary);
   font-weight: 700;
+  font-size: 1rem;
 }
 
 .movie-page__ratings__count {
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 0.9rem;
+  font-weight: 400;
   margin: 0;
   padding: 0;
   white-space: nowrap;
@@ -1189,6 +1198,14 @@ useSeo({
     &__empty {
       font-size: 0.875rem;
     }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .watch-platform,
+  .watch-streams__toggle,
+  .provider__card,
+  .movie-page__btn {
+    transition: none;
   }
 }
 </style>
