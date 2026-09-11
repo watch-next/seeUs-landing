@@ -475,7 +475,10 @@
     },
     "trailer_dialog": {
       "close": "Close trailer"
-    }
+    },
+    "watchlist": "Watch list",
+    "favorite": "Favorite",
+    "interest": "Interest"
   },
   "watch": {
     "stream_label": "Streaming providers"
