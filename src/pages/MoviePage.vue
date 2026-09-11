@@ -3,12 +3,11 @@
     <div class="container movie-page__container">
       <!-- Breadcrumb -->
       <Breadcrumbs :items="breadcrumbItems" />
+       <!-- Adsterra Banner -->
+          <AdsterraBanner class="movie-page__adsterra" />
 
-      <!-- Adsterra Banner -->
-      <AdsterraBanner class="movie-page__adsterra" />
-
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
+          <!-- AdSense Banner -->
+          <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
       <!-- Header with Poster and Backdrop -->
       <header class="movie-page__header">
         <div class="movie-page__media">
@@ -71,6 +70,25 @@
             </div>
           </div>
 
+          <!-- Action Buttons -->
+          <div class="movie-page__action-buttons" v-if="movie">
+            <button type="button" @click="toggleAction('watchlist')" :aria-pressed="activeActions.watchlist"
+              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.watchlist }]">
+              <img :src="`/assets/icons/discover.svg`" alt="" class="action-icon" aria-hidden="true" />
+              <span class="action-label">{{ t('movie.watchlist') }}</span>
+            </button>
+            <button type="button" @click="toggleAction('favorite')" :aria-pressed="activeActions.favorite"
+              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.favorite }]">
+              <img :src="`/assets/icons/rating.svg`" alt="" class="action-icon" aria-hidden="true" />
+              <span class="action-label">{{ t('movie.favorite') }}</span>
+            </button>
+            <button type="button" @click="toggleAction('interest')" :aria-pressed="activeActions.interest"
+              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.interest }]">
+              <img :src="`/assets/icons/track.svg`" alt="" class="action-icon" aria-hidden="true" />
+              <span class="action-label">{{ t('movie.interest') }}</span>
+            </button>
+          </div>
+
           <!-- Genres as Chips -->
           <div class="movie-page__genres" v-if="movie.genres && movie.genres.length">
             <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
@@ -87,11 +105,7 @@
             </button>
           </div>
 
-          <!-- Adsterra Banner -->
-          <AdsterraBanner class="movie-page__adsterra" />
-
-          <!-- AdSense Banner -->
-          <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
+         
 
           <!-- Synopsis -->
           <section class="movie-page__synopsis">
@@ -211,11 +225,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watchEffect, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { generateMovieSchema } from '@/lib/seo'
 import { useSeo } from '@/composables/useSeo'
 import { useWatchProviders } from '@/composables/useWatchProviders'
+import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Chip from '@/components/Chip.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
@@ -391,7 +406,7 @@ watch(movie, (newMovie) => {
         const progress = Math.min(elapsed / duration, 1)
         // Use ease-out cubic for smooth animation
         const easedProgress = 1 - Math.pow(1 - progress, 3)
-        animatedRatingPercentage.value = Math.round(easedProgress * actualRating)
+        animatedRatingPercentage.value = Math.round(easedProgress * actualRating!)
 
         if (progress < 1) {
           requestAnimationFrame(animatePercentage)
@@ -418,6 +433,28 @@ watchEffect(() => {
     loadProviders(currentMovieId)
   }
 })
+
+// Handle login-required actions
+const { isAuthenticated, signIn } = useSupabaseAppAuth()
+
+function handleLoginRequired() {
+  if (!isAuthenticated.value) {
+    // Trigger login using the existing authentication system
+    signIn('guest@seeus.com', 'temporary123') // This will show the login modal or redirect
+  }
+}
+
+// Independent visual toggle state for the three action buttons (UI-only, no persistence)
+const activeActions = ref<{ watchlist: boolean; favorite: boolean; interest: boolean }>({
+  watchlist: false,
+  favorite: false,
+  interest: false,
+})
+
+function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
+  handleLoginRequired()
+  activeActions.value[action] = !activeActions.value[action]
+}
 
 // Setup SEO
 const seoTitle = computed(() => movie.value ? `${movie.value.title} | SeeUs` : 'Movies | SeeUs')
@@ -878,6 +915,102 @@ useSeo({
   margin: 0;
   padding: 0;
   white-space: nowrap;
+}
+
+/* Action Buttons */
+.movie-page__action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.movie-page__action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.movie-page__action-btn .action-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.movie-page__action-btn .action-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Tint icon to SeeUs primary color */
+  filter: brightness(0) saturate(100%) invert(22%) sepia(11%) saturate(449%) hue-rotate(190deg) brightness(95%) contrast(102%);
+  transition: filter 0.2s ease;
+}
+
+.movie-page__action-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent);
+}
+
+.movie-page__action-btn:hover .action-icon img {
+  /* Lighter icon on hover */
+  filter: brightness(0) saturate(100%) invert(22%) sepia(11%) saturate(449%) hue-rotate(190deg) brightness(105%) contrast(102%);
+}
+
+.movie-page__action-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.movie-page__action-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.movie-page__action-btn:active {
+  transform: translateY(0);
+}
+
+.movie-page__action-btn--active {
+  background: var(--bg-tertiary);
+  border-color: var(--accent);
+  color: var(--brand-accent);
+  box-shadow: 0 0 0 1px inset var(--accent);
+}
+
+.movie-page__action-btn--active .action-icon img {
+  filter: brightness(0) saturate(100%) invert(43%) sepia(81%) saturate(2061%) hue-rotate(210deg) brightness(100%) contrast(101%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .movie-page__action-btn {
+    transition: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-page__action-buttons {
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .movie-page__action-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
 }
 
 @keyframes shimmer {
