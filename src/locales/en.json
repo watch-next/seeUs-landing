@@ -452,6 +452,8 @@
     "budget": "Budget",
     "revenue": "Revenue",
     "official_site": "Official Site",
+    "trailer": "Trailer",
+    "trailer_unavailable": "Trailer unavailable",
     "not_found": "Movie not found.",
     "no_providers": "No streaming providers available for your region.",
     "providers": {
@@ -470,6 +472,9 @@
       "android_app_desc": "Enjoy SeeUs on your Android device.",
       "close": "Close",
       "toggle_providers": "Streaming providers"
+    },
+    "trailer_dialog": {
+      "close": "Close trailer"
     }
   },
   "watch": {

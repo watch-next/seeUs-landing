@@ -445,6 +445,8 @@
     "budget": "Orçamento",
     "revenue": "Receita",
     "official_site": "Site Oficial",
+    "trailer": "Trailer",
+    "trailer_unavailable": "Trailer indisponível",
     "not_found": "Filme não encontrado.",
     "no_providers": "Nenhum provedor de streaming disponível para sua região.",
     "providers": {
@@ -463,6 +465,9 @@
       "android_app_desc": "Aproveite o SeeUs no seu dispositivo Android.",
       "close": "Fechar",
       "toggle_providers": "Provedores de streaming"
+    },
+    "trailer_dialog": {
+      "close": "Fechar trailer"
     }
   },
   "watch": {

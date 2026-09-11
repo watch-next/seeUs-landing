@@ -4,26 +4,26 @@
       <!-- Breadcrumb -->
       <Breadcrumbs :items="breadcrumbItems" />
 
+      <!-- Adsterra Banner -->
+      <AdsterraBanner class="movie-page__adsterra" />
+
+      <!-- AdSense Banner -->
+      <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
       <!-- Header with Poster and Backdrop -->
       <header class="movie-page__header">
         <div class="movie-page__media">
           <div class="movie-page__poster">
-            <img
-              v-if="posterUrl"
-              :src="posterUrl"
-              :alt="movie.title"
-              class="movie-page__poster-img"
-              loading="lazy"
-            />
+            <img v-if="posterUrl" :src="posterUrl" :alt="movie.title" class="movie-page__poster-img" loading="lazy" />
             <div v-else class="movie-page__poster-placeholder">
               <span>🎬</span>
               <p>{{ t('movie.no_poster') }}</p>
             </div>
           </div>
-          
+
         </div>
 
         <div class="movie-page__info">
+
           <h1 class="movie-page__title">{{ movie.title }}</h1>
 
           <p v-if="movie.original_title && movie.original_title !== movie.title" class="movie-page__original-title">
@@ -48,45 +48,51 @@
           </div>
 
           <!-- Ratings -->
-          <div class="movie-page__ratings" v-if="movie.vote_average !== null || movie.vote_count">
-            <div class="ratings__stars">
-              <span class="ratings__icon">⭐</span>
-              <span class="ratings__value">{{ movie.vote_average?.toFixed(1) ?? 'N/A' }}</span>
-              <span class="ratings__max">/ 10</span>
+          <div class="movie-page__ratings" v-if="movie">
+            <div class="movie-page__rating-circle" :style="{
+              background: ratingPercentage !== null
+                ? `conic-gradient(
+                    from -90deg,
+                    #3E8BFF 0%,
+                    #3E8BFF ${ratingPercentage}%,
+                    #1A1F55 ${ratingPercentage}%,
+                    #1A1F55 100%
+                  )`
+                : '#1A1F55',
+              boxShadow: ratingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
+            }">
+              <div class="movie-page__rating-circle__inner">
+                <span class="movie-page__rating-circle__rating-value">{{ ratingPercentage !== null ?
+                  `${ratingPercentage}%` : 'N/A' }}</span>
+              </div>
             </div>
-            <span class="ratings__count" v-if="movie.vote_count">
-              ({{ movie.vote_count.toLocaleString() }} {{ t('movie.votes') }})
-            </span>
+            <div class="movie-page__ratings__count" v-if="movie.vote_count">
+              {{ movie.vote_count.toLocaleString() }} {{ t('movie.votes') }}
+            </div>
           </div>
 
           <!-- Genres as Chips -->
           <div class="movie-page__genres" v-if="movie.genres && movie.genres.length">
-            <Chip
-              v-for="genre in movie.genres"
-              :key="genre.id"
-              :label="genre.name"
-            />
+            <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
           </div>
-           <!-- Action Buttons (aligned in block) -->
-      <div class="movie-page__actions">
-        <a
-          v-if="movie.homepage"
-          :href="movie.homepage"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="movie-page__btn movie-page__btn--homepage"
-        >
-          🌐 {{ t('movie.official_site') }}
-          <span class="external-link-icon">↗</span>
-        </a>
-        <button
-          type="button"
-          @click="showWatchModal = true"
-          class="movie-page__btn movie-page__btn--watch"
-        >
-          📺 {{ t('movie.watch_now') }}
-        </button>
-      </div>
+          <!-- Action Buttons (aligned in block) -->
+          <div class="movie-page__actions">
+            <a v-if="movie.homepage" :href="movie.homepage" target="_blank" rel="noopener noreferrer"
+              class="movie-page__btn movie-page__btn--homepage">
+              🌐 {{ t('movie.official_site') }}
+              <span class="external-link-icon">↗</span>
+            </a>
+            <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
+              📺 {{ t('movie.watch_now') }}
+            </button>
+          </div>
+
+          <!-- Adsterra Banner -->
+          <AdsterraBanner class="movie-page__adsterra" />
+
+          <!-- AdSense Banner -->
+          <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
+
           <!-- Synopsis -->
           <section class="movie-page__synopsis">
             <h2 class="synopsis__title">{{ t('movie.synopsis') }}</h2>
@@ -94,7 +100,7 @@
             <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
           </section>
 
-           <!--Financial Info 
+          <!--Financial Info 
           <section class="movie-page__financial" v-if="movie.budget || movie.revenue">
             <h2 class="financial__title">{{ t('movie.financial') }}</h2>
             <div class="financial__grid">
@@ -109,22 +115,8 @@
             </div>
           </section> -->
 
-          
         </div>
       </header>
-
-     
-
-      <!-- Adsterra Banner -->
-      <AdsterraBanner class="movie-page__adsterra" />
-
-      <!-- AdSense Banner -->
-      <AdSenseAd
-        format="auto"
-        layout="in-feed"
-        responsive
-        class="movie-page__ad"
-      />
     </div>
   </article>
 
@@ -144,26 +136,15 @@
   </div>
 
   <!-- Watch Dialog: platform choice + streaming providers -->
-  <div
-    v-if="showWatchModal"
-    class="modal-overlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="watch-modal-title"
-    @click="showWatchModal = false"
-    @keydown.esc="showWatchModal = false"
-  >
+  <div v-if="showWatchModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="watch-modal-title"
+    @click="showWatchModal = false" @keydown.esc="showWatchModal = false">
     <div class="modal modal--watch" @click.stop>
       <div class="modal__header">
         <div>
           <h2 id="watch-modal-title">{{ t('movie.watch_dialog.title') }}</h2>
           <p class="modal__subtitle">{{ t('movie.watch_dialog.subtitle') }}</p>
         </div>
-        <button
-          class="modal__close"
-          :aria-label="t('movie.watch_dialog.close')"
-          @click="showWatchModal = false"
-        >
+        <button class="modal__close" :aria-label="t('movie.watch_dialog.close')" @click="showWatchModal = false">
           ×
         </button>
       </div>
@@ -171,13 +152,8 @@
       <div class="modal__content">
         <!-- Platform choice -->
         <div class="watch-platforms">
-          <a
-            v-if="downloadWeb"
-            :href="downloadWeb"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="watch-platform watch-platform--web"
-          >
+          <a v-if="downloadWeb" :href="downloadWeb" target="_blank" rel="noopener noreferrer"
+            class="watch-platform watch-platform--web">
             <span class="watch-platform__icon" aria-hidden="true">🌐</span>
             <span class="watch-platform__body">
               <span class="watch-platform__title">{{ t('movie.watch_dialog.web_app') }}</span>
@@ -185,13 +161,8 @@
             </span>
           </a>
 
-          <a
-            v-if="downloadAndroid"
-            :href="downloadAndroid"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="watch-platform watch-platform--android"
-          >
+          <a v-if="downloadAndroid" :href="downloadAndroid" target="_blank" rel="noopener noreferrer"
+            class="watch-platform watch-platform--android">
             <span class="watch-platform__icon" aria-hidden="true">▶</span>
             <span class="watch-platform__body">
               <span class="watch-platform__title">{{ t('movie.watch_dialog.android_app') }}</span>
@@ -202,12 +173,8 @@
 
         <!-- Streaming providers (collapsible) -->
         <div class="watch-streams">
-          <button
-            type="button"
-            class="watch-streams__toggle"
-            :aria-expanded="showStreams"
-            @click="showStreams = !showStreams"
-          >
+          <button type="button" class="watch-streams__toggle" :aria-expanded="showStreams"
+            @click="showStreams = !showStreams">
             <span>{{ t('watch.stream_label') }}</span>
             <span class="watch-streams__chevron" aria-hidden="true">{{ showStreams ? '▲' : '▼' }}</span>
           </button>
@@ -222,24 +189,12 @@
             </div>
 
             <div v-else class="providers">
-              <section
-                v-for="section in providerSections"
-                :key="section.key"
-                class="providers__category"
-              >
+              <section v-for="section in providerSections" :key="section.key" class="providers__category">
                 <h3>{{ t(section.label) }}</h3>
                 <div class="providers__grid">
-                  <div
-                    v-for="provider in section.providers"
-                    :key="provider.id"
-                    class="provider__card"
-                  >
-                    <img
-                      v-if="provider.logo_path"
-                      :src="getProviderImageUrl(provider.logo_path)"
-                      :alt="provider.name"
-                      class="provider__logo"
-                    />
+                  <div v-for="provider in section.providers" :key="provider.id" class="provider__card">
+                    <img v-if="provider.logo_path" :src="getProviderImageUrl(provider.logo_path)" :alt="provider.name"
+                      class="provider__logo" />
                     <span class="provider__name">{{ provider.name }}</span>
                   </div>
                 </div>
@@ -250,6 +205,8 @@
       </div>
     </div>
   </div>
+
+
 </template>
 
 <script setup lang="ts">
@@ -336,6 +293,16 @@ const releaseYear = computed(() => {
   return new Date(movie.value.release_date).getFullYear().toString()
 })
 
+const ratingPercentage = computed<number | null>(() => {
+  const v = movie.value?.vote_average
+
+  if (typeof v !== 'number' || !Number.isFinite(v)) {
+    return null
+  }
+
+  return Math.min(100, Math.max(0, Math.round(v * 10)))
+})
+
 // hasProviders vem do composable useWatchProviders
 
 function formatDuration(minutes: number): string {
@@ -376,9 +343,12 @@ onMounted(async () => {
         await loadProviders(id)
       })(),
     ])
+
+
   } catch (err: any) {
     error.value = err?.response?.status === 404 ? 404 : 'unknown'
     movie.value = null
+
   } finally {
     isLoading.value = false
   }
@@ -511,7 +481,6 @@ useSeo({
   &__info {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
   }
 
   &__title {
@@ -544,55 +513,50 @@ useSeo({
   &__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.5rem;
     align-items: center;
+    margin: 0.5rem 0 1rem;
 
     span {
       font-size: 0.875rem;
       color: var(--text-secondary);
-      background: var(--bg-secondary);
-      padding: 0.375rem 0.75rem;
-      border-radius: 9999px;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    span::after {
+      content: "•";
+      margin: 0 0.5rem;
+      color: var(--border);
+    }
+
+    span:last-child::after {
+      content: "";
+      margin: 0;
     }
   }
 
-  &__ratings {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-
-    &__stars {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    &__icon {
-      font-size: 1.25rem;
-    }
-
-    &__value {
-      font-size: 1.25rem;
-    }
-
-    &__max {
-      color: var(--text-secondary);
-    }
-
-    &__count {
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-    }
-  }
 
   &__genres {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     padding: 0.5rem 0;
+
+    .chip {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+
+      &:hover {
+        background: var(--bg-secondary);
+        border-color: var(--border);
+      }
+    }
   }
 
   &__synopsis {
@@ -803,10 +767,68 @@ useSeo({
   }
 }
 
+.movie-page__ratings {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.5rem 0;
+  overflow: visible;
+}
+
+.movie-page__rating-circle {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  min-height: 72px;
+  max-width: 72px;
+  max-height: 72px;
+  flex: 0 0 72px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.movie-page__rating-circle__inner {
+  width: 62px;
+  height: 62px;
+  min-width: 62px;
+  min-height: 62px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+}
+
+.movie-page__rating-circle__rating-value {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.movie-page__ratings__count {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
 @keyframes shimmer {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -1094,6 +1116,90 @@ useSeo({
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+
+  .watch-platform,
+  .watch-streams__toggle,
+  .provider__card,
+  .movie-page__btn {
+    transition: none;
+  }
+}
+
+/* Genres chips */
+.movie-page__genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+
+  /* We'll rely on the Chip component's existing styles, but we can adjust if needed */
+  /* Ensure chips don't grow too large */
+  >* {
+    /* Override any Chip styles if necessary, but we prefer not to modify Chip globally */
+    /* We'll just ensure they are not too big */
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+  }
+}
+
+/* Synopsis */
+.movie-page__synopsis {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1rem 0;
+
+    &::after {
+      content: "";
+      flex-grow: 1;
+      height: 1px;
+      background: var(--bg-secondary);
+    }
+  }
+
+  &__content {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 1rem;
+    max-width: 60ch;
+    /* For readability */
+    margin: 0;
+  }
+
+  &__empty {
+    color: var(--text-tertiary);
+    font-style: italic;
+    max-width: 60ch;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .movie-page__genres>* {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .movie-page__synopsis {
+    &__title {
+      font-size: 1.125rem;
+    }
+
+    &__content,
+    &__empty {
+      font-size: 0.875rem;
+    }
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .watch-platform,
   .watch-streams__toggle,

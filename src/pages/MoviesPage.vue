@@ -80,10 +80,7 @@
         <router-link v-for="movie in filteredMovies" :key="movie.slug" :to="`/movies/${movie.slug}`" class="movie-card">
           <div class="movie-card__poster-wrapper">
             <img :src="movie.cover" :alt="movie.title" class="movie-card__poster" loading="lazy" />
-            <div v-if="formatRating(movie.rating)" class="movie-card__rating">
-              <span aria-hidden="true">★</span>
-              <span>{{ formatRating(movie.rating) }}</span>
-            </div>
+           
           </div>
           <div class="movie-card__content">
             <h2 class="movie-card__title">{{ movie.title }}</h2>
@@ -512,7 +509,7 @@ useSeo({
   background: var(--bg-tertiary);
   border: 1px solid var(--bg-secondary);
   border-radius: 12px;
-  padding: 0 1rem;
+  padding: 0;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
   max-width: 100%;
@@ -535,7 +532,8 @@ useSeo({
 }
 
 .movies-page__search-input {
-  flex: 1;
+  flex: 1 1 0%;
+  min-width: 0;
   background: transparent;
   border: none;
   outline: none;
