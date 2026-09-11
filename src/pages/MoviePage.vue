@@ -50,20 +50,20 @@
           <!-- Ratings -->
           <div class="movie-page__ratings" v-if="movie">
             <div class="movie-page__rating-circle" :style="{
-              background: ratingPercentage !== null
+              background: animatedRatingPercentage !== null
                 ? `conic-gradient(
                     from -90deg,
                     #3E8BFF 0%,
-                    #3E8BFF ${ratingPercentage}%,
-                    #1A1F55 ${ratingPercentage}%,
+                    #3E8BFF ${animatedRatingPercentage}%,
+                    #1A1F55 ${animatedRatingPercentage}%,
                     #1A1F55 100%
                   )`
                 : '#1A1F55',
-              boxShadow: ratingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
+              boxShadow: animatedRatingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
             }">
               <div class="movie-page__rating-circle__inner">
-                <span class="movie-page__rating-circle__rating-value">{{ ratingPercentage !== null ?
-                  `${ratingPercentage}%` : 'N/A' }}</span>
+                <span class="movie-page__rating-circle__rating-value">{{ animatedRatingPercentage !== null ?
+                  `${animatedRatingPercentage}%` : 'N/A' }}</span>
               </div>
             </div>
             <div class="movie-page__ratings__count" v-if="movie.vote_count">
@@ -210,7 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watchEffect } from 'vue'
+import { ref, computed, onMounted, watchEffect, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { generateMovieSchema } from '@/lib/seo'
@@ -351,6 +351,62 @@ onMounted(async () => {
 
   } finally {
     isLoading.value = false
+  }
+})
+
+// Rating animation state
+const ratingAnimated = ref(false)
+const animatedRatingPercentage = ref<number | null>(null)
+
+// Check if reduced motion is preferred
+const prefersReducedMotion = ref(false)
+onMounted(() => {
+  if (window.matchMedia) {
+    prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
+})
+
+// Watch for movie data changes to trigger rating animation
+watch(movie, (newMovie) => {
+  if (newMovie && !ratingAnimated.value) {
+    // If reduced motion is preferred, show immediately without animation
+    if (prefersReducedMotion.value) {
+      animatedRatingPercentage.value = ratingPercentage.value
+      ratingAnimated.value = true
+      return
+    }
+
+    // Start animation from 0% to actual rating percentage
+    const actualRating = ratingPercentage.value
+    if (actualRating !== null) {
+      animatedRatingPercentage.value = 0
+      ratingAnimated.value = true
+
+      // Animate the percentage value
+      const duration = 800 // ms
+      const startTime = performance.now()
+
+      function animatePercentage(currentTime: number) {
+        const elapsed = currentTime - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        // Use ease-out cubic for smooth animation
+        const easedProgress = 1 - Math.pow(1 - progress, 3)
+        animatedRatingPercentage.value = Math.round(easedProgress * actualRating)
+
+        if (progress < 1) {
+          requestAnimationFrame(animatePercentage)
+        } else {
+          // Ensure we end at exact value
+          animatedRatingPercentage.value = actualRating
+        }
+      }
+
+      requestAnimationFrame(animatePercentage)
+    } else {
+      // For N/A ratings, just show immediately
+      animatedRatingPercentage.value = null
+      ratingAnimated.value = true
+    }
   }
 })
 
