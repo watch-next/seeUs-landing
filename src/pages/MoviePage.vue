@@ -1,6 +1,7 @@
 <template>
   <article v-if="movie" class="movie-page">
-    <div class="container movie-page__container">
+    <div class="cinematic-card" :style="{ backgroundImage: movie.backdrop_path ? `url('https://image.tmdb.org/t/p/original${movie.backdrop_path}')` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: movie.backdrop_path ? 'transparent' : 'var(--bg-primary)' }">
+      <div class="container movie-page__container">
       <!-- Breadcrumb -->
       <Breadcrumbs :items="breadcrumbItems" />
        <!-- Adsterra Banner -->
@@ -73,17 +74,20 @@
           <!-- Action Buttons -->
           <div class="movie-page__action-buttons" v-if="movie">
             <button type="button" @click="toggleAction('watchlist')" :aria-pressed="activeActions.watchlist"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.watchlist }]">
+              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.watchlist }]"
+              title="Add to your watch list">
               <img :src="`/assets/icons/discover.svg`" alt="" class="action-icon" aria-hidden="true" />
               <span class="action-label">{{ t('movie.watchlist') }}</span>
             </button>
             <button type="button" @click="toggleAction('favorite')" :aria-pressed="activeActions.favorite"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.favorite }]">
+              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.favorite }]"
+              title="Add to your favorites">
               <img :src="`/assets/icons/rating.svg`" alt="" class="action-icon" aria-hidden="true" />
               <span class="action-label">{{ t('movie.favorite') }}</span>
             </button>
             <button type="button" @click="toggleAction('interest')" :aria-pressed="activeActions.interest"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.interest }]">
+              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.interest }]"
+              title="Mark as interested">
               <img :src="`/assets/icons/track.svg`" alt="" class="action-icon" aria-hidden="true" />
               <span class="action-label">{{ t('movie.interest') }}</span>
             </button>
@@ -105,14 +109,15 @@
             </button>
           </div>
 
-         
 
-          <!-- Synopsis -->
+  <!-- Synopsis -->
           <section class="movie-page__synopsis">
             <h2 class="synopsis__title">{{ t('movie.synopsis') }}</h2>
             <p v-if="movie.overview" class="synopsis__content">{{ movie.overview }}</p>
             <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
           </section>
+
+         
 
           <!--Financial Info 
           <section class="movie-page__financial" v-if="movie.budget || movie.revenue">
@@ -132,6 +137,9 @@
         </div>
       </header>
     </div>
+  </div>
+
+ 
   </article>
 
   <div v-else-if="isLoading" class="container movie-page__loading">
@@ -1368,6 +1376,36 @@ useSeo({
     color: var(--text-tertiary);
     font-style: italic;
     max-width: 60ch;
+  }
+}
+
+.cinematic-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.9) 25%,
+      rgba(0, 0, 0, 0.7) 90%,
+      rgba(0, 0, 0, 0.4) 100%,
+      transparent 80%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  & > .container {
+    position: relative;
+    z-index: 2;
   }
 }
 
