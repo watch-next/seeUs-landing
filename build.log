@@ -3,5 +3,22 @@
 > node node_modules/vite/bin/vite.js build
 
 [36mvite v6.4.3 [32mbuilding for production...[36m[39m
+[33m[1m(!) %VITE_GOOGLE_ANALYTICS% is not defined in env variables found in /index.html. Is the variable mistyped?[22m[39m
+[33m[1m(!) %VITE_GOOGLE_ADSENSE% is not defined in env variables found in /index.html. Is the variable mistyped?[22m[39m
 transforming...
-[32m✓[39m 16 modules transformed.
+[32m✓[39m 15 modules transformed.
+[31m✗[39m Build failed in 523ms
+[31merror during build:
+[31m[vite:vue] [plugin vite:vue] src/pages/MoviePage.vue (52:137): Error parsing JavaScript expression: Unexpected token (2:14)[31m
+file: [36mC:/GitHub/apps/seeUs-landing/src/pages/MoviePage.vue:52:137[31m
+SyntaxError: [plugin vite:vue] src/pages/MoviePage.vue (52:137): Error parsing JavaScript expression: Unexpected token (2:14)
+    at createCompilerError (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:1374:17)
+    at emitError (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:2980:5)
+    at createExp (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:2973:7)
+    at Object.onattribend (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:2528:29)
+    at Tokenizer.handleInAttrValue (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:959:16)
+    at Tokenizer.stateInAttrValueDoubleQuotes (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:969:10)
+    at Tokenizer.parse (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:1113:16)
+    at Object.baseParse (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-core\dist\compiler-core.cjs.prod.js:3012:13)
+    at Object.parse (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-dom\dist\compiler-dom.cjs.prod.js:665:23)
+    at Object.parse$1 [as parse] (C:\GitHub\apps\seeUs-landing\node_modules\@vue\compiler-sfc\dist\compiler-sfc.cjs.js:1824:24)[39m
