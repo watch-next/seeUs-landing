@@ -39,16 +39,18 @@
       <aside class="header__drawer" :class="{ 'header__drawer--open': menuOpen }" role="navigation"
         aria-label="Drawer navigation" id="main-nav">
         <ul class="header__drawer-list">
-          <li v-for="link in drawerNavigation" :key="link.href" class="header__drawer-item">
+          <li v-for="link in drawerNavigation" :key="link.key" class="header__drawer-item">
             <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__drawer-link"
-              @click="handleNavClick(link)">{{ link.label }}</router-link>
-            <router-link v-else :to="link.href" class="header__drawer-link" @click="handleNavClick(link)">{{ link.label
-            }}</router-link>
+              @click="handleNavClick(link)">
+              <span class="drawer-item-icon" aria-hidden="true" v-html="iconMap[link.key]"></span>
+              <span class="drawer-item-label">{{ link.label }}</span>
+            </router-link>
+            <router-link v-else :to="link.href" class="header__drawer-link" @click="handleNavClick(link)">
+              <span class="drawer-item-icon" aria-hidden="true" v-html="iconMap[link.key]"></span>
+              <span class="drawer-item-label">{{ link.label }}</span>
+            </router-link>
           </li>
-          <li class="header__drawer-item">
-            <router-link to="/about" class="header__drawer-link" @click="handleNavClick({ label: t('navigation.about'), href: '/about' })">{{ t('navigation.about') }}</router-link>
-          </li>
-          <li v-if="isPremiumActive && !isCheckingPremium" class="header__drawer-item">
+          <li v-if="isPremiumActive && !isCheckingPremium" class="header__drawer-item header__drawer-item--premium">
             <div class="header__premium-badge">
               <span class="badge">
                 <span class="badge__status-dot" aria-hidden="true"></span>
@@ -57,7 +59,10 @@
             </div>
           </li>
         </ul>
-        <button class="header__login-btn" @click="handleLoginClick">{{ t('navigation.login') }}</button>
+        <button class="header__login-btn" @click="handleLoginClick">
+          <span class="drawer-item-icon" aria-hidden="true" v-html="iconMap.login"></span>
+          <span class="drawer-item-label">{{ t('navigation.login') }}</span>
+        </button>
       </aside>
 
       <div v-if="menuOpen" class="header__overlay" @click="closeMenu"></div>
@@ -82,17 +87,32 @@ const showLangMenu = ref(false)
 const isPremiumActive = ref(false)
 const isCheckingPremium = ref(false)
 
+// Removed drawer-open emit as content shifting functionality was removed
+
 const headerNavigation = computed(() => [
   { label: t('navigation.blog'), href: '/blog', isRoute: true },
   { label: t('navigation.movies'), href: '/movies', isRoute: true },
+  { label: t('navigation.tvShows'), href: '/tv-shows', isRoute: true },
 ])
 
-const drawerNavigation = computed(() => [
-  { label: t('navigation.home'), href: '' },
-  { label: t('navigation.platforms'), href: '#platforms', isRoute: false },
-  { label: t('navigation.premium'), href: '#premium', isRoute: false },
-  { label: t('navigation.roadmap'), href: '#roadmap', isRoute: false },
+type IconKey = 'home' | 'platforms' | 'premium' | 'roadmap' | 'about' | 'login'
+
+const drawerNavigation = computed<Array<{ key: IconKey; label: string; href: string; isRoute?: boolean }>>(() => [
+  { key: 'home', label: t('navigation.home'), href: '' },
+  { key: 'platforms', label: t('navigation.platforms'), href: '#platforms', isRoute: false },
+  { key: 'premium', label: t('navigation.premium'), href: '#premium', isRoute: false },
+  { key: 'roadmap', label: t('navigation.roadmap'), href: '#roadmap', isRoute: false },
+  { key: 'about', label: t('navigation.about'), href: '/about', isRoute: true },
 ])
+
+const iconMap: Record<IconKey, string> = {
+  home: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
+  platforms: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="21"/></svg>',
+  premium: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+  roadmap: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 12 8 12 8 18 10 18 10 12 16 12"></polyline></svg>',
+  about: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  login: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12.01" y2="8"/><line x1="12" y1="16" x2="12.01" y2="16"/><path d="M12 8a4 4 0 0 0 0 8"></path></svg>'
+}
 
 const languages = [
   { code: 'en', label: 'EN' },
@@ -110,8 +130,8 @@ function closeMenu() {
   menuOpen.value = false
 }
 
-function handleNavClick(link: { label: string; href: string }) {
-  trackEvent(trackNavigation(link.label, 'header'))
+function handleNavClick(link: { label?: string; href: string }) {
+  trackEvent(trackNavigation(link.label ?? link.href, 'header'))
   closeMenu()
 }
 
@@ -334,15 +354,15 @@ onUnmounted(() => {
   &__overlay {
     position: fixed;
     inset: 0;
-    background: rgba($color-background, 0.5);
+    background: rgba($color-background, 0.35);
     z-index: $z-sticky;
   }
 
   &__drawer {
     position: fixed;
-    top: 64px;
+    top: 70px;
     left: 0;
-    width: min(180px, 84vw);
+    width: min(max(250px, 250px + (100vw - 320px) * 0.4167), 84vw, 320px);
     display: flex;
     flex-direction: column;
     gap: $space-6;
@@ -354,6 +374,14 @@ onUnmounted(() => {
     pointer-events: none;
     transition: transform $transition-base;
     z-index: $z-sticky + 1;
+
+    @media (max-width: 359px) {
+      top: 56px;
+    }
+
+    @media (min-width: 360px) and (max-width: 374px) {
+      top: 56px;
+    }
 
     &--open {
       transform: translateX(0);
@@ -367,17 +395,50 @@ onUnmounted(() => {
     gap: $space-4;
     flex: 1;
     min-height: 0;
-  
+
+    & > .header__drawer-item + .header__drawer-item {
+      border-top: 1px solid $color-border;
+      margin-top: $space-4;
+      padding-top: $space-4;
+    }
   }
 
   &__drawer-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: $space-4 $space-6;
+    gap: $space-4;
     font-size: $text-sm;
     font-weight: $weight-medium;
     color: $color-text-secondary;
-    transition: color $transition-fast;
+    transition: all $transition-fast;
+    border-radius: $radius-sm;
+
+    .drawer-item-icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+    }
 
     &:hover {
       color: $color-text;
+      background: rgba($color-primary, 0.05);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
+
+    &[aria-current="page"] {
+      color: $color-primary;
+      font-weight: $weight-semibold;
+      background: rgba($color-primary, 0.1);
+
+      .drawer-item-icon {
+        /* Icon color will inherit from text color */
+      }
     }
   }
 
