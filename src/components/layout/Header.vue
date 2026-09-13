@@ -213,7 +213,7 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
+    height: 70px;
   }
 
   &__brand {
@@ -235,7 +235,7 @@ onUnmounted(() => {
 
   &__logo-image {
     display: block;
-    height: 72px;
+    height: 60px;
     width: auto;
     object-fit: contain;
   }
@@ -316,15 +316,15 @@ onUnmounted(() => {
   &__menu-toggle {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: $space-2;
+    gap: 3px;
+    padding: $space-1;
     background: none;
     border: none;
   }
 
   &__menu-bar {
     display: block;
-    width: 24px;
+    width: 20px;
     height: 2px;
     background: $color-text;
     border-radius: $radius-full;

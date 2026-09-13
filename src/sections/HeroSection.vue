@@ -11,7 +11,6 @@
             @click="trackEvent(trackHeroCta('features'))">{{ hero.ctaPrimary }}</a>
           <a href="#premium" class="hero__cta hero__cta--secondary btn-hover-smooth"
             @click="trackEvent(trackHeroCta('premium'))">{{ hero.ctaSecondary }}</a>
-          <router-link to="/movies" class="hero__cta hero__cta--secondary btn-hover-smooth">Explore Movies</router-link>
         </div>
 
       </div>
