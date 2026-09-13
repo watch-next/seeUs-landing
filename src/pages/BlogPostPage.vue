@@ -110,6 +110,8 @@
       </div>
     </div>
   </div>
+
+  <AdsterraNative class="blog-post__adsterra-native" />
 </template>
 
 <script setup lang="ts">
@@ -125,6 +127,7 @@ import MarkdownRenderer from '@/components/blog/MarkdownRenderer.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import CommentSection from '@/components/comments/CommentSection.vue'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
 const route = useRoute()

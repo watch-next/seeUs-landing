@@ -139,7 +139,7 @@
     </div>
   </div>
 
- 
+   
   </article>
 
   <div v-else-if="isLoading" class="container movie-page__loading">
@@ -228,7 +228,7 @@
     </div>
   </div>
 
-
+<AdsterraNative class="movie-page__adsterra-native" />
 </template>
 
 <script setup lang="ts">
@@ -245,6 +245,7 @@ import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import { getMovieByUuid, getTmdbImageUrl, type MovieDetail } from '@/services/movie.service'
 import { loadDownloadConfig } from '@/services/downloads'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
 const route = useRoute()
