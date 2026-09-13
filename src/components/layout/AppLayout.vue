@@ -18,9 +18,23 @@ import Footer from '@/components/layout/Footer.vue'
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  transition: transform $transition-base;
+}
+
+#app.main--drawer-open {
+  transform: translateX(60px);
 }
 
 main {
   flex: 1;
+  transition: transform $transition-base;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app,
+  #app.main--drawer-open,
+  main {
+    transition: none;
+  }
 }
 </style>
