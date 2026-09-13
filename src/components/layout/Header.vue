@@ -10,7 +10,7 @@
         </button>
 
         <div class="header__logo">
-          <img class="header__logo-image" src="@/images/logo/favicon.ico" alt="SeeUs" />
+          <a href="/"><img class="header__logo-image" src="@/images/logo/favicon.ico" alt="SeeUs" /></a>
         </div>
         <nav class="header__nav" role="navigation" aria-label="Main navigation">
           <ul class="header__nav-list">
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
 import { usePremiumService } from '@/composables/usePremiumService'
@@ -82,21 +82,22 @@ const showLangMenu = ref(false)
 const isPremiumActive = ref(false)
 const isCheckingPremium = ref(false)
 
-const headerNavigation = [
-  { label: t('navigation.home'), href: '#hero' },
+const headerNavigation = computed(() => [
   { label: t('navigation.blog'), href: '/blog', isRoute: true },
-]
+  { label: t('navigation.movies'), href: '/movies', isRoute: true },
+])
 
-const drawerNavigation = [
+const drawerNavigation = computed(() => [
+  { label: t('navigation.home'), href: '' },
   { label: t('navigation.platforms'), href: '#platforms', isRoute: false },
   { label: t('navigation.premium'), href: '#premium', isRoute: false },
   { label: t('navigation.roadmap'), href: '#roadmap', isRoute: false },
-]
+])
 
 const languages = [
-  { code: 'en', label: 'English' },
-  { code: 'pt-BR', label: 'Português' },
-  { code: 'es', label: 'Español' },
+  { code: 'en', label: 'EN' },
+  { code: 'pt-BR', label: 'PT' },
+  { code: 'es', label: 'ESP' },
 ]
 
 const currentLang = ref(locale.value)
