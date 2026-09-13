@@ -1,11 +1,12 @@
 <template>
   <div class="home-page">
     <HeroSection />
+    <AdsterraBanner/>
     <FeaturesSection />
     <PlatformsSection />
     <PremiumSection />
+     <AdsterraNative />
     <RoadmapSection />
-    <AdsterraNative />
     <NewsletterSection />
     <FaqSection />
   </div>
@@ -20,4 +21,5 @@ import PremiumSection from '@/sections/PremiumSection.vue'
 import RoadmapSection from '@/sections/RoadmapSection.vue'
 import NewsletterSection from '@/sections/NewsletterSection.vue'
 import AdsterraNative from '@/components/ads/AdsterraNative.vue'
+import AdsterraBanner from './components/ads/AdsterraBanner.vue'
 </script>
