@@ -77,6 +77,8 @@
         </button>
       </nav>
     </div>
+
+    <AdsterraNative class="blog-page__adsterra-native" />
   </div>
 </template>
 
@@ -90,6 +92,7 @@ import BlogCategories from '@/components/blog/BlogCategories.vue'
 import BlogTags from '@/components/blog/BlogTags.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
 

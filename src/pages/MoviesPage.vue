@@ -110,6 +110,8 @@
       <!-- AdSense Banner -->
       <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
     </div>
+
+    <AdsterraNative class="movies-page__adsterra-native" />
   </div>
 </template>
 
@@ -122,6 +124,7 @@ import { useSeo } from '@/composables/useSeo'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
 
