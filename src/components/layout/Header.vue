@@ -10,7 +10,7 @@
         </button>
 
         <div class="header__logo">
-          <img class="header__logo-image" src="@/images/logo/favicon.ico" alt="SeeUs" />
+          <a href="/"><img class="header__logo-image" src="@/images/logo/favicon.ico" alt="SeeUs" /></a>
         </div>
         <nav class="header__nav" role="navigation" aria-label="Main navigation">
           <ul class="header__nav-list">
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
 import { usePremiumService } from '@/composables/usePremiumService'
@@ -82,21 +82,22 @@ const showLangMenu = ref(false)
 const isPremiumActive = ref(false)
 const isCheckingPremium = ref(false)
 
-const headerNavigation = [
-  { label: t('navigation.home'), href: '#hero' },
+const headerNavigation = computed(() => [
   { label: t('navigation.blog'), href: '/blog', isRoute: true },
-]
+  { label: t('navigation.movies'), href: '/movies', isRoute: true },
+])
 
-const drawerNavigation = [
+const drawerNavigation = computed(() => [
+  { label: t('navigation.home'), href: '' },
   { label: t('navigation.platforms'), href: '#platforms', isRoute: false },
   { label: t('navigation.premium'), href: '#premium', isRoute: false },
   { label: t('navigation.roadmap'), href: '#roadmap', isRoute: false },
-]
+])
 
 const languages = [
-  { code: 'en', label: 'English' },
-  { code: 'pt-BR', label: 'Português' },
-  { code: 'es', label: 'Español' },
+  { code: 'en', label: 'EN' },
+  { code: 'pt-BR', label: 'PT' },
+  { code: 'es', label: 'ESP' },
 ]
 
 const currentLang = ref(locale.value)
@@ -212,7 +213,7 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
+    height: 70px;
   }
 
   &__brand {
@@ -234,7 +235,7 @@ onUnmounted(() => {
 
   &__logo-image {
     display: block;
-    height: 72px;
+    height: 60px;
     width: auto;
     object-fit: contain;
   }
@@ -315,15 +316,15 @@ onUnmounted(() => {
   &__menu-toggle {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: $space-2;
+    gap: 3px;
+    padding: $space-1;
     background: none;
     border: none;
   }
 
   &__menu-bar {
     display: block;
-    width: 24px;
+    width: 20px;
     height: 2px;
     background: $color-text;
     border-radius: $radius-full;
