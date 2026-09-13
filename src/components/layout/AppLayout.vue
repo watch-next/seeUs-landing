@@ -1,6 +1,6 @@
 <template>
-  <div id="app" :class="{ 'app--drawer-open': isDrawerOpen }">
-    <Header @drawer-open="onDrawerOpen" />
+  <div id="app">
+    <Header />
     <main>
       <router-view />
     </main>
@@ -9,15 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import Header from '@/components/layout/Header.vue'
 import Footer from '@/components/layout/Footer.vue'
-
-const isDrawerOpen = ref(false)
-
-function onDrawerOpen(isOpen) {
-  isDrawerOpen.value = isOpen
-}
 </script>
 
 <style scoped>
@@ -28,11 +21,20 @@ function onDrawerOpen(isOpen) {
   transition: transform $transition-base;
 }
 
-#app.app--drawer-open {
+#app.main--drawer-open {
   transform: translateX(60px);
 }
 
 main {
   flex: 1;
+  transition: transform $transition-base;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app,
+  #app.main--drawer-open,
+  main {
+    transition: none;
+  }
 }
 </style>

@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed, defineEmits } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
 import { usePremiumService } from '@/composables/usePremiumService'
@@ -87,24 +87,25 @@ const showLangMenu = ref(false)
 const isPremiumActive = ref(false)
 const isCheckingPremium = ref(false)
 
-const emit = defineEmits<{
-  (e: 'drawer-open', isOpen: boolean): void
-}>();
+// Removed drawer-open emit as content shifting functionality was removed
 
 const headerNavigation = computed(() => [
   { label: t('navigation.blog'), href: '/blog', isRoute: true },
   { label: t('navigation.movies'), href: '/movies', isRoute: true },
+  { label: t('navigation.tvShows'), href: '/tv-shows', isRoute: true },
 ])
 
-const drawerNavigation = computed(() => [
-  { key: 'home', href: '' },
-  { key: 'platforms', href: '#platforms', isRoute: false },
-  { key: 'premium', href: '#premium', isRoute: false },
-  { key: 'roadmap', href: '#roadmap', isRoute: false },
-  { key: 'about', href: '/about', isRoute: true },
+type IconKey = 'home' | 'platforms' | 'premium' | 'roadmap' | 'about' | 'login'
+
+const drawerNavigation = computed<Array<{ key: IconKey; label: string; href: string; isRoute?: boolean }>>(() => [
+  { key: 'home', label: t('navigation.home'), href: '' },
+  { key: 'platforms', label: t('navigation.platforms'), href: '#platforms', isRoute: false },
+  { key: 'premium', label: t('navigation.premium'), href: '#premium', isRoute: false },
+  { key: 'roadmap', label: t('navigation.roadmap'), href: '#roadmap', isRoute: false },
+  { key: 'about', label: t('navigation.about'), href: '/about', isRoute: true },
 ])
 
-const iconMap = {
+const iconMap: Record<IconKey, string> = {
   home: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
   platforms: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="21"/></svg>',
   premium: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
@@ -123,16 +124,14 @@ const currentLang = ref(locale.value)
 
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
-  emit('drawer-open', menuOpen.value)
 }
 
 function closeMenu() {
   menuOpen.value = false
-  emit('drawer-open', menuOpen.value)
 }
 
-function handleNavClick(link: { label: string; href: string }) {
-  trackEvent(trackNavigation(link.label, 'header'))
+function handleNavClick(link: { label?: string; href: string }) {
+  trackEvent(trackNavigation(link.label ?? link.href, 'header'))
   closeMenu()
 }
 
@@ -355,7 +354,7 @@ onUnmounted(() => {
   &__overlay {
     position: fixed;
     inset: 0;
-    background: rgba($color-background, 0.5);
+    background: rgba($color-background, 0.35);
     z-index: $z-sticky;
   }
 
@@ -396,7 +395,12 @@ onUnmounted(() => {
     gap: $space-4;
     flex: 1;
     min-height: 0;
-  
+
+    & > .header__drawer-item + .header__drawer-item {
+      border-top: 1px solid $color-border;
+      margin-top: $space-4;
+      padding-top: $space-4;
+    }
   }
 
   &__drawer-link {
