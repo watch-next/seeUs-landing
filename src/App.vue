@@ -4,12 +4,11 @@
     <AdsterraBanner/>
     <FeaturesSection />
     <PlatformsSection />
-    <AdsterraBanner/>
     <PremiumSection />
-    <AdsterraNative />
     <RoadmapSection />
     <NewsletterSection />
     <FaqSection />
+    <AdsterraNative class="home-page__adsterra-native" />
   </div>
 </template>
 
