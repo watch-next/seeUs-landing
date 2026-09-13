@@ -4,8 +4,9 @@
     <AdsterraBanner/>
     <FeaturesSection />
     <PlatformsSection />
+    <AdsterraBanner/>
     <PremiumSection />
-     <AdsterraNative />
+    <AdsterraNative />
     <RoadmapSection />
     <NewsletterSection />
     <FaqSection />
