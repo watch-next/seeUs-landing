@@ -507,6 +507,31 @@
     "seasonsLabel": "{count} temporadas",
     "underConstruction": "Ainda estamos trabalhando nisso."
   },
+  "tvShow": {
+    "watch_now": "Assistir Agora",
+    "no_poster": "Sem pôster disponível",
+    "no_synopsis": "Sem sinopse disponível.",
+    "original_title": "Título original",
+    "popularity": "Popularidade",
+    "votes": "votos",
+    "synopsis": "Sinopse",
+    "official_site": "Site Oficial",
+    "seasons": "Temporadas",
+    "status": "Status",
+    "watch_dialog": {
+      "title": "Assistir no SeeUs",
+      "subtitle": "Escolha como você deseja assistir",
+      "web_app": "Abrir Web App",
+      "web_app_desc": "Assista diretamente no seu navegador.",
+      "android_app": "Obter o App Android",
+      "android_app_desc": "Aproveite o SeeUs no seu dispositivo Android.",
+      "close": "Fechar",
+      "toggle_providers": "Provedores de streaming"
+    },
+    "watchlist": "Lista para assistir",
+    "favorite": "Favorito",
+    "interest": "Interesse"
+  },
   "waitlist": {
     "error": {
       "emailRequired": "E-mail é obrigatório",

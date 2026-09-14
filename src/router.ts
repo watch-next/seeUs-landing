@@ -19,6 +19,7 @@ const MoviesPage = () => import('./pages/MoviesPage.vue')
 const MoviePage = () => import('./pages/MoviePage.vue')
 // TV Shows pages
 const TvShowsPage = () => import('./pages/TvShows.vue')
+const TvShowPage = () => import('./pages/TvShow.vue')
 // Admin pages
 const AdminLoginPage = () => import('./pages/admin/AdminLoginPage.vue')
 const AdminBlogDashboard = () => import('./pages/admin/AdminBlogDashboard.vue')
@@ -73,6 +74,12 @@ const routes = [
         path: 'tv-shows',
         name: 'TvShows',
         component: TvShowsPage,
+      },
+      {
+        path: 'tv-shows/:slug',
+        name: 'TvShow',
+        component: TvShowPage,
+        props: false,
       },
       {
         path: 'privacy-policy',

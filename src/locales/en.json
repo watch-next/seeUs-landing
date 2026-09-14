@@ -513,6 +513,52 @@
     "seasonsLabel": "{count} seasons",
     "underConstruction": "We're still working on this."
   },
+  "tvShow": {
+    "watch_now": "Watch Now",
+    "no_poster": "No poster available",
+    "no_synopsis": "No synopsis available.",
+    "original_title": "Original title",
+    "popularity": "Popularity",
+    "votes": "votes",
+    "synopsis": "Synopsis",
+    "official_site": "Official Site",
+    "seasons": "Seasons",
+    "status": "Status",
+    "watch_dialog": {
+      "title": "Watch on SeeUs",
+      "subtitle": "Choose how you'd like to watch",
+      "web_app": "Open Web App",
+      "web_app_desc": "Watch directly in your browser.",
+      "android_app": "Get the Android App",
+      "android_app_desc": "Enjoy SeeUs on your Android device.",
+      "close": "Close",
+      "toggle_providers": "Streaming providers"
+    },
+    "watchlist": "Watch list",
+    "favorite": "Favorite",
+    "interest": "Interest",
+    "watch_now": "Watch Now",
+    "official_site": "Official Site",
+    "synopsis": "Synopsis",
+    "no_synopsis": "No synopsis available.",
+    "popularity": "Popularity",
+    "votes": "votes",
+    "no_poster": "No poster available",
+    "original_title": "Original title",
+    "tagline": "Tagline",
+    "seasons": "Seasons",
+    "status": "Status",
+    "watch_dialog": {
+      "title": "Watch on SeeUs",
+      "subtitle": "Choose how you'd like to watch",
+      "web_app": "Open Web App",
+      "web_app_desc": "Watch directly in your browser.",
+      "android_app": "Get the Android App",
+      "android_app_desc": "Enjoy SeeUs on your Android device.",
+      "close": "Close",
+      "toggle_providers": "Streaming providers"
+    }
+  },
   "waitlist": {
     "error": {
       "emailRequired": "Email is required",

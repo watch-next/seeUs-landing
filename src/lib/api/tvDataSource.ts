@@ -4,7 +4,7 @@
  * This module adapts backend API calls to the expected TV show data format.
  */
 
-import { httpClient } from '@/lib/http/client';
+import { httpClient } from '../http/client';
 import type { TVShowDetail, TVShowsListResponse, SeasonDetail, Episode } from '../tmdb/types';
 
 /**
