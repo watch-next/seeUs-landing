@@ -496,6 +496,15 @@
     "totalResults": "{count} filmes"
   },
   "tvShows": {
+    "title": "Séries",
+    "subtitle": "Descubra nossa coleção de séries",
+    "searchPlaceholder": "Buscar séries...",
+    "clearSearch": "Limpar busca",
+    "loading": "Carregando séries...",
+    "searchResults": "{count} resultados para \"{query}\"",
+    "noShowsAvailable": "Nenhuma série encontrada",
+    "noShowsAvailableDescription": "Não encontramos séries correspondentes a \"{query}\".",
+    "seasonsLabel": "{count} temporadas",
     "underConstruction": "Ainda estamos trabalhando nisso."
   },
   "waitlist": {

@@ -502,6 +502,15 @@
     "searchResults": "{count} results for \"{query}\""
   },
   "tvShows": {
+    "title": "TV Shows",
+    "subtitle": "Discover our curated collection of series",
+    "searchPlaceholder": "Search TV shows...",
+    "clearSearch": "Clear search",
+    "loading": "Loading TV shows...",
+    "searchResults": "{count} results for \"{query}\"",
+    "noShowsAvailable": "No TV shows found",
+    "noShowsAvailableDescription": "We couldn't find any TV shows matching \"{query}\".",
+    "seasonsLabel": "{count} seasons",
     "underConstruction": "We're still working on this."
   },
   "waitlist": {

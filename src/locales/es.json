@@ -467,6 +467,15 @@
     "searchResults": "{count} resultados para \"{query}\""
   },
   "tvShows": {
+    "title": "Series de TV",
+    "subtitle": "Descubre nuestra colección de series",
+    "searchPlaceholder": "Buscar series...",
+    "clearSearch": "Limpiar búsqueda",
+    "loading": "Cargando series...",
+    "searchResults": "{count} resultados para \"{query}\"",
+    "noShowsAvailable": "No se encontraron series",
+    "noShowsAvailableDescription": "No se encontraron series que coincidan con \"{query}\".",
+    "seasonsLabel": "{count} temporadas",
     "underConstruction": "Aún estamos trabajando en esto."
   },
   "waitlist": {

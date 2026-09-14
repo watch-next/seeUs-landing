@@ -33,7 +33,7 @@ interface BackendTVShow {
 }
 
 interface BackendTVList {
-  items: BackendTVShow[];
+  data: BackendTVShow[];
   total: number;
   page: number;
   page_size: number;
@@ -97,7 +97,7 @@ function mapTVShowToTMDBFormat(show: BackendTVShow): TVShowDetail {
 function mapTVListToTMDBFormat(response: BackendTVList): TVShowsListResponse {
   return {
     page: response.page,
-    results: response.items.map(mapTVShowToTMDBFormat),
+    results: response.data.map(mapTVShowToTMDBFormat),
     total_pages: response.total_pages,
     total_results: response.total,
   };
@@ -226,7 +226,7 @@ export async function fetchSimilarShows(
   );
 
   return {
-    results: response.data.items.map(mapTVShowToTMDBFormat),
+    results: response.data.data.map(mapTVShowToTMDBFormat),
     total: response.data.total,
     page: response.data.page,
     total_pages: response.data.total_pages,
