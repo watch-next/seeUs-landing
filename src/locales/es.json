@@ -466,6 +466,9 @@
     "noMoviesAvailableDescription": "¡Vuelve pronto!",
     "searchResults": "{count} resultados para \"{query}\""
   },
+  "tvShows": {
+    "underConstruction": "Aún estamos trabajando en esto."
+  },
   "waitlist": {
     "error": {
       "emailRequired": "El correo electrónico es obligatorio",
