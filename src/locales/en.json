@@ -501,6 +501,9 @@
     "noMoviesAvailableDescription": "Check back soon!",
     "searchResults": "{count} results for \"{query}\""
   },
+  "tvShows": {
+    "underConstruction": "We're still working on this."
+  },
   "waitlist": {
     "error": {
       "emailRequired": "Email is required",
