@@ -19,6 +19,44 @@ import { mapTmdbGenresToGenres, type Genre } from "../tmdb/mappers/genreMapper";
 import type { Movie } from "./types";
 import type { MovieDetail as BackendMovieDetail } from "@/services/movie.service";
 
+interface TmdbMovieListItem {
+  id: number;
+  title: string;
+  original_title: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path?: string | null;
+  release_date?: string;
+  vote_average?: number;
+  vote_count?: number;
+  adult?: boolean;
+}
+
+interface TmdbMovieCreditsResponse {
+  cast?: Array<{
+    id: number;
+    name: string;
+    character?: string;
+    profile_path?: string | null;
+    order?: number;
+  }>;
+  crew?: Array<{
+    id: number;
+    name: string;
+    job?: string;
+    department?: string;
+    profile_path?: string | null;
+  }>;
+}
+
+interface MovieTrailer {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+}
+
 // In-memory cache: slug → Movie
 const movieCache = new Map<string, Movie>();
 
@@ -115,14 +153,12 @@ export async function getMovieByUuid(uuid: string): Promise<Movie | null> {
     try {
       // Fetch credits from backend using UUID
       const credits = await api.fetchMovieCredits(uuid);
-      movie.cast = mapTmdbCastMembersToPeople(credits.cast || []);
-      movie.directors = mapTmdbCrewMembersToPeople(credits.crew?.filter(c => c.job === 'Director') || []);
-      movie.writers = mapTmdbCrewMembersToPeople(credits.crew?.filter(c => c.job === 'Screenplay' || c.job === 'Writer') || []);
+      movie.cast = mapTmdbCastMembersToPeople(credits.cast || []).map(person => person.name);
+      movie.directors = mapTmdbCrewMembersToPeople(credits.crew?.filter(c => c.job === 'Director') || []).map(person => person.name);
     } catch (e) {
       console.warn(`[MovieRepository] Failed to fetch credits for ${uuid}:`, e);
       movie.cast = [];
       movie.directors = [];
-      movie.writers = [];
     }
 
     // Cache the movie

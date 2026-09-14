@@ -61,15 +61,15 @@
       <!-- Error State -->
       <div v-else-if="error" class="movies-page__empty">
         <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
-        <p class="movies-page__empty-title">{{ t('movies.loadError') }}</p>
-        <p class="movies-page__empty-text">{{ t('movies.loadErrorDescription') }}</p>
-        <button type="button" class="btn btn-secondary" @click="loadMovies">
-          {{ t('movies.retry') }}
+        <p class="movies-page__empty-title">Desculpe, nosso servidor está cansado e tirou uma pequena soneca.</p>
+        <p class="movies-page__empty-text"></p>
+        <button type="button" class="btn btn-primary" @click="loadMovies">
+          Despertar
         </button>
       </div>
 
       <!-- Empty State -->
-      <div v-else-if="movies.length === 0" class="movies-page__empty">
+      <div v-else-if="movies.length === 0 && !error" class="movies-page__empty">
         <div class="movies-page__empty-icon" aria-hidden="true">∅</div>
         <p class="movies-page__empty-title">{{ t('movies.noMoviesAvailable') }}</p>
         <p class="movies-page__empty-text">{{ t('movies.noMoviesAvailableDescription') }}</p>
@@ -117,6 +117,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getMovies } from '@/lib/content/MovieRepository'
 import type { Movie } from '@/lib/content/types'
@@ -132,6 +133,16 @@ const movies = ref<Movie[]>([])
 const searchQuery = ref('')
 const loading = ref(true)
 const error = ref(false)
+const retryTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const startTime = ref<number | null>(null)
+
+
+function clearRetryTimeout() {
+  if (retryTimeout.value !== null) {
+    clearTimeout(retryTimeout.value)
+    retryTimeout.value = null
+  }
+}
 
 function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60)
@@ -175,21 +186,47 @@ function searchMovies(query: string): Movie[] {
 const filteredMovies = computed(() => searchMovies(searchQuery.value))
 const hasSearchResults = computed(() => filteredMovies.value.length > 0)
 
-// Load movies
+// Load movies with retry mechanism
 async function loadMovies() {
+  clearRetryTimeout()
+  startTime.value = null
+  attemptLoad()
+}
+
+async function attemptLoad() {
   loading.value = true
   error.value = false
   try {
     movies.value = await getMovies()
-  } catch (err) {
-    error.value = true
-    movies.value = []
-  } finally {
     loading.value = false
+    clearRetryTimeout()
+    startTime.value = null
+  } catch (err) {
+    if (startTime.value === null) {
+      startTime.value = Date.now()
+    }
+    if (Date.now() - startTime.value >= 30000) {
+      loading.value = false
+      error.value = true
+      clearRetryTimeout()
+      startTime.value = null
+    } else {
+      scheduleRetry()
+    }
   }
 }
 
+function scheduleRetry() {
+  clearRetryTimeout()
+  retryTimeout.value = setTimeout(() => {
+    attemptLoad()
+  }, 5000)
+}
+
 onMounted(loadMovies)
+onUnmounted(() => {
+  clearRetryTimeout()
+})
 
 // SEO
 // SEO setup (run during component setup, before async operations)
