@@ -58,21 +58,14 @@
         </div>
       </div>
 
-      <!-- Error State -->
-      <div v-else-if="error" class="movies-page__empty">
-        <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
-        <p class="movies-page__empty-title">Desculpe, nosso servidor está cansado e tirou uma pequena soneca.</p>
-        <p class="movies-page__empty-text"></p>
-        <button type="button" class="btn btn-primary" @click="loadMovies">
-          Despertar
-        </button>
-      </div>
-
       <!-- Empty State -->
       <div v-else-if="movies.length === 0 && !error" class="movies-page__empty">
-        <div class="movies-page__empty-icon" aria-hidden="true">∅</div>
-        <p class="movies-page__empty-title">{{ t('movies.noMoviesAvailable') }}</p>
-        <p class="movies-page__empty-text">{{ t('movies.noMoviesAvailableDescription') }}</p>
+         <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
+        <p class="movies-page__empty-title">{{ t('movies.serverSleeping') }}</p>
+        <p class="movies-page__empty-text">{{ t('movies.serverSleepingDescription') }}</p>
+        <button type="button" class="btn btn-primary" @click="loadMovies">
+          {{ t('movies.wakeServer') }}
+        </button>
       </div>
 
       <!-- Movies Grid -->

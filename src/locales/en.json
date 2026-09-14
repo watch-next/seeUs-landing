@@ -499,6 +499,9 @@
     "noMoviesFoundDescription": "We couldn't find any movies matching \"{query}\".",
     "noMoviesAvailable": "No movies available yet",
     "noMoviesAvailableDescription": "Check back soon!",
+    "serverSleeping": "Our server took a little nap 😴",
+    "serverSleepingDescription": "Click the button below to wake it up and try again.",
+    "wakeServer": "Wake up server",
     "searchResults": "{count} results for \"{query}\""
   },
   "tvShows": {
@@ -508,8 +511,11 @@
     "clearSearch": "Clear search",
     "loading": "Loading TV shows...",
     "searchResults": "{count} results for \"{query}\"",
-    "noShowsAvailable": "No TV shows found",
-    "noShowsAvailableDescription": "We couldn't find any TV shows matching \"{query}\".",
+    "noShowsAvailable": "No TV shows available yet",
+    "noShowsAvailableDescription": "Check back soon!",
+    "serverSleeping": "Our server took a little nap 😴",
+    "serverSleepingDescription": "Click the button below to wake it up and try again.",
+    "wakeServer": "Wake up server",
     "seasonsLabel": "{count} seasons",
     "underConstruction": "We're still working on this."
   },

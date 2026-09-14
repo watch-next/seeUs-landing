@@ -464,6 +464,9 @@
     "noMoviesFoundDescription": "No pudimos encontrar ninguna película que coincida con \"{query}\".",
     "noMoviesAvailable": "No hay películas disponibles aún",
     "noMoviesAvailableDescription": "¡Vuelve pronto!",
+    "serverSleeping": "Nuestro servidor se echó una pequeña siesta 😴",
+    "serverSleepingDescription": "Haz clic en el botón de abajo para despertarlo e intentarlo de nuevo.",
+    "wakeServer": "Despertar servidor",
     "searchResults": "{count} resultados para \"{query}\""
   },
   "tvShows": {
@@ -473,8 +476,11 @@
     "clearSearch": "Limpiar búsqueda",
     "loading": "Cargando series...",
     "searchResults": "{count} resultados para \"{query}\"",
-    "noShowsAvailable": "No se encontraron series",
-    "noShowsAvailableDescription": "No se encontraron series que coincidan con \"{query}\".",
+    "noShowsAvailable": "No hay series disponibles aún",
+    "noShowsAvailableDescription": "¡Vuelve pronto!",
+    "serverSleeping": "Nuestro servidor se echó una pequeña siesta 😴",
+    "serverSleepingDescription": "Haz clic en el botón de abajo para despertarlo e intentarlo de nuevo.",
+    "wakeServer": "Despertar servidor",
     "seasonsLabel": "{count} temporadas",
     "underConstruction": "Aún estamos trabajando en esto."
   },
