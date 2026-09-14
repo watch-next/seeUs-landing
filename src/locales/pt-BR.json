@@ -492,9 +492,9 @@
     "noMoviesFoundDescription": "Não encontramos filmes correspondentes a \"{query}\".",
     "noMoviesAvailable": "Nenhum filme disponível ainda",
     "noMoviesAvailableDescription": "Volte em breve!",
-    "noMoviesAvailable": "Nosso servidor tirou uma soneca 😴",
-    "noMoviesAvailableDescription": "Clique no botão abaixo para acordá-lo e tentar novamente.",
-    "noMoviesAvailableWakeServer": "Acordar servidor",
+    "serverSleeping": "Nosso servidor tirou uma soneca 😴",
+    "serverSleepingDescription": "Clique no botão abaixo para acordá-lo e tentar novamente.",
+    "wakeServer": "Acordar servidor",
     "searchResults": "{count} resultados para \"{query}\"",
     "totalResults": "{count} filmes"
   },
