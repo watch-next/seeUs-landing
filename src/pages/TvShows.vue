@@ -60,18 +60,21 @@
       <!-- Error State -->
       <div v-else-if="error" class="tv-shows-page__empty">
         <div class="tv-shows-page__empty-icon" aria-hidden="true">◌</div>
-        <p class="tv-shows-page__empty-title">Desculpe, nosso servidor está cansado e tirou uma pequena soneca.</p>
-        <p class="tv-shows-page__empty-text"></p>
+        <p class="tv-shows-page__empty-title">{{ t('tvShows.serverSleeping') }}</p>
+        <p class="tv-shows-page__empty-text">{{ t('tvShows.serverSleepingDescription') }}</p>
         <button type="button" class="btn btn-primary" @click="loadShows">
-          Despertar
+          {{ t('tvShows.wakeServer') }}
         </button>
       </div>
 
       <!-- Empty State -->
       <div v-else-if="shows.length === 0 && !error" class="tv-shows-page__empty">
-        <div class="tv-shows-page__empty-icon" aria-hidden="true">∅</div>
-        <p class="tv-shows-page__empty-title">{{ t('tvShows.noShowsAvailable') }}</p>
-        <p class="tv-shows-page__empty-text">{{ t('tvShows.noShowsAvailableDescription') }}</p>
+         <div class="tv-shows-page__empty-icon" aria-hidden="true">◌</div>
+        <p class="tv-shows-page__empty-title">{{ t('tvShows.serverSleeping') }}</p>
+        <p class="tv-shows-page__empty-text">{{ t('tvShows.serverSleepingDescription') }}</p>
+        <button type="button" class="btn btn-primary" @click="loadShows">
+          {{ t('tvShows.wakeServer') }}
+        </button>
       </div>
 
       <!-- Shows Grid -->
