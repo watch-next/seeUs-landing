@@ -248,6 +248,13 @@ import { loadDownloadConfig } from '@/services/downloads'
 import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
+// Debug token state
+console.debug('[MoviePage.vue] Token state on load:', {
+  hasAccessToken: !!getAccessToken(),
+  hasRefreshToken: !!getRefreshToken(),
+  accessTokenLength: getAccessToken()?.length || 0,
+  refreshTokenLength: getRefreshToken()?.length || 0
+})
 const route = useRoute()
 
 // Watch dialog state: platform choice first, streaming providers below (collapsible)
@@ -359,9 +366,11 @@ onMounted(async () => {
     }
 
     // Load movie details and watch providers in parallel
+    console.debug('[MoviePage.vue] Attempting to load movie with id:', id)
     await Promise.all([
       (async () => {
         movie.value = await getMovieByUuid(id)
+        console.debug('[MoviePage.vue] Movie loaded successfully:', movie.value?.title || 'unknown')
       })(),
       (async () => {
         await loadProviders(id)
@@ -370,6 +379,14 @@ onMounted(async () => {
 
 
   } catch (err: any) {
+    console.error('[MoviePage.vue] Error fetching movie:', {
+      message: err?.message,
+      isAxiosError: !!err?.isAxiosError,
+      status: err?.response?.status,
+      statusText: err?.response?.statusText,
+      url: err?.config?.url,
+      id: movieId.value
+    })
     error.value = err?.response?.status === 404 ? 404 : 'unknown'
     movie.value = null
 
