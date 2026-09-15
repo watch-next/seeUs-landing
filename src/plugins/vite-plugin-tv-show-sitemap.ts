@@ -55,44 +55,58 @@ ${urls.join('\n')}
 }
 
 async function fetchShowsForSitemap(): Promise<TVShowSitemapEntry[]> {
-  try {
-    const { fetchPopularShows, fetchTopRatedShows, fetchTrendingShows } = await import('../lib/api/tvDataSource');
-    const shows: TVShowSitemapEntry[] = [];
-    const seenIds = new Set<string>();
+  const baseUrl = process.env.VITE_API_URL;
 
-    // Fetch from multiple endpoints to get a broader set of shows
-    const endpoints = [
-      fetchPopularShows(),
-      fetchTopRatedShows(),
-      fetchTrendingShows(),
-    ];
-
-    const results = await Promise.all(endpoints.map(p => p.catch(err => {
-      console.error('[TV Show Sitemap Plugin] TMDB endpoint error:', err);
-      return { page: 1, results: [], total_pages: 1, total_results: 0 };
-    })));
-
-    for (const result of results) {
-      for (const show of result.results) {
-        const id = String(show.id);
-        if (seenIds.has(id)) continue;
-        seenIds.add(id);
-
-        shows.push({
-          id,
-          name: show.name,
-          updatedAt: new Date().toISOString().split('T')[0],
-          first_air_date: show.first_air_date || null,
-        });
-      }
-    }
-
-    return shows;
-  } catch (error) {
-    console.error('Error fetching TV shows for sitemap:', error);
-    // Return empty array to avoid breaking the build
+  if (!baseUrl) {
+    console.warn('[TV Show Sitemap Plugin] VITE_API_URL not configured, generating empty sitemap');
     return [];
   }
+
+  const shows: TVShowSitemapEntry[] = [];
+  const pagesToFetch = 5; // Fetch first 5 pages (up to 100 shows)
+
+  console.log('[TV Show Sitemap Plugin] Fetching TV shows from backend...');
+
+  for (let page = 1; page <= pagesToFetch; page++) {
+    try {
+      const response = await fetch(`${baseUrl}/tv?page=${page}&page_size=20`);
+
+      if (!response.ok) {
+        console.error(`[TV Show Sitemap Plugin] Backend API error: ${response.status} ${response.statusText}`);
+        break;
+      }
+
+      const data = await response.json();
+
+      if (!data.data || !Array.isArray(data.data)) {
+        break;
+      }
+
+      for (const show of data.data) {
+        // A valid id is required to avoid malformed URLs such as /tv-shows--name-year
+        const id = show.tmdb_id || show.id;
+        if (!show.name || typeof show.name !== 'string' || !id) {
+          continue;
+        }
+        shows.push({
+          id: String(id),
+          name: show.name,
+          updatedAt: new Date().toISOString().split('T')[0],
+          first_air_date: show.first_air_date,
+        });
+      }
+
+      if (data.total_pages && page >= data.total_pages) {
+        break;
+      }
+    } catch (error) {
+      console.error(`[TV Show Sitemap Plugin] Error fetching page ${page}:`, error);
+      break;
+    }
+  }
+
+  console.log(`[TV Show Sitemap Plugin] Found ${shows.length} TV shows`);
+  return shows;
 }
 
 export function VitePluginTVShowSitemap(): Plugin {
