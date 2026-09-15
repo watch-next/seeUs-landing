@@ -234,6 +234,32 @@ export async function fetchSimilarShows(
 }
 
 /**
+ * Get on TV TV shows from backend.
+ */
+export async function fetchOnTvShows(
+  page = 1,
+  pageSize = 20
+): Promise<TVShowsListResponse> {
+  const response = await httpClient.get<BackendTVList>('/tv/on-tv', {
+    params: { page, page_size: pageSize },
+  });
+  return mapTVListToTMDBFormat(response.data);
+}
+
+/**
+ * Get airing today TV shows from backend.
+ */
+export async function fetchAiringTodayShows(
+  page = 1,
+  pageSize = 20
+): Promise<TVShowsListResponse> {
+  const response = await httpClient.get<BackendTVList>('/tv/airing-today', {
+    params: { page, page_size: pageSize },
+  });
+  return mapTVListToTMDBFormat(response.data);
+}
+
+/**
  * Get all TV shows (paginated).
  */
 export async function fetchAllShows(

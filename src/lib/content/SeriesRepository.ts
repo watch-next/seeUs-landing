@@ -42,7 +42,8 @@ export async function getSeries(): Promise<TVShowDetail[]> {
     // Process popular series
     if (popularResponse.results) {
       for (const show of popularResponse.results) {
-        const slug = `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        const year = show.first_air_date ? parseInt(show.first_air_date.substring(0,4)) : new Date().getFullYear();
+        const slug = `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${year}`;
         const seriesItem: TVShowDetail = {
           ...show,
           slug,
@@ -59,7 +60,8 @@ export async function getSeries(): Promise<TVShowDetail[]> {
       const uniqueTopRated = topRatedResponse.results.filter(s => !existingIds.has(s.id));
 
       for (const show of uniqueTopRated) {
-        const slug = `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+        const year = show.first_air_date ? parseInt(show.first_air_date.substring(0,4)) : new Date().getFullYear();
+        const slug = `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${year}`;
         const seriesItem: TVShowDetail = {
           ...show,
           slug,
@@ -114,7 +116,8 @@ export async function getSeriesByTmdbId(tmdbId: number): Promise<TVShowDetail | 
     const show = await api.fetchTVShowDetails(tmdbId);
 
     // Build series with slug
-    const slug = `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    const year = show.first_air_date ? parseInt(show.first_air_date.substring(0,4)) : new Date().getFullYear();
+    const slug = `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${year}`;
     const seriesItem: TVShowDetail = {
       ...show,
       slug,
@@ -162,10 +165,14 @@ export async function getEpisode(tmdbId: number, seasonNumber: number, episodeNu
 export async function getSimilarSeries(tmdbId: number): Promise<TVShowDetail[]> {
   try {
     const response = await api.fetchSimilarShows(tmdbId, 12);
-    return response.results?.map(show => ({
-      ...show,
-      slug: `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-    })) || [];
+    return response.results?.map(show => {
+      const year = show.first_air_date ? parseInt(show.first_air_date.substring(0,4)) : new Date().getFullYear();
+      const slug = `${show.id}-${show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${year}`;
+      return {
+        ...show,
+        slug,
+      };
+    }) || [];
   } catch (error) {
     console.error('[SeriesRepository] Failed to fetch similar series:', error);
     return [];

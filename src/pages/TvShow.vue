@@ -216,7 +216,6 @@ import { useI18n } from 'vue-i18n'
 import { generateMovieSchema } from '@/lib/seo'
 import { useSeo } from '@/composables/useSeo'
 import { useWatchProviders } from '@/composables/useWatchProviders'
-import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Chip from '@/components/Chip.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
@@ -272,13 +271,13 @@ const error = ref<number | string | null>(null)
 
 const breadcrumbItems = computed(() => [
   { label: t('common.home'), to: '/' },
-  { label: t('tvShows.title'), to: '/tvshows' },
+  { label: t('tvShows.title'), to: '/tv-shows' },
   { label: series.value?.name || seriesId.value },
 ])
 
 const canonicalUrl = computed(() => {
   const baseUrl = import.meta.env.VITE_SITE_URL || 'https://watchnext.app'
-  return `${baseUrl}/tvshows/${seriesId.value}`
+  return `${baseUrl}/tv-shows/${seriesId.value}`
 })
 
 const posterUrl = computed(() => {
@@ -341,9 +340,11 @@ onMounted(async () => {
     }
 
     // Load series details and watch providers in parallel
+    console.debug('[TvShow.vue] Attempting to load series with slug:', slug)
     await Promise.all([
       (async () => {
         series.value = await getSeriesBySlug(slug)
+        console.debug('[TvShow.vue] Series loaded successfully:', series.value?.name || 'unknown')
         if (!series.value) {
           throw new Error('Series not found')
         }
@@ -358,6 +359,15 @@ onMounted(async () => {
       })(),
     ])
   } catch (err: any) {
+    console.error('[TvShow.vue] Error fetching series:', {
+      message: err?.message,
+      isAxiosError: !!err?.isAxiosError,
+      status: err?.response?.status,
+      statusText: err?.response?.statusText,
+      url: err?.config?.url,
+      slug: route.params.slug,
+      seriesId: seriesId.value
+    })
     error.value = err?.response?.status === 404 ? 404 : 'unknown'
     series.value = null
   } finally {
@@ -430,16 +440,6 @@ watchEffect(() => {
   }
 })
 
-// Handle login-required actions
-const { isAuthenticated, signIn } = useSupabaseAppAuth()
-
-function handleLoginRequired() {
-  if (!isAuthenticated.value) {
-    // Trigger login using the existing authentication system
-    signIn('guest@seeus.com', 'temporary123') // This will show the login modal or redirect
-  }
-}
-
 // Independent visual toggle state for the three action buttons (UI-only, no persistence)
 const activeActions = ref<{ watchlist: boolean; favorite: boolean; interest: boolean }>({
   watchlist: false,
@@ -448,7 +448,6 @@ const activeActions = ref<{ watchlist: boolean; favorite: boolean; interest: boo
 })
 
 function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
-  handleLoginRequired()
   activeActions.value[action] = !activeActions.value[action]
 }
 
