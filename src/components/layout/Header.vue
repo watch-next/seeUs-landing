@@ -39,6 +39,14 @@
       <aside class="header__drawer" :class="{ 'header__drawer--open': menuOpen }" role="navigation"
         aria-label="Drawer navigation" id="main-nav">
         <ul class="header__drawer-list">
+          <li v-if="isPremiumActive && !isCheckingPremium" class="header__drawer-item header__drawer-item--premium">
+            <div class="header__premium-badge">
+              <span class="badge">
+                <span class="badge__status-dot" aria-hidden="true"></span>
+                {{ t('header.premium') }}
+              </span>
+            </div>
+          </li>
           <li v-for="link in drawerNavigation" :key="link.key" class="header__drawer-item">
             <router-link v-if="!link.isRoute" :to="{ path: '/', hash: link.href }" class="header__drawer-link"
               @click="handleNavClick(link)">
@@ -50,14 +58,7 @@
               <span class="drawer-item-label">{{ link.label }}</span>
             </router-link>
           </li>
-          <li v-if="isPremiumActive && !isCheckingPremium" class="header__drawer-item header__drawer-item--premium">
-            <div class="header__premium-badge">
-              <span class="badge">
-                <span class="badge__status-dot" aria-hidden="true"></span>
-                {{ t('header.premium') }}
-              </span>
-            </div>
-          </li>
+          
         </ul>
         <button class="header__login-btn" @click="handleLoginClick">
           <span class="drawer-item-icon" aria-hidden="true" v-html="iconMap.login"></span>
@@ -375,12 +376,94 @@ onUnmounted(() => {
     transition: transform $transition-base;
     z-index: $z-sticky + 1;
 
-    @media (max-width: 359px) {
-      top: 56px;
+    &__drawer-list {
+      display: flex;
+      flex-direction: column;
+      gap: $space-4;
+      flex: 1;
+      min-height: 0;
+
+      & > .header__drawer-item + .header__drawer-item {
+        border-top: 1px solid $color-border;
+        margin-top: $space-4;
+        padding-top: $space-4;
+      }
     }
 
-    @media (min-width: 360px) and (max-width: 374px) {
+    &__drawer-link {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: $space-4 $space-6;
+      gap: $space-4;
+      font-size: $text-sm;
+      font-weight: $weight-medium;
+      color: $color-text-secondary;
+      transition: all $transition-fast;
+      border-radius: $radius-sm;
+
+      .drawer-item-icon {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        color: $color-text;
+        background: rgba($color-primary, 0.05);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $color-primary;
+        outline-offset: 2px;
+      }
+
+      &[aria-current="page"] {
+        color: $color-primary;
+        font-weight: $weight-semibold;
+        background: rgba($color-primary, 0.1);
+
+        .drawer-item-icon {
+          /* Icon color will inherit */
+        }
+      }
+    }
+
+    &__drawer-item--premium {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  
+    @media (max-width: 399px) {
       top: 56px;
+      width: min(180px, 84vw);
+      padding: $space-6 $space-4;
+
+      &__drawer-link {
+        padding: $space-3 $space-4;
+        gap: $space-3;
+
+        .drawer-item-icon {
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      &__drawer-list {
+        gap: $space-3;
+
+        & > .header__drawer-item + .header__drawer-item {
+          margin-top: $space-3;
+          padding-top: $space-3;
+        }
+      }
+
+      &__login-btn {
+        padding: $space-2 $space-4;
+      }
     }
 
     &--open {
