@@ -121,20 +121,38 @@ const year = new Date().getFullYear()
 
   &__grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
     gap: $space-12;
     margin-bottom: $space-12;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   &__brand {
+    grid-column: 1 / -1;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     gap: $space-4;
+    max-width: 320px;
+  }
+
+  &__group:nth-child(1) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  &__group:nth-child(2) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  &__group:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: 3;
   }
 
   &__logo {
     display: block;
-    height: $space-16;
+    height: ($space-8 * 2.0);
     width: auto;
     object-fit: contain;
   }
@@ -143,12 +161,13 @@ const year = new Date().getFullYear()
     font-size: $text-sm;
     color: $color-text-secondary;
     line-height: $leading-relaxed;
+    margin-top: $space-2;
   }
 
   &__social {
     display: flex;
     gap: $space-3;
-    margin-top: $space-2;
+    margin-top: $space-4;
   }
 
   &__social-link {
@@ -190,6 +209,9 @@ const year = new Date().getFullYear()
     display: flex;
     flex-direction: column;
     gap: $space-3;
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   &__link {
@@ -213,21 +235,60 @@ const year = new Date().getFullYear()
     color: $color-text-muted;
   }
 
-  @media (max-width: 992px) {
+  /* Tablet: 640px to 1023px */
+  @media (min-width: 640px) and (max-width: 1023px) {
     &__grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    &__brand {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    &__group:nth-child(1) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    &__group:nth-child(2) {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    &__group:nth-child(3) {
+      grid-column: 2;
+      grid-row: 2;
     }
   }
 
-  @media (max-width: 639px) {
+  /* Desktop: 1024px and above */
+  @media (min-width: 1024px) {
     &__grid {
-      grid-template-columns: 1fr;
-      gap: $space-8;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    }
+    &__brand {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    &__group:nth-child(1) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    &__group:nth-child(2) {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    &__group:nth-child(3) {
+      grid-column: 4;
+      grid-row: 1;
+    }
+  }
+
+  /* Mobile: up to 639px */
+  @media (max-width: 639px) {
+    &__brand {
+      align-items: center;
     }
 
-    &__brand {
+    &__description {
       text-align: center;
-      align-items: center;
     }
 
     &__social {
