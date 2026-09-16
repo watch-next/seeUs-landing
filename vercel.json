@@ -1,7 +1,7 @@
 {
-  "rewrites": [
+   "rewrites": [
     {
-      "source": "/((?!api\\/|assets\\/|favicon\\/|(?:[^/]+\\/)*[^/]+\\.(?:js|css|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot|txt|xml|webmanifest|json|map)(\\?|$|\\/)).*)",
+      "source": "/((?!api/|assets/|favicon/).*)",
       "destination": "/index.html"
     }
   ],
@@ -41,20 +41,6 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "header",
-          "key": "host",
-          "value": "www.see-us-landing.vercel.app"
-        }
-      ],
-      "destination": "https://see-us-landing.vercel.app/:path*",
-      "permanent": true
     }
   ]
 }
