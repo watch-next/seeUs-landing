@@ -42,19 +42,5 @@
         }
       ]
     }
-  ],
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "header",
-          "key": "host",
-          "value": "www.see-us-landing.vercel.app"
-        }
-      ],
-      "destination": "https://see-us-landing.vercel.app/:path*",
-      "permanent": true
-    }
   ]
 }
