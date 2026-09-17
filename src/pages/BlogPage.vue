@@ -1,81 +1,53 @@
 <template>
   <div class="blog-page">
     <div class="container blog-page__container">
-      <header class="blog-page__header">
-        <h1 class="blog-page__title">{{ t('blog.title') }}</h1>
-        <p class="blog-page__subtitle">{{ t('blog.subtitle') }}</p>
-      </header>
-
       <!-- AdSense Banner -->
-      <AdSenseAd
-        format="auto"
-        layout="fixed"
-        responsive
-        class="blog-page__ad"
-      />
-
-      <BlogSearch @search="handleSearch" />
-
-      <div class="blog-page__filters">
-        <BlogCategories
-          :posts="posts"
-          :selected-category="selectedCategory"
-          @category-select="handleCategorySelect"
-        />
-        <BlogTags
-          :posts="posts"
-          :selected-tag="selectedTag"
-          @tag-select="handleTagSelect"
-        />
-      </div>
+      <AdSenseAd format="auto" layout="fixed" responsive class="blog-page__ad" />
 
       <!-- Adsterra Banner -->
       <AdsterraBanner class="blog-page__adsterra" />
 
-      <BlogList
-        :posts="posts"
-        :filtered-slugs="paginatedSlugs"
-      />
+      <header class="blog-page__header">
+        <h1 class="blog-page__title">{{ t('blog.title') }}</h1>
+        <p class="blog-page__subtitle">{{ t('blog.subtitle') }}</p>
+      </header>
+      <BlogSearch @search="handleSearch" />
 
-      <nav
-        v-if="filteredSlugs.length > 0 && totalPages > 1"
-        class="blog-page__pagination"
-        aria-label="Blog pagination"
-      >
-        <button
-          type="button"
-          class="blog-page__page-btn blog-page__page-btn--nav"
-          :disabled="currentPage === 1"
-          aria-label="Previous page"
-          @click="goToPage(currentPage - 1)"
-        >
-          ‹ Previous
-        </button>
+      <div class="blog-page__body">
+        <aside class="blog-page__sidebar">
+          <BlogCategories :posts="posts" :selected-category="selectedCategory"
+            @category-select="handleCategorySelect" />
+          <BlogTags :posts="posts" :selected-tag="selectedTag" @tag-select="handleTagSelect" />
+        </aside>
 
-        <ul class="blog-page__pages">
-          <li v-for="page in pageNumbers" :key="page">
-            <button
-              type="button"
-              class="blog-page__page-btn"
-              :class="{ 'blog-page__page-btn--active': page === currentPage }"
-              :aria-current="page === currentPage ? 'page' : undefined"
-              @click="goToPage(page)"
-            >
-              {{ page }}
+        <main class="blog-page__main">
+
+          <BlogList :posts="posts" :filtered-slugs="paginatedSlugs" />
+
+          <nav v-if="filteredSlugs.length > 0 && totalPages > 1" class="blog-page__pagination"
+            aria-label="Blog pagination">
+            <button type="button" class="blog-page__page-btn blog-page__page-btn--nav" :disabled="currentPage === 1"
+              aria-label="Previous page" @click="goToPage(currentPage - 1)">
+              ‹ Previous
             </button>
-          </li>
-        </ul>
 
-        <button
-          type="button"
-          class="blog-page__page-btn blog-page__page-btn--nav"
-          :disabled="currentPage === totalPages"
-          aria-label="Next page"
-          @click="goToPage(currentPage + 1)"
-        >
-          Next ›
-        </button>
-      </nav>
+            <ul class="blog-page__pages">
+              <li v-for="page in pageNumbers" :key="page">
+                <button type="button" class="blog-page__page-btn"
+                  :class="{ 'blog-page__page-btn--active': page === currentPage }"
+                  :aria-current="page === currentPage ? 'page' : undefined" @click="goToPage(page)">
+                  {{ page }}
+                </button>
+              </li>
+            </ul>
+
+            <button type="button" class="blog-page__page-btn blog-page__page-btn--nav"
+              :disabled="currentPage === totalPages" aria-label="Next page" @click="goToPage(currentPage + 1)">
+              Next ›
+            </button>
+          </nav>
+        </main>
+      </div>
     </div>
 
     <AdsterraNative class="blog-page__adsterra-native" />
@@ -194,8 +166,8 @@ const goToPage = (page: number) => {
     max-width: 1200px;
     height: 400px;
     background: radial-gradient(ellipse 80% 60% at 50% 0%,
-      rgba($color-primary, 0.12) 0%,
-      transparent 60%);
+        rgba($color-primary, 0.12) 0%,
+        transparent 60%);
     z-index: $z-base;
     pointer-events: none;
   }
@@ -247,10 +219,28 @@ const goToPage = (page: number) => {
   }
 }
 
-.blog-page__filters {
+.blog-page__body {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: $space-10;
+  margin-top: $space-6;
+}
+
+.blog-page__sidebar {
   display: flex;
   flex-direction: column;
-  gap: $space-4;
+  gap: $space-8;
+}
+
+.blog-page__main {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.blog-page__filters {
+  display: none;
+  /* Hidden as filters are now in sidebar */
 }
 
 .blog-page__pagination {

@@ -71,7 +71,7 @@ const selectCategory = (category: string) => {
 
   &__list {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: $space-2;
   }
 
