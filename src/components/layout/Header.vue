@@ -409,8 +409,15 @@ onUnmounted(() => {
       }
 
       &:hover {
+        // Hover state: subtle color change to primary, light background
         color: $color-text;
         background: rgba($color-primary, 0.05);
+
+        // Ensure hover doesn't override active state visual treatment
+        &[aria-current="page"] {
+          color: $color-primary;
+          background: rgba($color-primary, 0.1);
+        }
       }
 
       &:focus-visible {
