@@ -274,7 +274,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watchEffect, watch } from 'vue'
-import { getMovieCredits } from '@/services/movie.service'
+import { getMovieCredits, type MovieCredit, type MovieCreditsResponse } from '@/services/movie.service'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { generateMovieSchema } from '@/lib/seo'
@@ -292,12 +292,7 @@ import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
 // Debug token state
-console.debug('[MoviePage.vue] Token state on load:', {
-  hasAccessToken: !!getAccessToken(),
-  hasRefreshToken: !!getRefreshToken(),
-  accessTokenLength: getAccessToken()?.length || 0,
-  refreshTokenLength: getRefreshToken()?.length || 0
-})
+
 const route = useRoute()
 
 // Watch dialog state: platform choice first, streaming providers below (collapsible)
@@ -445,10 +440,10 @@ onMounted(async () => {
     }
 
 
-    // Load credits in parallel (non-blocking, does not prevent movie from rendering)
+    // Load credits (non-blocking) - using movie's UUID after movie details are loaded
     isLoadingCredits.value = true
     try {
-      credits.value = await getMovieCredits(id)
+      credits.value = await getMovieCredits(movie.value?.id ?? '')
       console.debug('[MoviePage.vue] Credits loaded successfully')
     } catch (err: any) {
       creditsError.value = err?.message ?? 'Unknown error'
