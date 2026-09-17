@@ -118,46 +118,6 @@
               <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
             </section>
 
-            <!-- Credits Card -->
-            <section v-if="credits" class="movie-page__credits" aria-label="Credits">
-              <h2 class="credits__title">{{ t('credits.title') }}</h2>
-
-              <!-- Section description -->
-              <p class="credits__description">{{ t('credits.description') }}</p>
-
-              <!-- Cast Section -->
-              <div v-if="credits.cast.length > 0" class="credits__grid credits__grid--cast">
-                <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>
-                <div class="credits__grid-items">
-                  <div v-for="credit in credits.cast" :key="credit.id" class="credits__grid-item">
-                    <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
-                      :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
-                    <div class="credits__info">
-                      <p class="credits__name">{{ credit.name }}</p>
-                      <p class="credits__character">{{ credit.character }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Crew Section -->
-              <div v-if="credits.crew.length > 0" class="credits__grid credits__grid--crew">
-                <h3 class="credits__section-title">{{ t('credits.crew') }}</h3>
-                <div class="credits__grid-items">
-                  <div v-for="credit in credits.crew" :key="credit.id" class="credits__grid-item">
-                    <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
-                      :alt="`${credit.name} - ${credit.job}`" class="credits__poster" />
-                    <div class="credits__info">
-                      <p class="credits__name">{{ credit.name }}</p>
-                      <p class="credits__job">{{ credit.job }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <p v-else class="credits__empty">{{ t('credits.no_credits') }}</p>
-            </section>
-
 
 
             <!--Financial Info 
@@ -180,6 +140,45 @@
       </div>
     </div>
 
+    <!-- Credits Card -->
+    <section v-if="credits" class="movie-page__credits" aria-label="Credits">
+      <h2 class="credits__title">{{ t('credits.title') }}</h2>
+
+      <!-- Section description -->
+      <p class="credits__description">{{ t('credits.description') }}</p>
+
+      <!-- Cast Section -->
+      <div v-if="credits.cast.length > 0" class="credits__grid credits__grid--cast">
+        <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>
+        <div class="credits__grid-items">
+          <div v-for="credit in credits.cast" :key="credit.id" class="credits__grid-item">
+            <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
+              :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
+            <div class="credits__info">
+              <p class="credits__name">{{ credit.name }}</p>
+              <p class="credits__character">{{ credit.character }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crew Section -->
+      <div v-if="credits.crew.length > 0" class="credits__grid credits__grid--crew">
+        <h3 class="credits__section-title">{{ t('credits.crew') }}</h3>
+        <div class="credits__grid-items">
+          <div v-for="credit in credits.crew" :key="`${credit.id}-${credit.job || ''}`" class="credits__grid-item">
+            <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
+              :alt="`${credit.name} - ${credit.job}`" class="credits__poster" />
+            <div class="credits__info">
+              <p class="credits__name">{{ credit.name }}</p>
+              <p class="credits__job">{{ credit.job }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p v-if="credits.cast.length === 0 && credits.crew.length === 0" class="credits__empty">{{ t('credits.no_credits') }}</p>
+    </section>
 
   </article>
 
@@ -333,20 +332,6 @@ const movieId = computed(() => {
 
 const movie = ref<MovieDetail | null>(null)
 const isLoading = ref(true)
-
-// Credits state
-type MovieCredit = {
-  id: number | string
-  name: string
-  profile_path?: string | null
-  character?: string
-  job?: string
-}
-
-type MovieCreditsResponse = {
-  cast: MovieCredit[]
-  crew: MovieCredit[]
-}
 
 const credits = ref<MovieCreditsResponse | null>(null)
 const isLoadingCredits = ref(false)
