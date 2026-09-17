@@ -33,6 +33,21 @@ export interface MovieDetail {
   genres: Genre[];
 }
 
+export interface MovieCreditsResponse {
+  id?: number;
+  cast: MovieCredit[];
+  crew: MovieCredit[];
+}
+
+export interface MovieCredit {
+  id: number;
+  name: string;
+  character?: string;
+  job?: string;
+  department?: string;
+  profile_path?: string | null;
+}
+
 export interface Video {
   id: string;
   iso_639_1: string;
@@ -74,6 +89,15 @@ const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
  */
 export async function getMovieByUuid(uuid: string): Promise<MovieDetail> {
   const response: AxiosResponse<{ success: boolean; data: MovieDetail }> = await httpClient.get(`/movies/${uuid}`);
+  return response.data.data;
+}
+
+/**
+ * Get movie credits by movie ID.
+ * @param movieId - UUID do filme ou TMDB ID
+ */
+export async function getMovieCredits(movieId: string | number): Promise<MovieCreditsResponse> {
+  const response: AxiosResponse<{ success: boolean; data: MovieCreditsResponse }> = await httpClient.get(`/movies/${movieId}/credits`);
   return response.data.data;
 }
 

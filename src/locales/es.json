@@ -1,795 +1,114 @@
 {
-  "common": {
-    "active": "Activo",
-    "home": "Inicio",
-    "loading": "Cargando...",
-    "error": "Ocurrió un error inesperado.",
-    "processing": "Procesando...",
-    "retry": "Intentar de nuevo"
-  },
-  "navigation": {
-    "home": "Inicio",
-    "features": "Características",
-    "platforms": "Plataformas",
-    "premium": "Premium",
-    "roadmap": "Hoja de Ruta",
-    "blog": "Blog",
-    "movies": "Películas",
-    "about": "Sobre Nosotros",
-    "login": "Iniciar Sesión",
-    "openMenu": "Abrir menú",
-    "closeMenu": "Cerrar menú",
-    "selectLanguage": "Seleccionar idioma",
-    "navigation": "Navegación"
-  },
-  "header": {
-    "premium": "Premium"
-  },
-  "hero": {
-    "headline": "Mira Junto.\nEn Cualquier Lugar, en Cualquier Momento.",
-    "subtitle": "Descubre, sigue y comparte tus películas y series favoritas con amigos. Tu próxima maratón está a solo un clic de distancia.",
-    "ctaPrimary": "Comienza Gratis",
-    "ctaSecondary": "Ver Planes",
-    "emailPlaceholder": "Ingresa tu correo",
-    "submitBtn": "Únete Ahora",
-    "submittedLabel": "Unido",
-    "successMessage": "¡Gracias por unirte a la lista de espera!"
-  },
-  "features": {
-    "title": "Todo Lo Que Necesitas",
-    "subtitle": "Desde el descubrimiento hasta el seguimiento, SeeUs te cubre en todas tus plataformas favoritas.",
-    "items": {
-      "discovery": {
-        "title": "Descubrimiento Inteligente",
-        "description": "Obtén recomendaciones personalizadas basadas en tu historial y preferencias de visualización."
-      },
-      "tracking": {
-        "title": "Seguimiento Unificado",
-        "description": "Mantén un registro de todo lo que ves en Netflix, Prime, Hulu y más."
-      },
-      "social": {
-        "title": "Lista Social",
-        "description": "Crea y comparte listas de reproducción con amigos. Nunca pierdas de vista qué ver después."
-      },
-      "calendar": {
-        "title": "Calendario de Estrenos",
-        "description": "Mantente al día con los próximos estrenos, nuevas temporadas y fechas de estreno."
-      },
-      "ratings": {
-        "title": "Calificaciones Inteligentes",
-        "description": "Ve puntuaciones combinadas de IMDb, Rotten Tomatoes y Metacritic en un solo lugar."
-      },
-      "offline": {
-        "title": "Modo Sin Conexión",
-        "description": "Navega por tu biblioteca y planifica tu lista incluso sin conexión a internet."
-      }
-    }
-  },
-  "platforms": {
-    "title": "Disponible en Todas Partes",
-    "subtitle": "SeeUs llega a todos tus dispositivos. Comienza en uno, continúa en otro."
-  },
-  "premium": {
-    "title": "Hazte Premium",
-    "subtitle": "Desbloquea funciones exclusivas y mejora tu experiencia de visualización.",
-    "features": {
-      "adFree": "Experiencia sin anuncios",
-      "analytics": "Análisis avanzados",
-      "support": "Soporte prioritario",
-      "earlyAccess": "Acceso anticipado a nuevas funciones"
-    },
-    "cta": "Actualizar Ahora",
-    "status": {
-      "active": "Premium activo",
-      "authenticated": "Usuario autenticado",
-      "current": "Plan actual",
-      "cancelled": "Suscripción cancelada"
-    },
-    "actions": {
-      "cancel": "Cancelar suscripción"
-    },
-    "plans": {
-      "title": "Elige Tu Plan",
-      "subtitle": "Todo lo que necesitas para organizar lo que quieres ver.",
-      "startFree": "Comenzar Premium",
-      "comingSoonLabel": "Próximamente",
-      "badge": "Más popular",
-      "free": {
-        "title": "Gratis",
-        "description": "Todo lo que necesitas para organizar lo que quieres ver.",
-        "savings": "",
-        "features": {
-          "favorites": "Favoritos",
-          "unlimitedWatchlist": "Lista ilimitada",
-          "officialTrailers": "Tráilers oficiales"
-        }
-      },
-      "premium": {
-        "title": "Premium",
-        "price": "$9.90",
-        "period": "/mes",
-        "description": "Disfruta de todas las funciones de SeeUs sin limitaciones.",
-        "features": {
-          "unlimitedSync": "Sincronización ilimitada entre dispositivos",
-          "personalStats": "Estadísticas personales",
-          "fullHistory": "Historial completo de visualización",
-          "adFree": "Experiencia sin anuncios",
-          "aiRecommendations": "Recomendaciones inteligentes con IA",
-          "smartNotifications": "Notificaciones inteligentes",
-          "exclusiveWidgets": "Widgets exclusivos"
-        },
-        "footer": "Próximamente para Android, Web y Windows."
-      },
-      "annual": {
-        "badge": "Mejor ahorro",
-        "title": "Premium Anual",
-        "price": "$99.90",
-        "period": "/año",
-        "description": "Todos los beneficios Premium con descuento en el pago anual.",
-        "savings": "Ahorra $18.90 — equivalente a $8.33/mes.",
-        "features": {
-          "sameBenefits": "Todos los beneficios Premium"
-        }
-      },
-      "monthly": "Mensual",
-      "yearly": "Anual",
-      "price999": "€9.99",
-      "price9999": "€99.99",
-      "periodMonth": "/mes",
-      "periodYear": "/año",
-      "selectPlan": "Seleccionar Plan",
-      "features": {
-        "adFree": "Experiencia sin anuncios",
-        "basicAnalytics": "Análisis básicos",
-        "advancedAnalytics": "Análisis avanzados",
-        "prioritySupport": "Soporte prioritario",
-        "earlyAccess": "Acceso anticipado a nuevas funciones",
-        "exclusiveContent": "Contenido y recompensas exclusivas"
-      }
-    },
-    "success": {
-      "loading": {
-        "title": "Confirmando su suscripción...",
-        "description": ""
-      },
-      "confirmed": {
-        "title": "¡Suscripción confirmada!",
-        "description": "Su plan Premium está activo.",
-        "continue": "Continuar a la app",
-        "downloadPlatform": "Descargar / Acceder a SeeUs",
-        "backToStart": "Volver al inicio"
-      },
-      "pending": {
-        "title": "Pago recibido.",
-        "description": "La confirmación de su suscripción aún está siendo procesada.",
-        "retry": "Intentar de nuevo"
-      },
-      "canceled": {
-        "title": "Suscripción cancelada",
-        "description": "Su suscripción ha sido cancelada.",
-        "back": "Volver a los planes"
-      },
-      "rejected": {
-        "title": "Suscripción rechazada",
-        "description": "No pudimos procesar su suscripción.",
-        "back": "Volver a los planes"
-      },
-      "error": {
-        "title": "No se pudo verificar su suscripción",
-        "description": "",
-        "retry": "Intentar de nuevo"
-      },
-      "errors": {
-        "noId": "ID de preaprobación no encontrado.",
-        "generic": "Ocurrió un error al verificar su suscripción.",
-        "noSession": "Necesita iniciar sesión para verificar su suscripción."
-      }
-    }
-  },
-  "auth": {
-    "loginTitle": "Iniciar sesión",
-    "loginSubtitle": "Inicia sesión para completar tu suscripción Premium.",
-    "signupTitle": "Crear una cuenta",
-    "signupSubtitle": "Crea una cuenta para completar tu suscripción Premium.",
-    "email": "Correo electrónico",
-    "password": "Contraseña",
-    "login": "Iniciar sesión",
-    "signup": "Registrarse",
-    "noAccount": "¿No tienes una cuenta?",
-    "haveAccount": "¿Ya tienes una cuenta?",
-    "close": "Cerrar",
-    "confirmPassword": "Confirmar contraseña",
-    "emailConfirmation": "¡Ya casi está! Revisa tu correo para confirmar tu cuenta y luego inicia sesión.",
-    "passwordMismatch": "Las contraseñas no coinciden.",
-    "logout": "Cerrar sesión / Cambiar cuenta"
-  },
-  "roadmap": {
-    "title": "Lo Que Viene Próximamente",
-    "subtitle": "Esto es lo que estamos construyendo. Sigue el proceso mientras llevamos SeeUs a todas las plataformas.",
-    "quarters": {
-      "q1_2026": {
-        "title": "Lanzamiento de la Plataforma Principal",
-        "description": "Lanzamiento inicial con aplicación web, seguimiento básico y sincronización de listas entre plataformas."
-      },
-      "q2_2026": {
-        "title": "Funciones Sociales",
-        "description": "Listas de amigos, listas compartidas, feeds de actividad y hilos de comentarios."
-      },
-      "q3_2026": {
-        "title": "Aplicaciones Móviles",
-        "description": "Aplicación nativa de Android con modo sin conexión, widgets y notificaciones push."
-      },
-      "q4_2026": {
-        "title": "Motor de Recomendaciones",
-        "description": "Sugerencias impulsadas por IA basadas en historial de visualización, preferencias de género y tendencias sociales."
-      },
-      "q1_2027": {
-        "title": "Aplicación de Escritorio Windows",
-        "description": "Cliente nativo de Windows con bandeja del sistema, modo PiP y atajos de teclado."
-      },
-      "q2_2027": {
-        "title": "API e Integraciones",
-        "description": "API pública para desarrolladores e integraciones con Plex, Jellyfin y Kodi."
-      }
-    },
-    "status": {
-      "completed": "Completado",
-      "inProgress": "En Progreso",
-      "planned": "Planificado"
-    }
-  },
-  "faq": {
-    "section": {
-      "title": "Preguntas Frecuentes",
-      "subtitle": "Todo lo que necesitas saber sobre SeeUs."
-    },
-    "items": [
-      {
-        "question": "¿Es gratis SeeUs?",
-        "answer": "Sí. SeeUs ofrece una versión gratuita con funciones esenciales. Una versión Premium está disponible para usuarios que desean funciones adicionales."
-      },
-      {
-        "question": "¿Necesito crear una cuenta?",
-        "answer": "No. Puedes empezar a usar SeeUs inmediatamente. Crear una cuenta te permite sincronizar tus datos entre dispositivos."
-      },
-      {
-        "question": "¿Cómo sincronizo mis datos?",
-        "answer": "Simplemente inicia sesión con tu cuenta. Tus watchlists, favoritos y preferencias se sincronizan automáticamente."
-      },
-      {
-        "question": "¿Hay una aplicación para Android?",
-        "answer": "Sí. SeeUs está disponible para dispositivos Android."
-      },
-      {
-        "question": "¿Hay una versión para Windows?",
-        "answer": "Aún no. La versión web funciona en Windows, y una aplicación de escritorio nativa es parte de nuestro roadmap."
-      },
-      {
-        "question": "¿Cómo funciona Premium?",
-        "answer": "Premium desbloquea funciones adicionales y ayuda a apoyar el desarrollo continuo de SeeUs."
-      },
-      {
-        "question": "¿SeeUs rastrea dónde veo mi contenido?",
-        "answer": "No. SeeUs ayuda a organizar lo que ves, pero no monitorea dónde transmites tu contenido."
-      },
-      {
-        "question": "¿Puedo importar mis watchlists existentes?",
-        "answer": "La funcionalidad de importación está planificada y estará disponible en una actualización futura."
-      }
-    ]
-  },
-  "newsletter": {
-    "title": "Mantente Informado",
-    "description": "Recibe las últimas funciones, actualizaciones de la plataforma y recomendaciones curadas en tu bandeja de entrada.",
-    "placeholder": "Ingresa tu dirección de correo",
-    "submitLabel": "Suscribirse",
-    "successMessage": "¡Gracias por suscribirte!",
-    "submittedLabel": "Suscrito"
-  },
-  "footer": {
-    "brandDescription": "Descubre, sigue y comparte tus películas y series favoritas. Tu próxima maratón comienza aquí.",
-    "navigation": {
-      "heading": "Navegación",
-      "home": "Inicio",
-      "features": "Características",
-      "platforms": "Plataformas",
-      "premium": "Premium",
-      "roadmap": "Hoja de Ruta"
-    },
-    "platforms": {
-      "heading": "Plataformas",
-      "web": "Aplicación Web",
-      "windows": "Windows",
-      "android": "Android"
-    },
-    "legal": {
-      "heading": "Legal",
-      "privacy": "Política de Privacidad",
-      "terms": "Términos de Servicio",
-      "cookies": "Política de Cookies",
-      "feedback": "Feedback",
-      "backToHome": "Volver al Inicio"
-    },
-    "social": {
-      "twitter": "Twitter",
-      "github": "GitHub",
-      "discord": "Discord",
-      "instagram": "Instagram"
-    }
-  },
-  "feedback": {
-    "seo": {
-      "title": "Feedback | SeeUs",
-      "description": "Envía sugerencias, reporta errores o solicita nuevas funciones para SeeUs."
-    },
-    "title": "Feedback",
-    "subtitle": "Ayúdanos a mejorar SeeUs. Elige una de las opciones a continuación y envíanos tu opinión.",
-    "categories": {
-      "suggestion": "Sugerencias",
-      "bug": "Reportar un Error",
-      "feature": "Solicitar Función"
-    },
-    "form": {
-      "name": "Nombre",
-      "namePlaceholder": "Tu nombre (opcional)",
-      "email": "Correo",
-      "emailPlaceholder": "tu correo (opcional)",
-      "message": "Mensaje",
-      "submit": "Enviar Feedback",
-      "submitting": "Enviando...",
-      "submitAnother": "Enviar Otro Feedback",
-      "placeholders": {
-        "suggestion": "Cuéntanos tu idea...",
-        "bug": "Describe el problema...",
-        "feature": "¿Qué función te gustaría ver?"
-      }
-    },
-    "success": {
-      "title": "¡Gracias!",
-      "message": "Tu feedback nos ayuda a mejorar SeeUs.",
-      "submitAnother": "Enviar Otro Feedback"
-    }
-  },
-  "blog": {
-    "seo": {
-      "title": "Blog | SeeUs",
-      "description": "Descubre artículos sobre streaming de películas y series, guías, consejos y noticias para usuarios de SeeUs."
-    },
-    "title": "Blog",
-    "subtitle": "Guías, consejos y noticias sobre streaming de películas y series.",
-    "home": "Inicio",
-    "by": "Por",
-    "readingTime": "min de lectura",
-    "minRead": "min",
-    "featured": "Destacado",
-    "categories": "Categorías",
-    "tags": "Etiquetas",
-    "searchPlaceholder": "Buscar artículos...",
-    "noPostsFound": "No se encontraron publicaciones.",
-    "postNotFound": "Publicación No Encontrada",
-    "postNotFoundDescription": "El artículo que buscas no existe.",
-    "backToBlog": "Volver al Blog",
-    "relatedArticles": "Artículos Relacionados"
-  },
-  "content": {
-    "meta": {
-      "releaseYear": "Año de Estreno",
-      "firstAirYear": "Primera Emisión",
-      "lastAirYear": "Última Emisión",
-      "duration": "Duración",
-      "seasons": "Temporadas",
-      "rating": "Calificación",
-      "genres": "Géneros",
-      "director": "Director",
-      "directors": "Directores",
-      "cast": "Reparto",
-      "profession": "Profesión",
-      "birthDate": "Fecha de Nacimiento",
-      "birthPlace": "Lugar de Nacimiento",
-      "filmography": "Filmografía",
-      "status": "Estado",
-      "platforms": "Disponible En"
-    },
-    "navigation": {
-      "backToHome": "Volver al Inicio",
-      "relatedContent": "Contenido Relacionado",
-      "alsoStarring": "También Protagonizada Por",
-      "moreByDirector": "Más Por Este Director",
-      "similarTitles": "Títulos Similares",
-      "viewActor": "Ver Actor",
-      "viewDirector": "Ver Director",
-      "viewMovie": "Ver Película",
-      "viewSeries": "Ver Serie"
-    },
-    "labels": {
-      "minutes": "min",
-      "seasons": "temp.",
-      "episodes": "episodios"
-    }
-  },
-  "movie": {
-    "watch_now": "Ver Ahora",
-    "no_poster": "No hay póster disponible",
-    "no_synopsis": "No hay sinopsis disponible.",
-    "original_title": "Título original",
-    "popularity": "Popularidad",
-    "votes": "votos",
-    "synopsis": "Sinopsis",
-    "financial": "Información Financiera",
-    "budget": "Presupuesto",
-    "revenue": "Recaudación",
-    "official_site": "Sitio Oficial",
-    "trailer": "Tráiler",
-    "trailer_unavailable": "Tráiler no disponible",
-    "not_found": "Película no encontrada.",
-    "no_providers": "No hay proveedores de streaming disponibles para tu región.",
-    "providers": {
-      "streaming": "Streaming",
-      "free": "Gratis",
-      "ads": "Con Anuncios",
-      "rent": "Alquilar",
-      "buy": "Comprar"
-    },
-    "watch_dialog": {
-      "title": "Mira en SeeUs",
-      "subtitle": "Elige cómo quieres ver",
-      "web_app": "Abrir Web App",
-      "web_app_desc": "Mira directamente en tu navegador.",
-      "android_app": "Obtén la App de Android",
-      "android_app_desc": "Disfruta SeeUs en tu dispositivo Android.",
-      "close": "Cerrar",
-      "toggle_providers": "Plataformas de streaming"
-    },
-    "trailer_dialog": {
-      "close": "Cerrar tráiler"
-    },
-    "watchlist": "Lista para ver",
-    "favorite": "Favorito",
-    "interest": "Interés"
-  },
-  "watch": {
-    "stream_label": "Plataformas de streaming"
+  "intro": {
+    "title": "Bem-vindo ao SeeUs",
+    "subtitle": "Sua plataforma de descoberta de filmes e séries",
+    "cta": "Começar"
   },
   "movies": {
-    "title": "Películas",
-    "subtitle": "Descubre nuestra colección de películas",
-    "search": "Buscar",
-    "searchPlaceholder": "Buscar películas...",
-    "clearSearch": "Limpiar búsqueda",
-    "loading": "Cargando películas...",
-    "loadError": "No se pudieron cargar las películas",
-    "loadErrorDescription": "No pudimos cargar el catálogo de películas en este momento. Inténtalo de nuevo.",
-    "retry": "Intentar de nuevo",
-    "noMoviesFound": "No se encontraron películas",
-    "noMoviesFoundDescription": "No pudimos encontrar ninguna película que coincida con \"{query}\".",
-    "noMoviesAvailable": "No hay películas disponibles aún",
-    "noMoviesAvailableDescription": "¡Vuelve pronto!",
-    "serverSleeping": "Nuestro servidor se echó una pequeña siesta 😴",
-    "serverSleepingDescription": "Haz clic en el botón de abajo para despertarlo e intentarlo de nuevo.",
-    "wakeServer": "Despertar servidor",
-    "searchResults": "{count} resultados para \"{query}\""
+    "title": "Filmes",
+    "subtitle": "Descubra nossa coleção de filmes",
+    "searchPlaceholder": "Buscar filmes...",
+    "clearSearch": "Limpar busca",
+    "loading": "Carregando filmes...",
+    "loadError": "Não foi possível carregar os filmes",
+    "loadErrorDescription": "Não conseguimos carregar o catálogo de filmes no momento. Tente novamente.",
+    "retry": "Tentar novamente",
+    "noMoviesFound": "Nenhum filme encontrado",
+    "noMoviesFoundDescription": "Não encontramos filmes correspondentes a \"{query}\".",
+    "noMoviesAvailable": "Nenhum filme disponível ainda",
+    "noMoviesAvailableDescription": "Volte em breve!",
+    "serverSleeping": "Nosso servidor tirou uma soneca 😴",
+    "serverSleepingDescription": "Clique no botão abaixo para acordá-lo e tentar novamente.",
+    "wakeServer": "Acordar servidor",
+    "searchResults": "{count} resultados para \"{query}\"",
+    "totalResults": "{count} filmes"
   },
   "tvShows": {
-    "title": "Series de TV",
-    "subtitle": "Descubre nuestra colección de series",
-    "searchPlaceholder": "Buscar series...",
-    "clearSearch": "Limpiar búsqueda",
-    "loading": "Cargando series...",
+    "title": "Séries",
+    "subtitle": "Descubra nossa coleção de séries",
+    "searchPlaceholder": "Buscar séries...",
+    "clearSearch": "Limpar busca",
+    "loading": "Carregando séries...",
     "searchResults": "{count} resultados para \"{query}\"",
-    "noShowsAvailable": "No hay series disponibles aún",
-    "noShowsAvailableDescription": "¡Vuelve pronto!",
-    "serverSleeping": "Nuestro servidor se echó una pequeña siesta 😴",
-    "serverSleepingDescription": "Haz clic en el botón de abajo para despertarlo e intentarlo de nuevo.",
-    "wakeServer": "Despertar servidor",
-    "seasonsLabel": "{count} temporadas",
-    "underConstruction": "Aún estamos trabajando en esto."
+    "noShowsAvailable": "Nenhuma série disponível ainda",
+    "noShowsAvailableDescription": "Volte em breve!",
+    "serverSleeping": "Nosso servidor tirou uma soneca 😴",
+    "serverSleepingDescription": "Clique no botão abaixo para acordá-lo e tentar novamente.",
+    "wakeServer": "Acordar servidor",
+    "searchResults": "{count} resultados para \"{query}\"",
+    "totalResults": "{count} séries"
   },
-  "tvShow": {
-    "watch_now": "Ver Ahora",
-    "no_poster": "Sin póster disponible",
-    "no_synopsis": "Sin sinopsis disponible.",
-    "original_title": "Título original",
-    "popularity": "Popularidad",
-    "votes": "votos",
-    "synopsis": "Sinopsis",
-    "official_site": "Sitio Oficial",
-    "seasons": "Temporadas",
-    "status": "Estado",
-    "watch_dialog": {
-      "title": "Ver en SeeUs",
-      "subtitle": "Elige cómo quieres ver",
-      "web_app": "Abrir Web App",
-      "web_app_desc": "Mira directamente en tu navegador.",
-      "android_app": "Obtener la App de Android",
-      "android_app_desc": "Disfruta de SeeUs en tu dispositivo Android.",
-      "close": "Cerrar",
-      "toggle_providers": "Proveedores de streaming"
-    },
-    "watchlist": "Lista para ver",
-    "favorite": "Favorito",
-    "interest": "Interés"
+  "user": {
+    "login": "Entrar",
+    "signup": "Registrar",
+    "signInWithGoogle": "Entrar com Google",
+    "signInWithFacebook": "Entrar com Facebook",
+    "profile": "Perfil",
+    "logout": "Sair",
+    "welcomeBack": "Bem-vindo de volta",
+    "accountCreated": "Conta criada com sucesso"
   },
-  "waitlist": {
-    "error": {
-      "emailRequired": "El correo electrónico es obligatorio",
-      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
-      "alreadySubscribed": "Este correo electrónico ya está registrado",
-      "generic": "Error al unirse a la lista de espera. Inténtalo más tarde."
+  "premium": {
+    "title": "Premium",
+    "subtitle": "Assinatura mensal",
+    "free": "Experimente de graça",
+    "freeDescription": "Cadastre-se e aproveite 7 dias gratuitos",
+    "plans": {
+      "monthly": "Mensal",
+      "annual": "Anual",
+      "monthlyPrice": "R$ 9,90/mês",
+      "annualPrice": "R$ 99,90/ano (economize R$ 18,90 = R$ 8,33/mês)",
+      "subscribe": "Assinar",
+      "subscribeDescription": "Comece agora e ganhe seu primeiro mês de desconto",
+      "freeTrial": "7 dias grátis",
+      "freeTrialDescription": "Sem compromisso, cancelar a qualquer momento"
     },
-    "success": {
-      "joined": "¡Gracias por unirte a la lista de espera!"
+    "checkout": {
+      "title": "Finalizar assinatura",
+      "description": "Escolha o plano que desejar e complete o pagamento",
+      "premiumAnnual": "Assinatura anual",
+      "premiumMonthly": "Assinatura mensal",
+      "total": "Total",
+      "payNow": "Pagar agora",
+      "paymentError": "Erro no pagamento",
+      "paymentErrorDescription": "Não conseguimos processar seu pagamento. Tente novamente."
+    },
+    "status": {
+      "free": "Plano gratuito",
+      "monthly": "Plano mensal",
+      "annual": "Plano anual",
+      "canceled": "Plano cancelado",
+      "canceledDescription": "Sua assinatura foi cancelada. Você continua com acesso ao plano gratuito até o fim do período pago."
     }
   },
   "about": {
-    "seo": {
-      "title": "Sobre SeeUs | SeeUs",
-      "description": "Conoce qu? es SeeUs, c?mo funciona hoy, qu? est? planificado y c?mo el proyecto aborda privacidad, roadmap, comunidad y limitaciones del producto."
-    },
-    "hero": {
-      "title": "Sobre SeeUs",
-      "subtitle": "SeeUs es un rastreador de pel?culas y series construido sobre una idea simple: lo que ves, y lo que piensas sobre ello, es tuyo. Lo estamos construyendo de forma independiente, sin publicidad ni seguimiento conductual. Esta p?gina es la versi?n larga de esa declaraci?n: qui?nes somos, c?mo empez? el proyecto, qu? hemos entregado y hacia d?nde vamos."
-    },
-    "story": {
-      "title": "Nuestra Historia",
-      "blocks": [
-        {
-          "heading": "C?mo empez? la idea",
-          "body": "Segu?amos perdiendo el rastro. Una pel?cula vista en un viaje, una serie recomendada por un amigo, el siguiente episodio de una temporada que nunca terminamos: todo quedaba repartido entre servicios, apps de notas y memoria. El problema no era la falta de herramientas, sino la falta de herramientas que respetaran a la persona que las usa."
-        },
-        {
-          "heading": "Construyendo de forma independiente",
-          "body": "SeeUs es un proyecto independiente. No est? respaldado por una empresa de medios, una red publicitaria ni un fondo de inversi?n. Pagamos nuestra propia infraestructura, definimos nuestro propio roadmap y respondemos por nuestros propios errores."
-        },
-        {
-          "heading": "La primera versi?n funcional",
-          "body": "La primera versi?n de SeeUs hac?a una cosa: permit?a marcar una pel?cula o serie como vista. Sin calificaciones, sin red social, sin calendario. Eso bast? para saber que la idea val?a la pena. La <a href=\"/\">homepage</a> muestra en qu? se ha convertido el producto desde entonces, y publicamos los cambios en el <a href=\"/blog\">blog</a>."
-        }
-      ]
-    },
-    "why": {
-      "title": "Por Qu? Existe SeeUs",
-      "subtitle": "Un rastreador privado de pel?culas creado alrededor de lo que faltaba en la forma en que vemos y recordamos lo que vimos.",
-      "blocks": [
-        {
-          "heading": "El problema que segu?amos encontrando",
-          "body": "Mantener un historial significativo de lo que vemos no deber?a ser dif?cil. En la pr?ctica lo es: pel?culas, series recomendadas y episodios pendientes quedan repartidos entre servicios, notas y memoria."
-        },
-        {
-          "heading": "Lo que faltaba",
-          "body": "Quer?amos un lugar unificado para seguir pel?culas y series, organizar lo que planeamos ver, interactuar sin un feed impulsado por anuncios y mantener control real sobre nuestros datos."
-        },
-        {
-          "heading": "El principio elegido",
-          "body": "Lo que registras sobre lo que ves debe permanecer bajo tu control. SeeUs no vende datos personales, no hace perfilado conductual y no usa seguimiento entre sitios. Consulta <a href=\"/about#about-privacy\">Privacidad y Seguridad</a>."
-        }
-      ]
-    },
-    "mission": {
-      "title": "Misi?n",
-      "subtitle": "Dar a las personas un lugar privado y sin anuncios para seguir las pel?culas y series que ven, construido de una forma que respete m?s a los usuarios que a los incentivos externos.",
-      "blocks": [
-        {
-          "statement": true,
-          "body": "Construimos SeeUs para que lo que alguien ve, y lo que piensa sobre ello, siga siendo suyo."
-        },
-        {
-          "heading": "Construir para uso real",
-          "body": "Una funci?n pertenece a SeeUs cuando resuelve una parte real del seguimiento de lo que ves. Para entender la direcci?n del producto, consulta <a href=\"/about#about-vision\">Visi?n</a>."
-        },
-        {
-          "heading": "Mantener los datos personales bajo control del usuario",
-          "body": "Tu historial es personal. SeeUs no vende datos personales, no hace perfilado conductual y no coloca seguimiento entre sitios. Consulta <a href=\"/about#about-privacy\">Privacidad y Seguridad</a>."
-        },
-        {
-          "heading": "Explicar qu? cambia y por qu?",
-          "body": "Cuando cambiamos algo que afecta el uso de SeeUs, publicamos notas y contexto en el <a href=\"/blog\">Blog</a>."
-        }
-      ]
-    },
-    "vision": {
-      "title": "Visi?n",
-      "subtitle": "Hacia d?nde queremos llevar SeeUs a largo plazo, y los l?mites que no pretendemos cruzar.",
-      "blocks": [
-        {
-          "heading": "Hacia d?nde vamos",
-          "body": "Queremos que SeeUs sea un registro personal estable de lo que alguien ve, con experiencia consistente entre dispositivos, funciones sociales cuidadosas y mejores herramientas de organizaci?n. Consulta la <a href=\"/#features\">homepage</a> para ver qu? existe hoy."
-        },
-        {
-          "heading": "Lo que no construiremos",
-          "body": "No estamos construyendo una red publicitaria, no licenciamos contenido y no convertiremos SeeUs en un servicio de streaming. Tampoco vendemos datos conductuales."
-        },
-        {
-          "heading": "C?mo mediremos el ?xito",
-          "body": "Medimos el ?xito por el uso sostenido y por el control real del usuario sobre su propio registro. El trabajo concreto est? en el <a href=\"/about#about-roadmap\">Roadmap de Desarrollo</a>."
-        }
-      ]
-    },
-    "technologies": {
-      "title": "Tecnolog?as",
-      "subtitle": "La stack detr?s de SeeUs, elegida para mantenimiento a largo plazo, contribuci?n ligera y una ejecuci?n ?gil en el dispositivo.",
-      "items": [
-        {
-          "name": "Vue 3 + TypeScript",
-          "description": "El frontend est? escrito en Vue 3 con Composition API y TypeScript de punta a punta. La comprobaci?n de tipos forma parte del build de Vite."
-        },
-        {
-          "name": "Vite",
-          "description": "Vite sostiene el desarrollo local y el build de producci?n. El bundle final se despliega en Vercel."
-        },
-        {
-          "name": "vue-router",
-          "description": "El enrutamiento del cliente usa vue-router, con rutas est?ticas y din?micas declaradas expl?citamente."
-        },
-        {
-          "name": "vue-i18n",
-          "description": "La copia de interfaz vive en archivos locale para ingl?s, espa?ol y portugu?s, incluida esta p?gina About."
-        },
-        {
-          "name": "@unhead/vue",
-          "description": "Los t?tulos y meta tags se gestionan con @unhead/vue para que cada ruta defina el head del documento."
-        },
-        {
-          "name": "Supabase (Postgres)",
-          "description": "El frontend se comunica con Supabase mediante @supabase/supabase-js. Auth, blog y comentarios usan servicios de Supabase; no hay API custom en este repositorio frontend."
-        }
-      ]
-    },
-    "how": {
-      "title": "C?mo Funciona SeeUs",
-      "subtitle": "Esta secci?n describe lo que SeeUs hace hoy, seg?n lo que realmente est? funcionando. La <a href=\"/#features\">vista de funciones en la homepage</a> describe hacia d?nde vamos; <a href=\"/about#about-technologies\">las tecnolog?as detr?s de SeeUs</a> se cubren por separado.",
-      "blocks": [
-        {
-          "heading": "Las cinco ?reas actuales",
-          "body": "Agrupamos la funcionalidad actual en cinco ?reas. Algunas ya est?n entregadas; otras existen solo como texto de homepage mientras se construyen."
-        },
-        {
-          "heading": "Descubrimiento",
-          "body": "Puedes navegar por una cuadr?cula de t?tulos populares y bien valorados en la <a href=\"/movies\">p?gina de pel?culas</a> y abrir detalles con p?ster, sinopsis, g?neros, a?o, duraci?n y calificaci?n agregada. Hoy no hay b?squeda, filtros ni motor de recomendaci?n."
-        },
-        {
-          "heading": "Seguimiento",
-          "body": "Hoy no hay watchlist, bot?n de \"marcar como vista\" ni selector de estado. Es una de las pr?ximas entregas grandes del roadmap."
-        },
-        {
-          "heading": "Social",
-          "body": "La ?nica superficie social hoy es el hilo de comentarios en <a href=\"/blog\">posts del blog</a>. No hay perfiles de usuario, red de seguidores ni watchlists compartidas."
-        },
-        {
-          "heading": "Calendario",
-          "body": "No hay funci?n de calendario en el repositorio: no existe p?gina, ruta ni componente de calendario. La tarjeta de la homepage es lenguaje de roadmap."
-        },
-        {
-          "heading": "Calificaciones",
-          "body": "Las p?ginas de pel?culas muestran una calificaci?n agregada de TMDB. No hay calificaciones de usuarios, rese?as ni agregaci?n de IMDb, Rotten Tomatoes o Metacritic."
-        },
-        {
-          "heading": "El modelo de datos en lenguaje simple",
-          "body": "Como seguimiento y calificaciones a?n no se han entregado, los datos por usuario almacenados hoy se limitan a comentarios del blog. SeeUs no aloja, transmite ni almacena video, y no hay herramienta de exportaci?n hoy."
-        },
-        {
-          "heading": "Qu? ocurre al iniciar sesi?n",
-          "body": "La autenticaci?n usa Supabase Auth. Puedes entrar con Google o Facebook mediante OAuth o participar de forma an?nima. Las identidades an?nimas y OAuth son separadas; entrar con un proveedor social no fusiona comentarios an?nimos anteriores. El identificador an?nimo queda en el navegador y no es un l?mite de seguridad."
-        },
-        {
-          "body": "La p?gina de pel?culas es la vista m?s completa de SeeUs: <a href=\"/movies\">abre la demo en vivo</a>."
-        }
-      ]
-    },
-    "roadmap": {
-      "title": "Roadmap de Desarrollo",
-      "subtitle": "El roadmap representa nuestra direcci?n de desarrollo. Los elementos planificados son intenciones, no garant?as. Puedes ver la versi?n visual en la <a href=\"/#roadmap\">homepage</a>.",
-      "blocks": [
-        {
-          "heading": "D?nde estamos",
-          "body": "Estamos al inicio de la construcci?n. La aplicaci?n web est? activa con navegaci?n por metadatos, comentarios en el blog y autenticaci?n. El trimestre actual mostrado es Q2 2026 (Funciones Sociales), marcado en progreso."
-        },
-        {
-          "heading": "Qu? se entreg?",
-          "body": "<strong>Q1 2026: Lanzamiento de la Plataforma Principal.</strong> Se entregaron navegaci?n por pel?culas y series, p?ginas de detalle, comentarios con identidades an?nima, Google y Facebook, y Supabase Auth. La descripci?n original tambi?n menciona seguimiento y sincronizaci?n de watchlist, pero eso a?n no existe en el c?digo."
-        },
-        {
-          "heading": "Qu? sigue",
-          "body": "<strong>Q2 2026: Funciones Sociales</strong> est? en progreso, pero hoy solo est?n activos los comentarios del blog. Despu?s vienen etapas planificadas para apps mobile y motor de recomendaci?n. Etapas de 2027 aparecen en los locales, pero no en la timeline renderizada, as? que se tratan como borradores."
-        },
-        {
-          "heading": "Qu? cambi? desde el plan original",
-          "body": "El seguimiento b?sico y la sincronizaci?n de watchlist de Q1 2026 no se entregaron. Primero entregamos navegaci?n p?blica, detalles, blog y autenticaci?n; las prioridades pueden cambiar con el desarrollo."
-        },
-        {
-          "body": "<a href=\"/blog\">Seguir progreso -></a>"
-        }
-      ]
-    },
-    "privacy": {
-      "title": "Privacidad y Seguridad",
-      "subtitle": "La versi?n corta: no vendemos tus datos personales, no hacemos perfilado conductual y no usamos seguimiento entre sitios. Para el texto legal, lee la <a href=\"/privacy-policy\">Pol?tica de Privacidad</a> y la <a href=\"/cookies-policy\">Pol?tica de Cookies</a>.",
-      "blocks": [
-        {
-          "heading": "Qu? recopilamos",
-          "body": "Al crear una cuenta, almacenamos tu correo y credenciales con hash usadas por Supabase Auth. En comentarios almacenamos nombre visible, semilla de avatar, texto, likes y reportes. Los metadatos vienen de TMDB. Usamos GA4 para m?tricas agregadas; las cookies est?n en la <a href=\"/cookies-policy\">Pol?tica de Cookies</a>."
-        },
-        {
-          "heading": "Qu? no recopilamos",
-          "body": "No vendemos datos personales, no hacemos perfilado conductual ni seguimiento entre sitios, y no alojamos, transmitimos ni almacenamos video. Como seguimiento y calificaciones a?n no se entregaron, hoy no recopilamos historial visto, watchlist ni calificaciones personales."
-        },
-        {
-          "heading": "C?mo se almacenan tus datos",
-          "body": "Los datos de cuenta y comentarios viven en Supabase Postgres, accedidos v?a Supabase JS por HTTPS. La identidad an?nima es un UUID en localStorage y no est? vinculada criptogr?ficamente a una cuenta de servidor."
-        },
-        {
-          "heading": "C?mo puedes irte",
-          "body": "Puedes ejercer los derechos descritos en la Pol?tica de Privacidad escribiendo a privacy@watchnext.app. Hoy no hay bot?n de eliminaci?n de cuenta ni herramienta de exportaci?n dentro del producto."
-        },
-        {
-          "heading": "Limitaciones conocidas",
-          "body": "El token an?nimo es texto claro en localStorage y no es un l?mite de seguridad. Confirmamos HTTPS en tr?nsito, pero no auditamos el cifrado en reposo de Supabase. Eliminaci?n self-service y exportaci?n siguen como tareas pendientes. Consulta <a href=\"/about#about-community\">Comunidad</a>."
-        }
-      ]
-    },
-    "community": {
-      "title": "Comunidad",
-      "subtitle": "SeeUs es peque?o y transparente al respecto. No publicamos recuentos de usuarios o descargas, y no pretendemos ser una plataforma concurrida cuando a?n no lo somos.",
-      "blocks": [
-        {
-          "heading": "C?mo usan SeeUs las personas",
-          "body": "Hoy la aplicaci?n permite navegar por pel?culas y series, abrir detalles y leer contenido en el <a href=\"/blog\">blog</a>. Cualquier persona puede comentar de forma an?nima o entrando con Google o Facebook. Seguimiento, watchlists, calificaciones y funciones sociales a?n no est?n entregadas."
-        },
-        {
-          "heading": "C?mo contactarnos",
-          "body": "El canal directo principal es el <a href=\"/feedback\">formulario de feedback</a>, para bugs, usabilidad, accesibilidad y seguridad. No hay equipo formal de soporte ni plazo garantizado de respuesta."
-        },
-        {
-          "heading": "C?mo contribuir",
-          "body": "Por ahora, el feedback es la v?a pr?ctica de contribuci?n. A?n no apuntamos a un repositorio p?blico que acepte pull requests."
-        },
-        {
-          "heading": "Moderaci?n y reportes",
-          "body": "Los comentarios pueden reportarse por spam, acoso, lenguaje ofensivo u otros motivos. Esto no es una promesa de moderaci?n 24/7 o automatizada."
-        }
-      ]
-    },
-    "faq": {
-      "title": "FAQ",
-      "subtitle": "Respuestas directas a las preguntas m?s comunes. Cuando algo se superpone con otra p?gina, mantenemos la respuesta breve y enlazamos el detalle.",
-      "items": [
-        {
-          "question": "?SeeUs es gratis?",
-          "answer": "S?. SeeUs tiene un plan gratuito para la experiencia principal. Hay un plan Premium por <a href=\"/#premium\">$9.90 al mes</a>. Hoy no mostramos un plan anual."
-        },
-        {
-          "question": "?Qu? plataformas soporta SeeUs?",
-          "answer": "Los datos del producto declaran web, Windows y Android; consulta <a href=\"/#platforms\">plataformas</a>. Las URLs de tienda y descarga vienen de configuraci?n en runtime, y a?n no hay app iOS."
-        },
-        {
-          "question": "?Puedo exportar mis datos?",
-          "answer": "Todav?a no. No hay herramienta funcional de exportaci?n hoy. Cuando exista, se mencionar? aqu? y en la <a href=\"/privacy-policy\">Pol?tica de Privacidad</a>."
-        },
-        {
-          "question": "?Venden mis datos?",
-          "answer": "No. No vendemos datos personales, no creamos perfiles conductuales y no te rastreamos en otros sitios. Consulta la <a href=\"/privacy-policy\">Pol?tica de Privacidad</a>."
-        },
-        {
-          "question": "?C?mo elimino mi cuenta?",
-          "answer": "Hoy no hay bot?n self-service de eliminaci?n de cuenta. La Pol?tica de Privacidad describe la v?a manual por el <a href=\"/privacy-policy\">contacto de privacidad</a>."
-        },
-        {
-          "question": "?Hay app m?vil?",
-          "answer": "Todav?a no como lanzamiento nativo. Android aparece en los datos del producto, pero no anunciamos disponibilidad en tiendas sin un enlace real. Consulta <a href=\"/#platforms\">plataformas</a>."
-        },
-        {
-          "question": "?C?mo reporto un bug o abuso?",
-          "answer": "Usa el <a href=\"/feedback\">formulario de feedback</a> para bugs, accesibilidad, seguridad y reportes de contenido."
-        },
-        {
-          "question": "?C?mo sigo las actualizaciones?",
-          "answer": "El <a href=\"/blog\">blog</a> es donde publicamos notas de lanzamiento y progreso."
-        }
-      ]
-    },
-    "download": {
-      "title": "Prueba SeeUs",
-      "subtitle": "Ahora sabes qu? es SeeUs, c?mo funciona y hacia d?nde va. La forma m?s r?pida de evaluarlo es abrirlo y navegar por tu cuenta.",
-      "cta": "Abrir SeeUs"
-    }
+    "title": "Sobre Nós",
+    "technologies": "Tecnologias",
+    "team": "Equipe",
+    "careers": "Carreiras",
+    "press": "Imprensa",
+    "terms": "Termos de uso",
+    "privacy": "Privacidade",
+    "cookiePolicy": "Política de cookies"
+  },
+  "blog": {
+    "title": "Blog",
+    "noPosts": "Nenhum post encontrado",
+    "searchPlaceholder": "Buscar posts...",
+    "clearSearch": "Limpar busca",
+    "loadMore": "Carregar mais",
+    "loadMoreDescription": "Carregar mais posts"
+  },
+  "download": {
+    "title": "Prueba SeeUs",
+    "subtitle": "Ahora sabes qu? es SeeUs, c?mo funciona y hacia d?nde va. La forma m?s r?pida de evaluarlo es abrirlo y navegar por tu cuenta.",
+    "cta": "Abrir SeeUs"
+  },
+  "credits": {
+    "title": "Créditos",
+    "description": "Veja o elenco e a equipe deste filme",
+    "cast": "Elenco",
+    "crew": "Equipe",
+    "no_credits": "Não há créditos disponíveis"
   }
 }

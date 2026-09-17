@@ -1,125 +1,166 @@
 <template>
   <article v-if="movie" class="movie-page">
-    <div class="cinematic-card" :style="{ backgroundImage: movie.backdrop_path ? `url('https://image.tmdb.org/t/p/original${movie.backdrop_path}')` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: movie.backdrop_path ? 'transparent' : 'var(--bg-primary)' }">
+    <div class="cinematic-card"
+      :style="{ backgroundImage: movie.backdrop_path ? `url('https://image.tmdb.org/t/p/original${movie.backdrop_path}')` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: movie.backdrop_path ? 'transparent' : 'var(--bg-primary)' }">
       <div class="container movie-page__container">
-      <!-- Breadcrumb -->
-      <Breadcrumbs :items="breadcrumbItems" />
-       <!-- Adsterra Banner -->
-          <AdsterraBanner class="movie-page__adsterra" />
+        <!-- Breadcrumb -->
+        <Breadcrumbs :items="breadcrumbItems" />
+        <!-- Adsterra Banner -->
+        <AdsterraBanner class="movie-page__adsterra" />
 
-          <!-- AdSense Banner -->
-          <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
-      <!-- Header with Poster and Backdrop -->
-      <header class="movie-page__header">
-        <div class="movie-page__media">
-          <div class="movie-page__poster">
-            <img v-if="posterUrl" :src="posterUrl" :alt="movie.title" class="movie-page__poster-img" loading="lazy" />
-            <div v-else class="movie-page__poster-placeholder">
-              <span>🎬</span>
-              <p>{{ t('movie.no_poster') }}</p>
+        <!-- AdSense Banner -->
+        <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
+        <!-- Header with Poster and Backdrop -->
+        <header class="movie-page__header">
+          <div class="movie-page__media">
+            <div class="movie-page__poster">
+              <img v-if="posterUrl" :src="posterUrl" :alt="movie.title" class="movie-page__poster-img" loading="lazy" />
+              <div v-else class="movie-page__poster-placeholder">
+                <span>🎬</span>
+                <p>{{ t('movie.no_poster') }}</p>
+              </div>
             </div>
+
           </div>
 
-        </div>
+          <div class="movie-page__info">
 
-        <div class="movie-page__info">
+            <h1 class="movie-page__title">{{ movie.title }}</h1>
 
-          <h1 class="movie-page__title">{{ movie.title }}</h1>
+            <p v-if="movie.original_title && movie.original_title !== movie.title" class="movie-page__original-title">
+              <span class="label">{{ t('movie.original_title') }}:</span> {{ movie.original_title }}
+            </p>
 
-          <p v-if="movie.original_title && movie.original_title !== movie.title" class="movie-page__original-title">
-            <span class="label">{{ t('movie.original_title') }}:</span> {{ movie.original_title }}
-          </p>
+            <p v-if="movie.tagline" class="movie-page__tagline">"{{ movie.tagline }}"</p>
 
-          <p v-if="movie.tagline" class="movie-page__tagline">"{{ movie.tagline }}"</p>
+            <div class="movie-page__meta">
+              <span class="movie-page__year" v-if="releaseYear">
+                {{ releaseYear }}
+              </span>
+              <span class="movie-page__duration" v-if="movie.runtime_minutes">
+                {{ formatDuration(movie.runtime_minutes) }}
+              </span>
+              <span class="movie-page__status" v-if="movie.status">
+                {{ movie.status }}
+              </span>
+              <span class="movie-page__popularity" v-if="movie.popularity">
+                {{ t('movie.popularity') }}: {{ movie.popularity.toFixed(0) }}
+              </span>
+            </div>
 
-          <div class="movie-page__meta">
-            <span class="movie-page__year" v-if="releaseYear">
-              {{ releaseYear }}
-            </span>
-            <span class="movie-page__duration" v-if="movie.runtime_minutes">
-              {{ formatDuration(movie.runtime_minutes) }}
-            </span>
-            <span class="movie-page__status" v-if="movie.status">
-              {{ movie.status }}
-            </span>
-            <span class="movie-page__popularity" v-if="movie.popularity">
-              {{ t('movie.popularity') }}: {{ movie.popularity.toFixed(0) }}
-            </span>
-          </div>
-
-          <!-- Ratings -->
-          <div class="movie-page__ratings" v-if="movie">
-            <div class="movie-page__rating-circle" :style="{
-              background: animatedRatingPercentage !== null
-                ? `conic-gradient(
+            <!-- Ratings -->
+            <div class="movie-page__ratings" v-if="movie">
+              <div class="movie-page__rating-circle" :style="{
+                background: animatedRatingPercentage !== null
+                  ? `conic-gradient(
                     from -90deg,
                     #3E8BFF 0%,
                     #3E8BFF ${animatedRatingPercentage}%,
                     #1A1F55 ${animatedRatingPercentage}%,
                     #1A1F55 100%
                   )`
-                : '#1A1F55',
-              boxShadow: animatedRatingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
-            }">
-              <div class="movie-page__rating-circle__inner">
-                <span class="movie-page__rating-circle__rating-value">{{ animatedRatingPercentage !== null ?
-                  `${animatedRatingPercentage}%` : 'N/A' }}</span>
+                  : '#1A1F55',
+                boxShadow: animatedRatingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
+              }">
+                <div class="movie-page__rating-circle__inner">
+                  <span class="movie-page__rating-circle__rating-value">{{ animatedRatingPercentage !== null ?
+                    `${animatedRatingPercentage}%` : 'N/A' }}</span>
+                </div>
+              </div>
+              <div class="movie-page__ratings__count" v-if="movie.vote_count">
+                {{ movie.vote_count.toLocaleString() }} {{ t('movie.votes') }}
               </div>
             </div>
-            <div class="movie-page__ratings__count" v-if="movie.vote_count">
-              {{ movie.vote_count.toLocaleString() }} {{ t('movie.votes') }}
+
+            <!-- Action Buttons -->
+            <div class="movie-page__action-buttons" v-if="movie">
+              <button type="button" @click="toggleAction('watchlist')" :aria-pressed="activeActions.watchlist"
+                :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.watchlist }]"
+                title="Add to your watch list">
+                <img :src="`/assets/icons/discover.svg`" alt="" class="action-icon" aria-hidden="true" />
+                <span class="action-label">{{ t('movie.watchlist') }}</span>
+              </button>
+              <button type="button" @click="toggleAction('favorite')" :aria-pressed="activeActions.favorite"
+                :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.favorite }]"
+                title="Add to your favorites">
+                <img :src="`/assets/icons/rating.svg`" alt="" class="action-icon" aria-hidden="true" />
+                <span class="action-label">{{ t('movie.favorite') }}</span>
+              </button>
+              <button type="button" @click="toggleAction('interest')" :aria-pressed="activeActions.interest"
+                :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.interest }]"
+                title="Mark as interested">
+                <img :src="`/assets/icons/track.svg`" alt="" class="action-icon" aria-hidden="true" />
+                <span class="action-label">{{ t('movie.interest') }}</span>
+              </button>
             </div>
-          </div>
 
-          <!-- Action Buttons -->
-          <div class="movie-page__action-buttons" v-if="movie">
-            <button type="button" @click="toggleAction('watchlist')" :aria-pressed="activeActions.watchlist"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.watchlist }]"
-              title="Add to your watch list">
-              <img :src="`/assets/icons/discover.svg`" alt="" class="action-icon" aria-hidden="true" />
-              <span class="action-label">{{ t('movie.watchlist') }}</span>
-            </button>
-            <button type="button" @click="toggleAction('favorite')" :aria-pressed="activeActions.favorite"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.favorite }]"
-              title="Add to your favorites">
-              <img :src="`/assets/icons/rating.svg`" alt="" class="action-icon" aria-hidden="true" />
-              <span class="action-label">{{ t('movie.favorite') }}</span>
-            </button>
-            <button type="button" @click="toggleAction('interest')" :aria-pressed="activeActions.interest"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.interest }]"
-              title="Mark as interested">
-              <img :src="`/assets/icons/track.svg`" alt="" class="action-icon" aria-hidden="true" />
-              <span class="action-label">{{ t('movie.interest') }}</span>
-            </button>
-          </div>
-
-          <!-- Genres as Chips -->
-          <div class="movie-page__genres" v-if="movie.genres && movie.genres.length">
-            <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
-          </div>
-          <!-- Action Buttons (aligned in block) -->
-          <div class="movie-page__actions">
-            <a v-if="movie.homepage" :href="movie.homepage" target="_blank" rel="noopener noreferrer"
-              class="movie-page__btn movie-page__btn--homepage">
-              🌐 {{ t('movie.official_site') }}
-              <span class="external-link-icon">↗</span>
-            </a>
-            <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
-              📺 {{ t('movie.watch_now') }}
-            </button>
-          </div>
+            <!-- Genres as Chips -->
+            <div class="movie-page__genres" v-if="movie.genres && movie.genres.length">
+              <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
+            </div>
+            <!-- Action Buttons (aligned in block) -->
+            <div class="movie-page__actions">
+              <a v-if="movie.homepage" :href="movie.homepage" target="_blank" rel="noopener noreferrer"
+                class="movie-page__btn movie-page__btn--homepage">
+                🌐 {{ t('movie.official_site') }}
+                <span class="external-link-icon">↗</span>
+              </a>
+              <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
+                📺 {{ t('movie.watch_now') }}
+              </button>
+            </div>
 
 
-  <!-- Synopsis -->
-          <section class="movie-page__synopsis">
-            <h2 class="synopsis__title">{{ t('movie.synopsis') }}</h2>
-            <p v-if="movie.overview" class="synopsis__content">{{ movie.overview }}</p>
-            <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
-          </section>
+            <!-- Synopsis -->
+            <section class="movie-page__synopsis">
+              <h2 class="synopsis__title">{{ t('movie.synopsis') }}</h2>
+              <p v-if="movie.overview" class="synopsis__content">{{ movie.overview }}</p>
+              <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
+            </section>
 
-         
+            <!-- Credits Card -->
+            <section v-if="credits" class="movie-page__credits" aria-label="Credits">
+              <h2 class="credits__title">{{ t('credits.title') }}</h2>
 
-          <!--Financial Info 
+              <!-- Section description -->
+              <p class="credits__description">{{ t('credits.description') }}</p>
+
+              <!-- Cast Section -->
+              <div v-if="credits.cast.length > 0" class="credits__grid credits__grid--cast">
+                <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>
+                <div class="credits__grid-items">
+                  <div v-for="credit in credits.cast" :key="credit.id" class="credits__grid-item">
+                    <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
+                      :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
+                    <div class="credits__info">
+                      <p class="credits__name">{{ credit.name }}</p>
+                      <p class="credits__character">{{ credit.character }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Crew Section -->
+              <div v-if="credits.crew.length > 0" class="credits__grid credits__grid--crew">
+                <h3 class="credits__section-title">{{ t('credits.crew') }}</h3>
+                <div class="credits__grid-items">
+                  <div v-for="credit in credits.crew" :key="credit.id" class="credits__grid-item">
+                    <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
+                      :alt="`${credit.name} - ${credit.job}`" class="credits__poster" />
+                    <div class="credits__info">
+                      <p class="credits__name">{{ credit.name }}</p>
+                      <p class="credits__job">{{ credit.job }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p v-else class="credits__empty">{{ t('credits.no_credits') }}</p>
+            </section>
+
+
+
+            <!--Financial Info 
           <section class="movie-page__financial" v-if="movie.budget || movie.revenue">
             <h2 class="financial__title">{{ t('movie.financial') }}</h2>
             <div class="financial__grid">
@@ -134,12 +175,12 @@
             </div>
           </section> -->
 
-        </div>
-      </header>
+          </div>
+        </header>
+      </div>
     </div>
-  </div>
 
-   
+
   </article>
 
   <div v-else-if="isLoading" class="container movie-page__loading">
@@ -228,11 +269,12 @@
     </div>
   </div>
 
-<AdsterraNative class="movie-page__adsterra-native" />
+  <AdsterraNative class="movie-page__adsterra-native" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watchEffect, watch } from 'vue'
+import { getMovieCredits } from '@/services/movie.service'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { generateMovieSchema } from '@/lib/seo'
@@ -296,6 +338,24 @@ const movieId = computed(() => {
 
 const movie = ref<MovieDetail | null>(null)
 const isLoading = ref(true)
+
+// Credits state
+type MovieCredit = {
+  id: number | string
+  name: string
+  profile_path?: string | null
+  character?: string
+  job?: string
+}
+
+type MovieCreditsResponse = {
+  cast: MovieCredit[]
+  crew: MovieCredit[]
+}
+
+const credits = ref<MovieCreditsResponse | null>(null)
+const isLoadingCredits = ref(false)
+const creditsError = ref<string | null>(null)
 const showWatchModal = ref(false)
 const error = ref<number | string | null>(null)
 
@@ -366,17 +426,36 @@ onMounted(async () => {
       throw new Error('Invalid movie ID')
     }
 
-    // Load movie details and watch providers in parallel
+    // Load movie details
     console.debug('[MoviePage.vue] Attempting to load movie with id:', id)
-    await Promise.all([
-      (async () => {
-        movie.value = await getMovieByUuid(id)
-        console.debug('[MoviePage.vue] Movie loaded successfully:', movie.value?.title || 'unknown')
-      })(),
-      (async () => {
-        await loadProviders(id)
-      })(),
-    ])
+    try {
+      movie.value = await getMovieByUuid(id)
+      console.debug('[MoviePage.vue] Movie loaded successfully:', movie.value?.title || 'unknown')
+    } catch (movieError) {
+      console.error('[MoviePage.vue] Error loading movie:', movieError)
+      throw movieError // Re-throw to be caught by outer try/catch
+    }
+
+    // Load watch providers (non-blocking)
+    try {
+      await loadProviders(id)
+    } catch (providersError) {
+      console.error('[MoviePage.vue] Error loading watch providers:', providersError)
+      // Continue execution - providers failure doesn't block movie display
+    }
+
+
+    // Load credits in parallel (non-blocking, does not prevent movie from rendering)
+    isLoadingCredits.value = true
+    try {
+      credits.value = await getMovieCredits(id)
+      console.debug('[MoviePage.vue] Credits loaded successfully')
+    } catch (err: any) {
+      creditsError.value = err?.message ?? 'Unknown error'
+      console.warn('[MoviePage.vue] Failed to load credits:', err)
+    } finally {
+      isLoadingCredits.value = false
+    }
 
 
   } catch (err: any) {
@@ -388,8 +467,20 @@ onMounted(async () => {
       url: err?.config?.url,
       id: movieId.value
     })
-    error.value = err?.response?.status === 404 ? 404 : 'unknown'
-    movie.value = null
+
+    // Check if this error is from the movie request (not watch providers or credits)
+    const isMovieRequestError =
+      err?.isAxiosError &&
+      err?.config?.url === `/movies/${movieId.value}`
+
+    if (isMovieRequestError) {
+      // This is an error loading the movie itself
+      error.value = err?.response?.status === 404 ? 404 : 'unknown'
+      movie.value = null
+    }
+    // For errors from watch providers or credits requests,
+    // we don't update movie.value or error.value here
+    // as they have their own error handling
 
   } finally {
     isLoading.value = false
@@ -883,6 +974,197 @@ useSeo({
       background-size: 200% 100%;
       border-radius: 4px;
       animation: shimmer 1.5s infinite;
+    }
+  }
+
+  &__credits {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &__title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &::before {
+        content: "";
+        width: 4px;
+        height: 24px;
+        background: linear-gradient(180deg, #3E8BFF, #8A2BE2);
+        border-radius: 2px;
+      }
+    }
+
+    &__description {
+      font-size: 0.95rem;
+      color: var(--text-tertiary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+
+      @media (max-width: 1024px) {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 480px) {
+        gap: 1rem;
+      }
+    }
+
+    &__section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &::before {
+        content: "";
+        width: 3px;
+        height: 20px;
+        background: linear-gradient(180deg, #3E8BFF, #8A2BE2);
+        border-radius: 1.5px;
+      }
+    }
+
+    &__grid-items {
+      display: grid;
+      gap: 1.25rem;
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    &__grid-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+      text-align: center;
+      padding: 1.25rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border-color: var(--accent);
+        background: var(--bg-secondary);
+
+        &::before {
+          opacity: 0.1;
+        }
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3E8BFF, #8A2BE2);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+    }
+
+    &__poster {
+      width: 90px;
+      height: 135px;
+      object-fit: cover;
+      border-radius: 10px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: scale(1.03);
+      }
+    }
+
+    &__info {
+      text-align: center;
+      width: 100%;
+    }
+
+    &__name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 180px;
+      line-height: 1.3;
+    }
+
+    &__character,
+    &__job {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 180px;
+      line-height: 1.4;
+
+      &:before {
+        content: "• ";
+        color: var(--text-tertiary);
+ margin-right: 2px;
+      }
+    }
+
+    &__character {
+      font-style: italic;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+    font-size: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+
+    @media (max-width: 480px) {
+      padding: 2rem 1.5rem;
     }
   }
 }
@@ -1411,18 +1693,16 @@ useSeo({
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.9) 25%,
-      rgba(0, 0, 0, 0.7) 90%,
-      rgba(0, 0, 0, 0.4) 100%,
-      transparent 80%
-    );
+    background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0.9) 25%,
+        rgba(0, 0, 0, 0.7) 90%,
+        rgba(0, 0, 0, 0.4) 100%,
+        transparent 80%);
     pointer-events: none;
     z-index: 1;
   }
 
-  & > .container {
+  &>.container {
     position: relative;
     z-index: 2;
   }
@@ -1446,7 +1726,9 @@ useSeo({
     }
   }
 }
+
 @media (prefers-reduced-motion: reduce) {
+
   .watch-platform,
   .watch-streams__toggle,
   .provider__card,

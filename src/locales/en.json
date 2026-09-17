@@ -480,7 +480,14 @@
     },
     "watchlist": "Watch list",
     "favorite": "Favorite",
-    "interest": "Interest"
+    "interest": "Interest",
+    "credits": {
+      "title": "Credits",
+      "description": "See the cast and crew for this movie",
+      "cast": "Cast",
+      "crew": "Crew",
+      "no_credits": "No credits available"
+    }
   },
   "watch": {
     "stream_label": "Streaming providers"
