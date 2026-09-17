@@ -820,5 +820,12 @@
       "subtitle": "Agora você sabe o que é o SeeUs, como ele funciona e para onde está indo. A forma mais rápida de avaliar é abrir o produto e navegar por conta própria.",
       "cta": "Abrir o SeeUs"
     }
+  },
+  "credits": {
+    "title": "Créditos",
+    "description": "Veja o elenco e a equipe deste filme",
+    "cast": "Elenco",
+    "crew": "Equipe",
+    "no_credits": "Não há créditos disponíveis"
   }
 }
