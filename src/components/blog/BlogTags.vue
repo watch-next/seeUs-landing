@@ -1,7 +1,7 @@
 <template>
   <div class="blog-tags">
     <h3 class="blog-tags__title">{{ t('blog.tags') }}</h3>
-    <div class="blog-tags__cloud" aria-label="Blog tags">
+    <div class="blog-tags__list">
       <button
         v-for="tag in tags"
         :key="tag"
@@ -60,45 +60,11 @@ const selectTag = (tag: string) => {
     color: $color-text;
   }
 
-  &__cloud {
-    position: relative;
+  &__list {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: $space-2;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    padding: $space-1 0 $space-2;
-    margin-inline: calc(-1 * #{$space-1});
-    padding-inline: $space-1;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: $space-6;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    &::before {
-      left: 0;
-      background: linear-gradient(90deg, $color-background 20%, rgba($color-background, 0));
-    }
-
-    &::after {
-      right: 0;
-      background: linear-gradient(270deg, $color-background 20%, rgba($color-background, 0));
-    }
+    justify-content: flex-start;
   }
 
   &__item {
