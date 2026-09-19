@@ -5,7 +5,8 @@
     "error": "Ocorreu um erro inesperado.",
     "processing": "Processando...",
     "active": "Ativo",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "more": "Mais"
   },
   "navigation": {
     "home": "Início",

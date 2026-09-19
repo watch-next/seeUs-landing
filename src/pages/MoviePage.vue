@@ -160,12 +160,12 @@
                 <p class="credits__character">{{ credit.character }}</p>
               </div>
             </div>
+            <div class="credits__grid-item credits__grid-item--more">
+              <button type="button" class="btn btn--ghost">
+                {{ t('common.more') }}
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="credits__view-more">
-          <button type="button" class="btn btn--ghost">
-            {{ t('common.more') }}
-          </button>
         </div>
       </div>
 
@@ -1814,6 +1814,19 @@ useSeo({
   border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
 }
 
+.credits__grid-item--more {
+  align-items: center;
+  justify-content: center;
+}
+
+.credits__grid-item--more .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
 .credits__poster {
   width: 100%;
   aspect-ratio: 2 / 3;
@@ -1847,9 +1860,6 @@ useSeo({
   text-overflow: ellipsis;
 }
 
-.credits__view-more {
-  margin-top: 1rem;
-}
 
 @media (max-width: 640px) {
   .credits__grid-item {

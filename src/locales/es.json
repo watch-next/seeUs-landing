@@ -1,4 +1,7 @@
 {
+  "common": {
+    "more": "Más"
+  },
   "intro": {
     "title": "Bem-vindo ao SeeUs",
     "subtitle": "Sua plataforma de descoberta de filmes e séries",
