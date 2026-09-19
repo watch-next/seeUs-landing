@@ -5,7 +5,8 @@
     "error": "An unexpected error occurred.",
     "processing": "Processing...",
     "active": "Active",
-    "retry": "Try again"
+    "retry": "Try again",
+    "more": "More"
   },
   "navigation": {
     "home": "Home",

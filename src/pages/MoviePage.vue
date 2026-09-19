@@ -118,46 +118,6 @@
               <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
             </section>
 
-            <!-- Credits Card -->
-            <section v-if="credits" class="movie-page__credits" aria-label="Credits">
-              <h2 class="credits__title">{{ t('credits.title') }}</h2>
-
-              <!-- Section description -->
-              <p class="credits__description">{{ t('credits.description') }}</p>
-
-              <!-- Cast Section -->
-              <div v-if="credits.cast.length > 0" class="credits__grid credits__grid--cast">
-                <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>
-                <div class="credits__grid-items">
-                  <div v-for="credit in credits.cast" :key="credit.id" class="credits__grid-item">
-                    <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
-                      :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
-                    <div class="credits__info">
-                      <p class="credits__name">{{ credit.name }}</p>
-                      <p class="credits__character">{{ credit.character }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Crew Section -->
-              <div v-if="credits.crew.length > 0" class="credits__grid credits__grid--crew">
-                <h3 class="credits__section-title">{{ t('credits.crew') }}</h3>
-                <div class="credits__grid-items">
-                  <div v-for="credit in credits.crew" :key="credit.id" class="credits__grid-item">
-                    <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
-                      :alt="`${credit.name} - ${credit.job}`" class="credits__poster" />
-                    <div class="credits__info">
-                      <p class="credits__name">{{ credit.name }}</p>
-                      <p class="credits__job">{{ credit.job }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <p v-else class="credits__empty">{{ t('credits.no_credits') }}</p>
-            </section>
-
 
 
             <!--Financial Info 
@@ -180,6 +140,52 @@
       </div>
     </div>
 
+    <!-- Credits Card -->
+    <section v-if="credits" class="movie-page__credits" aria-label="Credits">
+      <h2 class="credits__title">{{ t('credits.title') }}</h2>
+
+      <!-- Section description -->
+      <p class="credits__description">{{ t('credits.description') }}</p>
+
+      <!-- Cast Section -->
+      <div v-if="credits.cast.length > 0" class="credits__grid credits__grid--cast">
+        <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>
+        <div class="credits__carousel-container">
+          <div class="credits__carousel">
+            <div v-for="credit in credits.cast.slice(0, 10)" :key="credit.id" class="credits__grid-item">
+              <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
+                :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
+              <div class="credits__info">
+                <p class="credits__name">{{ credit.name }}</p>
+                <p class="credits__character">{{ credit.character }}</p>
+              </div>
+            </div>
+            <div class="credits__grid-item credits__grid-item--more">
+              <button type="button" class="btn btn--ghost">
+                {{ t('common.more') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crew Section
+      <div v-if="credits.crew.length > 0" class="credits__grid credits__grid--crew">
+        <h3 class="credits__section-title">{{ t('credits.crew') }}</h3>
+        <div class="credits__grid-items">
+          <div v-for="credit in credits.crew" :key="`${credit.id}-${credit.job || ''}`" class="credits__grid-item">
+            <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
+              :alt="`${credit.name} - ${credit.job}`" class="credits__poster" />
+            <div class="credits__info">
+              <p class="credits__name">{{ credit.name }}</p>
+              <p class="credits__job">{{ credit.job }}</p>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <p v-if="credits.cast.length === 0 && credits.crew.length === 0" class="credits__empty">{{ t('credits.no_credits') }}</p>
+    </section>
 
   </article>
 
@@ -333,20 +339,6 @@ const movieId = computed(() => {
 
 const movie = ref<MovieDetail | null>(null)
 const isLoading = ref(true)
-
-// Credits state
-type MovieCredit = {
-  id: number | string
-  name: string
-  profile_path?: string | null
-  character?: string
-  job?: string
-}
-
-type MovieCreditsResponse = {
-  cast: MovieCredit[]
-  crew: MovieCredit[]
-}
 
 const credits = ref<MovieCreditsResponse | null>(null)
 const isLoadingCredits = ref(false)
@@ -1067,6 +1059,10 @@ useSeo({
       transition: all 0.2s ease;
       position: relative;
       overflow: hidden;
+      flex: 0 0 auto;
+      width: 200px;
+      min-width: 200px;
+      max-width: 200px;
 
       &:hover {
         transform: translateY(-2px);
@@ -1090,6 +1086,51 @@ useSeo({
         opacity: 0;
         transition: opacity 0.2s ease;
       }
+    }
+
+&__carousel-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 1rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-tertiary);
+
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: var(--bg-tertiary);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--accent);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--accent-hover, var(--accent));
+      }
+    }
+
+&__carousel {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: 1.5rem;
+      padding: 0 1rem;
+      width: max-content;
+      min-width: 100%;
+      scroll-behavior: smooth;
+    }
+
+&__view-more {
+      margin-top: 2rem;
+      text-align: center;
     }
 
     &__poster {
@@ -1729,6 +1770,103 @@ useSeo({
   .provider__card,
   .movie-page__btn {
     transition: none;
+    }
+}
+
+/* Cast credits — horizontal carousel */
+.credits__grid.credits__grid--cast {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+.credits__carousel-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.credits__carousel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 1rem;
+  width: max-content;
+  min-width: 100%;
+  padding: 0.5rem;
+  scroll-behavior: smooth;
+}
+
+.credits__grid-item {
+  flex: 0 0 200px;
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-tertiary, #1f2430);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+.credits__grid-item--more {
+  align-items: center;
+  justify-content: center;
+}
+
+.credits__grid-item--more .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.credits__poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  background: var(--bg-tertiary, #1f2430);
+}
+
+.credits__info {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.credits__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.credits__character {
+  font-size: 0.8rem;
+  margin: 0;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+@media (max-width: 640px) {
+  .credits__grid-item {
+    flex: 0 0 160px;
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
   }
 }
 </style>

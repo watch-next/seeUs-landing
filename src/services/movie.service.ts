@@ -97,8 +97,16 @@ export async function getMovieByUuid(uuid: string): Promise<MovieDetail> {
  * @param movieId - UUID do filme ou TMDB ID
  */
 export async function getMovieCredits(movieId: string | number): Promise<MovieCreditsResponse> {
-  const response: AxiosResponse<{ success: boolean; data: MovieCreditsResponse }> = await httpClient.get(`/movies/${movieId}/credits`);
-  return response.data.data;
+  const response: AxiosResponse<{ success: boolean; cast: MovieCredit[]; crew: MovieCredit[] }> = await httpClient.get(`/movies/${movieId}/credits`);
+
+  if (!response.data.success) {
+    throw new Error('Failed to fetch credits');
+  }
+
+  return {
+    cast: response.data.cast,
+    crew: response.data.crew,
+  };
 }
 
 /**
