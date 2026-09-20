@@ -446,6 +446,12 @@
     }
   },
   "movie": {
+    "media": {
+      "title": "Media",
+      "backdrops": "Backdrops",
+      "posters": "Posters",
+      "no_media": "No media available"
+    },
     "watch_now": "Watch Now",
     "no_poster": "No poster available",
     "no_synopsis": "No synopsis available.",
