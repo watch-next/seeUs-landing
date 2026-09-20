@@ -97,12 +97,7 @@
           </div>
         </router-link>
       </div>
-       <!-- Adsterra Banner -->
-      <AdsterraBanner class="movies-page__adsterra" />
-
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
-    </div>
+       </div>
 
     <AdsterraNative class="movies-page__adsterra-native" />
   </div>

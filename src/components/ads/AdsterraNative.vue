@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="adsterraConfig.enabled"
+    v-if="shouldRender"
     class="adsterra-native"
     role="complementary"
     aria-label="Advertisement"
@@ -14,13 +14,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { adsterraConfig } from '@/config/adsterra'
+import { usePremiumStatus } from '@/composables/usePremiumStatus'
 
 // The Native Banner container ID is unique and supplied by Adsterra.
 const NATIVE_CONTAINER_ID = 'container-32b46174a164c051854edda58269cb28'
 const NATIVE_SCRIPT_SRC =
   'https://pl31246408.profitableratecpmnetwork.com/32b46174a164c051854edda58269cb28/invoke.js'
+
+const { isPremiumActive, checkPremiumStatus } = usePremiumStatus()
+
+const shouldRender = computed(() => adsterraConfig.enabled && !isPremiumActive.value)
 
 const containerRef = ref<HTMLElement | null>(null)
 
@@ -52,8 +57,9 @@ function loadNativeScript(): void {
   ;(window.__adsterraNative as AdsterraNativeState) = { scriptLoaded: true }
 }
 
-onMounted(() => {
-  if (!adsterraConfig.enabled) return
+onMounted(async () => {
+  await checkPremiumStatus()
+  if (!shouldRender.value) return
 
   const container = containerRef.value
   if (!container) return
