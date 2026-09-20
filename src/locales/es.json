@@ -115,5 +115,13 @@
     "cast": "Elenco",
     "crew": "Equipe",
     "no_credits": "Não há créditos disponíveis"
+  },
+  "movie": {
+    "media": {
+      "title": "Mídias",
+      "backdrops": "Backdrops",
+      "posters": "Posters",
+      "no_media": "Nenhuma mídia disponível"
+    }
   }
 }

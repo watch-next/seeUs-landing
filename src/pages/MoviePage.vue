@@ -142,14 +142,14 @@
 
     <!-- Credits Card -->
     <section v-if="credits" class="movie-page__credits" aria-label="Credits">
-      <h2 class="credits__title">{{ t('credits.title') }}</h2>
+      <h2 class="credits__title">{{ t('credits.title') }}:</h2>
 
       <!-- Section description -->
       <p class="credits__description">{{ t('credits.description') }}</p>
 
       <!-- Cast Section -->
       <div v-if="credits.cast.length > 0" class="credits__grid credits__grid--cast">
-        <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>
+        <!-- <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>-->
         <div class="credits__carousel-container">
           <div class="credits__carousel">
             <div v-for="credit in credits.cast.slice(0, 10)" :key="credit.id" class="credits__grid-item">
@@ -188,6 +188,53 @@
       </div> -->
 
       <p v-if="credits.cast.length === 0 && credits.crew.length === 0" class="credits__empty">{{ t('credits.no_credits') }}</p>
+    </section>
+
+    <!-- Media Section -->
+    <section v-if="mediaAvailable" class="movie-page__media" aria-label="Media">
+      <h2 class="media__title">{{ t('movie.media.title') }}</h2>
+
+      <div class="media__tabs" role="tablist" aria-label="Media categories">
+        <button
+          type="button"
+          class="media__tab"
+          :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }"
+          role="tab"
+          :aria-selected="activeMediaTab === 'backdrops'"
+          @click="activeMediaTab = 'backdrops'"
+        >
+          {{ t('movie.media.backdrops') }} ({{ mediaBackdrops.length }})
+        </button>
+        <button
+          type="button"
+          class="media__tab"
+          :class="{ 'media__tab--active': activeMediaTab === 'posters' }"
+          role="tab"
+          :aria-selected="activeMediaTab === 'posters'"
+          @click="activeMediaTab = 'posters'"
+        >
+          {{ t('movie.media.posters') }} ({{ mediaPosters.length }})
+        </button>
+      </div>
+
+      <div
+        v-if="activeMediaCount > 0"
+        class="media__carousel-container"
+        :class="`media__carousel-container--${activeMediaTab}`"
+      >
+        <div class="media__carousel">
+          <div v-for="(image, index) in activeMediaImages" :key="`${activeMediaTab}-${index}`" class="media__card">
+            <img
+              :src="getMediaImageUrl(image)"
+              :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`"
+              class="media__image"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+
+      <p v-else class="media__empty">{{ t('movie.media.no_media') }}</p>
     </section>
 
   </article>
@@ -369,6 +416,48 @@ const posterUrl = computed(() => {
 const backdropUrl = computed(() => {
   return getTmdbImageUrl(movie.value?.backdrop_path ?? null, 'original')
 })
+
+// --- Media section (Backdrops / Posters) ---
+const activeMediaTab = ref<'backdrops' | 'posters'>('backdrops')
+
+// The movie API exposes a single poster/backdrop path per category (Case A).
+const mediaBackdrops = computed<string[]>(() =>
+  movie.value?.backdrop_path ? [movie.value.backdrop_path] : [],
+)
+
+const mediaPosters = computed<string[]>(() =>
+  movie.value?.poster_path ? [movie.value.poster_path] : [],
+)
+
+const mediaAvailable = computed(
+  () => mediaBackdrops.value.length > 0 || mediaPosters.value.length > 0,
+)
+
+const activeMediaImages = computed<string[]>(() =>
+  activeMediaTab.value === 'backdrops' ? mediaBackdrops.value : mediaPosters.value,
+)
+
+const activeMediaCount = computed(() => activeMediaImages.value.length)
+
+// Sharp but reasonable sizes: backdrops tend to render wide, posters tall.
+const activeMediaImageSize = computed(() =>
+  activeMediaTab.value === 'backdrops' ? 'w780' : 'w500',
+)
+
+function getMediaImageUrl(path: string): string | undefined {
+  return getTmdbImageUrl(path, activeMediaImageSize.value)
+}
+
+// Default to a category that actually has images once the movie loads.
+watch(
+  movie,
+  (m) => {
+    if (m) {
+      activeMediaTab.value = m.backdrop_path ? 'backdrops' : 'posters'
+    }
+  },
+  { immediate: true },
+)
 
 const releaseYear = computed(() => {
   if (!movie.value?.release_date) return ''
@@ -1879,6 +1968,143 @@ useSeo({
     width: 160px;
     min-width: 160px;
     max-width: 160px;
+  }
+}
+
+/* Media section — Backdrops / Posters carousel (shares Credits carousel pattern) */
+.movie-page__media {
+  max-width: 1200px;
+  margin: 3.5rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.media__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.media__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.media__tab {
+  appearance: none;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  background: var(--bg-tertiary, #1f2430);
+  color: var(--text-secondary);
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.media__tab:hover {
+  border-color: var(--color-primary, #7c5cff);
+  color: var(--text-primary);
+}
+
+.media__tab--active {
+  background: var(--color-primary, #7c5cff);
+  border-color: var(--color-primary, #7c5cff);
+  color: #fff;
+}
+
+.media__carousel-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.media__carousel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 1rem;
+  width: max-content;
+  min-width: 100%;
+  padding: 1rem 0.5rem;
+  scroll-behavior: smooth;
+}
+
+.media__card {
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-tertiary, #1f2430);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  padding: 0.4rem;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.media__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  border-color: var(--color-primary, #7c5cff);
+}
+
+.media__image {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  background: var(--bg-tertiary, #1f2430);
+}
+
+/* Backdrops are wide; posters are tall. Keep aspect ratio per active category. */
+.media__carousel-container--backdrops .media__image {
+  aspect-ratio: 16 / 9;
+}
+.media__carousel-container--posters .media__image {
+  aspect-ratio: 2 / 3;
+}
+
+/* Carousel  scrolls horizontally — edge to edge within the constrained section. */
+.media__carousel-container--backdrops .media__card {
+  width: min(560px, 75vw);
+}
+.media__carousel-container--posters .media__card {
+  width: min(220px, 45vw);
+}
+
+.media__empty {
+  padding: 1rem 0;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .media__carousel-container--backdrops .media__card {
+    width: min(420px, 82vw);
+  }
+  .media__carousel-container--posters .media__card {
+    width: min(180px, 52vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media__tab,
+  .media__card {
+    transition: none;
+  }
+  .media__card:hover {
+    transform: none;
   }
 }
 </style>
