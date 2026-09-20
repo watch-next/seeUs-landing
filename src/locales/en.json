@@ -405,7 +405,9 @@
     "postNotFound": "Post Not Found",
     "postNotFoundDescription": "The article you're looking for doesn't exist.",
     "backToBlog": "Back to Blog",
-    "relatedArticles": "Related Articles"
+    "relatedArticles": "Related Articles",
+    "viewMore": "View more",
+    "viewLess": "View less"
   },
   "content": {
     "meta": {

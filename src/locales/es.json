@@ -100,7 +100,9 @@
     "searchPlaceholder": "Buscar posts...",
     "clearSearch": "Limpar busca",
     "loadMore": "Carregar mais",
-    "loadMoreDescription": "Carregar mais posts"
+    "loadMoreDescription": "Carregar mais posts",
+    "viewMore": "Ver más",
+    "viewLess": "Ver menos"
   },
   "download": {
     "title": "Prueba SeeUs",

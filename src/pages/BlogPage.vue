@@ -224,18 +224,25 @@ const goToPage = (page: number) => {
   grid-template-columns: 260px minmax(0, 1fr);
   gap: $space-10;
   margin-top: $space-6;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: $space-8;
+  }
 }
 
 .blog-page__sidebar {
   display: flex;
   flex-direction: column;
   gap: $space-8;
+  min-width: 0;
 }
 
 .blog-page__main {
   display: flex;
   flex-direction: column;
   gap: $space-6;
+  min-width: 0;
 }
 
 .blog-page__filters {

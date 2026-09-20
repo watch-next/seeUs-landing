@@ -398,7 +398,9 @@
     "postNotFound": "Post Não Encontrado",
     "postNotFoundDescription": "O artigo que você está procurando não existe.",
     "backToBlog": "Voltar ao Blog",
-    "relatedArticles": "Artigos Relacionados"
+    "relatedArticles": "Artigos Relacionados",
+    "viewMore": "Ver mais",
+    "viewLess": "Ver menos"
   },
   "content": {
     "meta": {

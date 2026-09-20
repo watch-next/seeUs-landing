@@ -89,6 +89,9 @@ const selectCategory = (category: string) => {
     align-items: center;
     gap: $space-2;
     white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover {
       border-color: $color-border-hover;
