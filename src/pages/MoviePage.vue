@@ -311,7 +311,8 @@
               <section v-for="section in providerSections" :key="section.key" class="providers__category">
                 <h3>{{ t(section.label) }}</h3>
                 <div class="providers__grid">
-                  <div v-for="provider in section.providers" :key="provider.id" class="provider__card">
+                  <div v-for="provider in section.providers" :key="provider.id" class="provider__card"
+                    @click="onProviderCardClick">
                     <img v-if="provider.logo_path" :src="getProviderImageUrl(provider.logo_path)" :alt="provider.name"
                       class="provider__logo" />
                     <span class="provider__name">{{ provider.name }}</span>
@@ -345,6 +346,7 @@ import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import { getMovieByUuid, getTmdbImageUrl, type MovieDetail } from '@/services/movie.service'
 import { loadDownloadConfig } from '@/services/downloads'
 import AdsterraNative from '@/components/ads/AdsterraNative.vue'
+import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
 
 const { t } = useI18n()
 // Debug token state
@@ -369,6 +371,14 @@ const {
   loadedMovieId,
   loadProviders,
 } = useWatchProviders()
+
+const { maybeTriggerPopunder } = useAdsterraPopunder()
+
+// Provider-card click: keep the card's default behavior intact; a single
+// session-capped popunder may fire alongside it (premium users excluded).
+function onProviderCardClick() {
+  void maybeTriggerPopunder()
+}
 
 // Route uses :slug param containing backend ID in format: {id}-{title-slugified}
 // ID can be UUID (9f5dde6b-...) or TMDB ID (550)

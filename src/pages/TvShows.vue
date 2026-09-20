@@ -105,12 +105,7 @@
         </router-link>
       </div>
 
-      <!-- Adsterra Banner -->
-      <AdsterraBanner class="tv-shows-page__adsterra" />
-
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="tv-shows-page__ad" />
-    </div>
+      </div>
 
     <AdsterraNative class="tv-shows-page__adsterra-native" />
   </div>
