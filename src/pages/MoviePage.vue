@@ -153,8 +153,11 @@
         <div class="credits__carousel-container">
           <div class="credits__carousel">
             <div v-for="credit in credits.cast.slice(0, 10)" :key="credit.id" class="credits__grid-item">
-              <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
-                :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
+              <img
+                :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w185') : undefined"
+                :alt="`${credit.name} as ${credit.character}`"
+                class="credits__poster"
+              />
               <div class="credits__info">
                 <p class="credits__name">{{ credit.name }}</p>
                 <p class="credits__character">{{ credit.character }}</p>
@@ -1812,6 +1815,15 @@ useSeo({
   border-radius: 12px;
   background: var(--bg-tertiary, #1f2430);
   border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  position: relative;
+}
+
+.credits__grid-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-color: var(--border);
+  background: var(--bg-secondary);
 }
 
 .credits__grid-item--more {
