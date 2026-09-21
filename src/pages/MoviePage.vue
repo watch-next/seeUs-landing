@@ -113,7 +113,7 @@
 
             <!-- Synopsis -->
             <section class="movie-page__synopsis">
-              <h2 class="synopsis__title">{{ t('movie.synopsis') }}</h2>
+              <h2 class="synopsis__title">{{ t('movie.synopsis') }}:</h2>
               <p v-if="movie.overview" class="synopsis__content">{{ movie.overview }}</p>
               <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
             </section>
@@ -192,7 +192,7 @@
 
     <!-- Media Section -->
     <section v-if="mediaAvailable" class="movie-page__media" aria-label="Media">
-      <h2 class="media__title">{{ t('movie.media.title') }}</h2>
+      <h2 class="media__title">{{ t('movie.media.title') }}:</h2>
 
       <div class="media__tabs" role="tablist" aria-label="Media categories">
         <button
@@ -239,7 +239,7 @@
 
     <!-- Related Movies Section -->
     <section v-if="relatedMovies.length > 0" class="movie-page__related" aria-label="Related movies">
-      <h2 class="related__heading">{{ t('movie.related') }}</h2>
+      <h2 class="related__heading">{{ t('movie.related') }}:</h2>
 
       <div class="related__carousel-container">
         <div class="related__carousel">
