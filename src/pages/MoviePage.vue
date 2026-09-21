@@ -192,50 +192,33 @@
 
     <!-- Media Section -->
     <section v-if="mediaAvailable" class="movie-page__media" aria-label="Media">
-      <h2 class="media__title">{{ t('movie.media.title') }}:</h2>
-
-      <div class="media__tabs" role="tablist" aria-label="Media categories">
-        <button
-          type="button"
           class="media__tab"
-          :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }"
-          role="tab"
-          :aria-selected="activeMediaTab === 'backdrops'"
-          @click="activeMediaTab = 'backdrops'"
-        >
-          {{ t('movie.media.backdrops') }} ({{ mediaBackdrops.length }})
-        </button>
-        <button
-          type="button"
-          class="media__tab"
-          :class="{ 'media__tab--active': activeMediaTab === 'posters' }"
-          role="tab"
-          :aria-selected="activeMediaTab === 'posters'"
-          @click="activeMediaTab = 'posters'"
-        >
-          {{ t('movie.media.posters') }} ({{ mediaPosters.length }})
-        </button>
+      <div class="media__header">
+        <h2 class="media__title">{{ t('movie.media.title') }}</h2>
+        <div class="media__tabs" role="tablist" aria-label="Media categories">
+          <button type="button" class="media__tab" :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }" role="tab" :aria-selected="activeMediaTab === 'backdrops'" @click="activeMediaTab = 'backdrops'">{{ t('movie.media.backdrops') }} ({{ mediaBackdrops.length }})</button>
+          <button type="button" class="media__tab" :class="{ 'media__tab--active': activeMediaTab === 'posters' }" role="tab" :aria-selected="activeMediaTab === 'posters'" @click="activeMediaTab = 'posters'">{{ t('movie.media.posters') }} ({{ mediaPosters.length }})</button>
+        </div>
       </div>
-
-      <div
-        v-if="activeMediaCount > 0"
-        class="media__carousel-container"
-        :class="`media__carousel-container--${activeMediaTab}`"
-      >
+      <div v-if="activeMediaCount > 0" class="media__carousel-container" :class="`media__carousel-container--${activeMediaTab}`">
         <div class="media__carousel">
-          <div v-for="(image, index) in activeMediaImages" :key="`${activeMediaTab}-${index}`" class="media__card">
-            <img
-              :src="getMediaImageUrl(image)"
-              :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`"
-              class="media__image"
-              loading="lazy"
-            />
+          <div v-for="(image, index) in activeMediaImages" :key="`${activeMediaTab}-${index}`" class="media__card" role="button" tabindex="0" @click="openMediaDialog(image)" @keydown.enter="openMediaDialog(image)" @keydown.space.prevent="openMediaDialog(image)">
+            <img :src="getMediaImageUrl(image)" :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`" class="media__image" loading="lazy"/>
           </div>
         </div>
       </div>
-
       <p v-else class="media__empty">{{ t('movie.media.no_media') }}</p>
     </section>
+    <div v-if="isMediaDialogOpen" class="modal-overlay" role="dialog" aria-modal="true" :aria-label="t('movie.media.title')" @click="closeMediaDialog">
+      <div class="modal modal--media" @click.stop>
+        <div class="modal__header">
+          <button class="modal__close" @click="closeMediaDialog" :aria-label="t('global.close')">×</button>
+        </div>
+        <div class="modal__content">
+          <img v-if="selectedMediaImage" :src="getMediaImageUrl(selectedMediaImage)" :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`" class="modal__image"/>
+        </div>
+      </div>
+    </div>
 
     <!-- Related Movies Section -->
     <section v-if="relatedMovies.length > 0" class="movie-page__related" aria-label="Related movies">
@@ -492,6 +475,21 @@ const activeMediaImageSize = computed(() =>
 
 function getMediaImageUrl(path: string): string | undefined {
   return getTmdbImageUrl(path, activeMediaImageSize.value)
+}
+
+// Media dialog state
+const isMediaDialogOpen = ref(false)
+const selectedMediaImage = ref<string | null>(null)
+function openMediaDialog(image: string): void {
+  selectedMediaImage.value = image
+  isMediaDialogOpen.value = true
+}
+function closeMediaDialog(): void {
+  isMediaDialogOpen.value = false
+  selectedMediaImage.value = null
+}
+function handleMediaDialogKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Escape') closeMediaDialog()
 }
 
 // Default to a category that actually has images once the movie loads.
