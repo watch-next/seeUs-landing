@@ -237,6 +237,40 @@
       <p v-else class="media__empty">{{ t('movie.media.no_media') }}</p>
     </section>
 
+    <!-- Related Movies Section -->
+    <section v-if="relatedMovies.length > 0" class="movie-page__related" aria-label="Related movies">
+      <h2 class="related__heading">{{ t('movie.related') }}</h2>
+
+      <div class="related__carousel-container">
+        <div class="related__carousel">
+          <router-link
+            v-for="related in relatedMovies"
+            :key="related.id"
+            :to="relatedMovieUrl(related)"
+            class="related__card"
+          >
+            <div class="related__poster">
+              <img
+                :src="related.poster_path ? getTmdbImageUrl(related.poster_path, 'w500') : undefined"
+                :alt="related.title"
+                class="related__image"
+                loading="lazy"
+              />
+            </div>
+            <div class="related__info">
+              <p class="related__title">{{ related.title }}</p>
+              <p class="related__meta">
+                <span v-if="related.release_date">{{ related.release_date.slice(0, 4) }}</span>
+                <span v-if="typeof related.vote_average === 'number' && related.vote_average">
+                  ★ {{ Number(related.vote_average).toFixed(1) }}
+                </span>
+              </p>
+            </div>
+          </router-link>
+        </div>
+      </div>
+    </section>
+
   </article>
 
   <div v-else-if="isLoading" class="container movie-page__loading">
@@ -345,6 +379,8 @@ import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import { getMovieByUuid, getTmdbImageUrl, type MovieDetail } from '@/services/movie.service'
 import { loadDownloadConfig } from '@/services/downloads'
+import { fetchSimilarMovies } from '@/lib/api/movieDataSource'
+import { slugify } from '@/lib/content/slugify'
 import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
 
@@ -469,6 +505,25 @@ watch(
   { immediate: true },
 )
 
+// --- Related Movies ---
+interface RelatedMovie {
+  id: number
+  title: string
+  poster_path: string | null
+  release_date: string
+  vote_average: number
+}
+
+const relatedMovies = ref<RelatedMovie[]>([])
+const isLoadingRelated = ref(false)
+
+function relatedMovieUrl(m: RelatedMovie): string {
+  const id = m.id
+  const slug = slugify(m.title || 'movie')
+  const year = m.release_date?.slice(0, 4) || ''
+  return `/movies/${id}-${slug}${year ? `-${year}` : ''}`
+}
+
 const releaseYear = computed(() => {
   if (!movie.value?.release_date) return ''
   return new Date(movie.value.release_date).getFullYear().toString()
@@ -546,6 +601,17 @@ onMounted(async () => {
       isLoadingCredits.value = false
     }
 
+    // Load similar movies (non-blocking, optional content)
+    isLoadingRelated.value = true
+    try {
+      const similar = await fetchSimilarMovies(movie.value?.tmdb_id ?? 0)
+      relatedMovies.value = (similar?.results ?? []).slice(0, 10) as RelatedMovie[]
+    } catch (relatedError) {
+      relatedMovies.value = []
+      console.warn('[MoviePage.vue] Failed to load similar movies:', relatedError)
+    } finally {
+      isLoadingRelated.value = false
+    }
 
   } catch (err: any) {
     console.error('[MoviePage.vue] Error fetching movie:', {
@@ -2114,6 +2180,114 @@ useSeo({
     transition: none;
   }
   .media__card:hover {
+    transform: none;
+  }
+}
+
+/* Related Movies section — horizontal carousel (shares Credits/Media pattern) */
+.movie-page__related {
+  max-width: 1200px;
+  margin: 3.5rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.related__heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1.25rem;
+  color: var(--text-primary);
+}
+
+.related__carousel-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.related__carousel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 1rem;
+  width: max-content;
+  min-width: 100%;
+  padding: 1rem 0.5rem;
+  scroll-behavior: smooth;
+}
+
+.related__card {
+  flex: 0 0 auto;
+  width: 200px;
+  overflow: hidden;
+  border-radius: 12px;
+  text-decoration: none;
+  background: var(--bg-tertiary, #1f2430);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.related__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  border-color: var(--color-primary, #7c5cff);
+}
+
+.related__poster {
+  padding: 0.4rem 0.4rem 0;
+}
+
+.related__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--bg-tertiary, #1f2430);
+}
+
+.related__info {
+  padding: 0.6rem 0.6rem 0.75rem;
+}
+
+.related__title {
+  margin: 0 0 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4em;
+}
+
+.related__meta {
+  margin: 0;
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .related__card {
+    width: 160px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .related__card {
+    transition: none;
+  }
+  .related__card:hover {
     transform: none;
   }
 }
