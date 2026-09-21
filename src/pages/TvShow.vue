@@ -120,6 +120,229 @@
     </div>
   </article>
 
+  <!-- Current Season Section -->
+  <section v-if="series && series.number_of_seasons && series.number_of_seasons > 0" class="tv-show-page__season section">
+    <div class="container">
+      <h2 class="section__title">{{ t('tvShow.season.title') }}</h2>
+
+      <div v-if="isLoadingSeason" class="season__loading">
+        <div class="spinner"></div>
+        <p>{{ t('tvShow.season.loading') }}</p>
+      </div>
+
+      <div v-else-if="seasonError" class="season__error">
+        <p>{{ seasonError }}</p>
+      </div>
+
+      <div v-else-if="currentSeason" class="season__card">
+        <div class="season__media">
+          <img
+            v-if="currentSeason.poster_path"
+            :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')"
+            :alt="currentSeason.name"
+            class="season__poster"
+            loading="lazy"
+          />
+          <div v-else class="season__poster-placeholder">
+            <span>📺</span>
+            <p>{{ t('tvShow.no_poster') }}</p>
+          </div>
+        </div>
+
+        <div class="season__info">
+          <h3 class="season__name">{{ currentSeason.name || `${t('tvShow.season.season')} ${currentSeason.season_number}` }}</h3>
+
+          <p v-if="currentSeason.air_date" class="season__air-date">
+            <span class="label">{{ t('tvShow.season.air_date') }}:</span>
+            {{ formatDate(currentSeason.air_date) }}
+          </p>
+
+          <p v-if="currentSeason.episode_count > 0" class="season__episodes">
+            <span class="label">{{ t('tvShow.season.episodes') }}:</span>
+            {{ t('tvShow.season.episode_count', { count: currentSeason.episode_count }) }}
+          </p>
+
+          <p v-if="currentSeason.vote_average !== undefined && currentSeason.vote_average !== null" class="season__rating">
+            <span class="label">{{ t('tvShow.votes') }}:</span>
+            <span class="rating">{{ currentSeason.vote_average.toFixed(1) }}</span>
+            <span class="rating__stars" aria-hidden="true">★</span>
+          </p>
+
+          <p v-if="currentSeason.overview" class="season__overview">
+            <span class="label">{{ t('tvShow.season.overview') }}:</span>
+            {{ currentSeason.overview }}
+          </p>
+        </div>
+      </div>
+
+      <p v-else class="season__empty">{{ t('tvShow.season.no_overview') }}</p>
+    </div>
+  </section>
+
+  <!-- Media Section -->
+  <section v-if="series && (series.poster_path || series.backdrop_path)" class="tv-show-page__media-section section">
+    <div class="container">
+      <h2 class="section__title">{{ t('tvShow.media.title') }}</h2>
+
+      <!-- Media Tabs -->
+      <div class="media__tabs" role="tablist" aria-label="{{ t('tvShow.media.title') }}">
+        <button
+          v-if="series.poster_path"
+          role="tab"
+          :aria-selected="activeMediaTab === 'posters'"
+          :aria-controls="activeMediaTab === 'posters' ? 'media-panel-posters' : undefined"
+          :id="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
+          class="media__tab"
+          :class="{ 'media__tab--active': activeMediaTab === 'posters' }"
+          @click="activeMediaTab = 'posters'"
+        >
+          {{ t('tvShow.media.posters') }}
+        </button>
+        <button
+          v-if="series.backdrop_path"
+          role="tab"
+          :aria-selected="activeMediaTab === 'backdrops'"
+          :aria-controls="activeMediaTab === 'backdrops' ? 'media-panel-backdrops' : undefined"
+          :id="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
+          class="media__tab"
+          :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }"
+          @click="activeMediaTab = 'backdrops'"
+        >
+          {{ t('tvShow.media.backdrops') }}
+        </button>
+      </div>
+
+      <!-- Posters Panel -->
+      <div
+        v-if="activeMediaTab === 'posters' && series.poster_path"
+        role="tabpanel"
+        id="media-panel-posters"
+        :aria-labelledby="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
+        class="media__panel"
+      >
+        <div class="media__grid">
+          <figure class="media__item" @click="openMediaModal(getTmdbImageUrl(series.poster_path, 'original'))">
+            <img
+              :src="getTmdbImageUrl(series.poster_path, 'w500')"
+              :alt="series.name"
+              class="media__image"
+              loading="lazy"
+            />
+            <figcaption class="media__caption">{{ series.name }} - Poster</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Backdrops Panel -->
+      <div
+        v-else-if="activeMediaTab === 'backdrops' && series.backdrop_path"
+        role="tabpanel"
+        id="media-panel-backdrops"
+        :aria-labelledby="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
+        class="media__panel"
+      >
+        <div class="media__grid">
+          <figure class="media__item" @click="openMediaModal(getTmdbImageUrl(series.backdrop_path, 'original'))">
+            <img
+              :src="getTmdbImageUrl(series.backdrop_path, 'w1280')"
+              :alt="series.name"
+              class="media__image"
+              loading="lazy"
+            />
+            <figcaption class="media__caption">{{ series.name }} - Backdrop</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <p v-else class="media__empty">{{ t('tvShow.media.no_media') }}</p>
+    </div>
+  </section>
+
+  <!-- Related Shows Section -->
+  <section v-if="series" class="tv-show-page__related section">
+    <div class="container">
+      <h2 class="section__title">{{ t('tvShow.related.title') }}</h2>
+
+      <div v-if="isLoadingRelated" class="related__loading">
+        <div class="spinner"></div>
+        <p>{{ t('common.loading') }}...</p>
+      </div>
+
+      <div v-else-if="relatedError" class="related__error">
+        <p>{{ relatedError }}</p>
+      </div>
+
+      <div v-else-if="relatedShows.length > 0" class="related__carousel">
+        <div class="related__scroll" ref="relatedScroll">
+          <div class="related__track" :style="{ transform: `translateX(-${relatedScrollX}px)` }">
+            <div
+              v-for="show in relatedShows"
+              :key="show.id"
+              class="related__card cinematic-card"
+            >
+              <a :href="`/tv/${show.id}-${slugify(show.name)}-${show.first_air_date ? new Date(show.first_air_date).getFullYear() : ''}`" class="related__link">
+                <div class="related__poster">
+                  <img
+                    v-if="show.poster_path"
+                    :src="getTmdbImageUrl(show.poster_path, 'w342')"
+                    :alt="show.name"
+                    class="related__image"
+                    loading="lazy"
+                  />
+                  <div v-else class="related__placeholder">
+                    <span>📺</span>
+                  </div>
+                </div>
+                <div class="related__info">
+                  <h3 class="related__title">{{ show.name }}</h3>
+                  <p v-if="show.vote_average !== undefined && show.vote_average !== null" class="related__rating">
+                    <span aria-hidden="true">★</span>
+                    {{ show.vote_average.toFixed(1) }}
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scroll buttons -->
+        <button
+          class="related__nav related__nav--prev"
+          :aria-label="t('tvShow.related.prev')"
+          @click="scrollRelated(-1)"
+          :disabled="relatedScrollX <= 0"
+        >
+          ‹
+        </button>
+        <button
+          class="related__nav related__nav--next"
+          :aria-label="t('tvShow.related.next')"
+          @click="scrollRelated(1)"
+          :disabled="relatedScrollX >= relatedMaxScroll"
+        >
+          ›
+        </button>
+      </div>
+
+      <p v-else class="related__empty">{{ t('tvShow.related.no_related') }}</p>
+    </div>
+  </section>
+
+  <!-- Media Modal -->
+  <div v-if="showMediaModal" class="media-modal-overlay" role="dialog" aria-modal="true" aria-label="{{ t('tvShow.media.title') }}" @click="closeMediaModal" @keydown.esc="closeMediaModal">
+    <div class="media-modal" @click.stop>
+      <button class="media-modal__close" :aria-label="t('tvShow.watch_dialog.close')" @click="closeMediaModal">
+        ×
+      </button>
+      <img
+        v-if="selectedMediaImage"
+        :src="selectedMediaImage"
+        :alt="series?.name || ''"
+        class="media-modal__image"
+      />
+    </div>
+  </div>
+
   <div v-else-if="isLoading" class="container tv-show-page__loading">
     <div class="tv-show-page__skeleton">
       <div class="tv-show-page__skeleton-poster"></div>
@@ -226,6 +449,9 @@ import { loadDownloadConfig } from '@/services/downloads'
 import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 import { getTmdbImageUrl } from '@/services/movie.service'
 import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
+import { fetchSeasonDetails, fetchSimilarShows } from '@/lib/api/tvDataSource'
+import { slugify } from '@/lib/content/slugify'
+import type { SeasonDetail, TVShowDetail } from '@/lib/tmdb/types'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -457,9 +683,103 @@ const activeActions = ref<{ watchlist: boolean; favorite: boolean; interest: boo
   interest: false,
 })
 
+// Current Season state
+const currentSeason = ref<SeasonDetail | null>(null)
+const isLoadingSeason = ref(false)
+const seasonError = ref<string | null>(null)
+
+// Media tabs state
+const activeMediaTab = ref<'posters' | 'backdrops'>('posters')
+const showMediaModal = ref(false)
+const selectedMediaImage = ref<string | null>(null)
+
+// Related shows state
+const relatedShows = ref<TVShowDetail[]>([])
+const isLoadingRelated = ref(false)
+const relatedError = ref<string | null>(null)
+
 function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
   activeActions.value[action] = !activeActions.value[action]
 }
+
+// Fetch current season (latest season based on number_of_seasons)
+async function loadCurrentSeason() {
+  if (!series.value?.number_of_seasons || series.value.number_of_seasons <= 0) {
+    return
+  }
+
+  isLoadingSeason.value = true
+  seasonError.value = null
+
+  try {
+    const season = await fetchSeasonDetails(series.value.id, series.value.number_of_seasons)
+    currentSeason.value = season
+  } catch (err) {
+    seasonError.value = t('tvShow.season.error')
+    console.error('Failed to load season:', err)
+  } finally {
+    isLoadingSeason.value = false
+  }
+}
+
+// Fetch related shows
+async function loadRelatedShows() {
+  if (!series.value) return
+
+  isLoadingRelated.value = true
+  relatedError.value = null
+
+  try {
+    const response = await fetchSimilarShows(series.value.id, 10)
+    relatedShows.value = response.results
+  } catch (err) {
+    relatedError.value = t('tvShow.related.no_related')
+    console.error('Failed to load related shows:', err)
+  } finally {
+    isLoadingRelated.value = false
+  }
+}
+
+// Media modal handlers
+function openMediaModal(imageUrl: string) {
+  selectedMediaImage.value = imageUrl
+  showMediaModal.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+function closeMediaModal() {
+  showMediaModal.value = false
+  selectedMediaImage.value = null
+  document.body.style.overflow = ''
+}
+
+// Related carousel state
+const relatedScrollX = ref(0)
+const relatedScroll = ref<HTMLElement | null>(null)
+const cardWidth = 230 // card width + gap (220px + 10px)
+
+// Related carousel computed
+const relatedMaxScroll = computed(() => {
+  if (!relatedScroll.value) return 0
+  const containerWidth = relatedScroll.value.clientWidth
+  const trackWidth = relatedShows.value.length * cardWidth
+  return Math.max(0, trackWidth - containerWidth)
+})
+
+function scrollRelated(direction: -1 | 1) {
+  if (!relatedScroll.value) return
+  const newScrollX = relatedScrollX.value + direction * cardWidth * 2
+  relatedScrollX.value = Math.max(0, Math.min(newScrollX, relatedMaxScroll.value))
+  relatedScroll.value.scrollTo({ left: relatedScrollX.value, behavior: 'smooth' })
+}
+
+// Load additional data when series is loaded
+watch(series, (newSeries) => {
+  if (newSeries) {
+    loadCurrentSeason()
+    loadRelatedShows()
+  }
+})
 
 // Setup SEO
 const seoTitle = computed(() => series.value ? `${series.value.name} | SeeUs` : 'TV Shows | SeeUs')
@@ -1392,6 +1712,557 @@ useSeo({
   .provider__card,
   .tv-show-page__btn {
     transition: none;
+  }
+}
+
+/* Section base styles */
+.section {
+  padding: 3rem 0;
+
+  &__title {
+    font-size: clamp(1.5rem, 1.25vw + 1.25rem, 1.875rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+    letter-spacing: -0.01em;
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/* Current Season Section */
+.tv-show-page__season {
+  .season__loading,
+  .season__error,
+  .season__empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+  }
+
+  .season__card {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+    align-items: start;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .season__media {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .season__poster {
+    width: 240px;
+    aspect-ratio: 2 / 3;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+  }
+
+  .season__poster-placeholder {
+    width: 240px;
+    aspect-ratio: 2 / 3;
+    border-radius: 12px;
+    background: var(--bg-tertiary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 3rem;
+    border: 1px dashed var(--border);
+
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    span {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      margin: 0;
+    }
+  }
+
+  .season__info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .season__name {
+    font-size: clamp(1.25rem, 1vw + 1rem, 1.5rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .season__air-date,
+  .season__episodes,
+  .season__rating,
+  .season__overview {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+
+    .label {
+      font-weight: 600;
+      color: var(--text-primary);
+      min-width: fit-content;
+      flex-shrink: 0;
+    }
+  }
+
+  .season__rating {
+    .rating {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .rating__stars {
+      color: var(--accent);
+      margin-left: 0.25rem;
+    }
+  }
+
+  .season__overview {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* Media Section */
+.tv-show-page__media-section {
+  .media__tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.5rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 480px) {
+      gap: 0.25rem;
+    }
+  }
+
+  .media__tab {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    &--active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+  }
+
+  .media__panel {
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .media__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.5rem;
+    }
+  }
+
+  .media__item {
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .media__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    object-fit: cover;
+    aspect-ratio: 2 / 3;
+  }
+
+  .media__caption {
+    display: none; /* Hidden by default, shown on hover if needed */
+  }
+
+  .media__empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+  }
+}
+
+/* Related Shows Section */
+.tv-show-page__related {
+  .related__loading,
+  .related__error,
+  .related__empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+  }
+
+  .related__carousel {
+    position: relative;
+    padding: 0 4rem;
+
+    @media (max-width: 768px) {
+      padding: 0 3rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0 2.5rem;
+    }
+  }
+
+  .related__scroll {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .related__track {
+    display: flex;
+    gap: 1rem;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+  }
+
+  .related__card {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+
+    @media (max-width: 768px) {
+      flex: 0 0 180px;
+    }
+
+    @media (max-width: 480px) {
+      flex: 0 0 150px;
+    }
+  }
+
+  .related__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .related__poster {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+  }
+
+  .related__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .related__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--text-tertiary);
+  }
+
+  .related__info {
+    padding: 0.75rem 0.25rem 0;
+    text-align: center;
+  }
+
+  .related__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .related__rating {
+    font-size: 0.8125rem;
+    color: var(--accent);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin: 0;
+  }
+
+  .related__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+
+    &:hover:not(:disabled) {
+      background: var(--bg-tertiary);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    &--prev {
+      left: 0;
+
+      @media (max-width: 480px) {
+        left: -1rem;
+      }
+    }
+
+    &--next {
+      right: 0;
+
+      @media (max-width: 480px) {
+        right: -1rem;
+      }
+    }
+  }
+}
+
+/* Media Modal */
+.media-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+    align-items: center;
+  }
+}
+
+.media-modal {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+.media-modal__close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 480px) {
+    top: -45px;
+    right: -5px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+}
+
+.media-modal__image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 480px) {
+    border-radius: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media__tab,
+  .media__item,
+  .related__link,
+  .related__nav,
+  .media-modal,
+  .media-modal__close {
+    transition: none;
+    animation: none;
   }
 }
 </style>

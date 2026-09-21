@@ -580,6 +580,27 @@
       "android_app_desc": "Enjoy SeeUs on your Android device.",
       "close": "Close",
       "toggle_providers": "Streaming providers"
+    },
+    "season": {
+      "title": "Current Season",
+      "season": "Season",
+      "episodes": "Episodes",
+      "episode_count": "{count} episodes",
+      "air_date": "Air date",
+      "overview": "Overview",
+      "no_overview": "No overview available.",
+      "loading": "Loading season...",
+      "error": "Failed to load season"
+    },
+    "media": {
+      "title": "Media",
+      "posters": "Posters",
+      "backdrops": "Backdrops",
+      "no_media": "No media available"
+    },
+    "related": {
+      "title": "Related",
+      "no_related": "No related shows found"
     }
   },
   "waitlist": {
