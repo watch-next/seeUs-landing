@@ -192,7 +192,6 @@
 
     <!-- Media Section -->
     <section v-if="mediaAvailable" class="movie-page__media" aria-label="Media">
-          class="media__tab"
       <div class="media__header">
         <h2 class="media__title">{{ t('movie.media.title') }}</h2>
         <div class="media__tabs" role="tablist" aria-label="Media categories">
