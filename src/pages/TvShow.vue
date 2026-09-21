@@ -242,7 +242,7 @@
         class="media__panel"
       >
         <div class="media__grid">
-          <figure class="media__item" @click="openMediaModal(getTmdbImageUrl(series.backdrop_path, 'original'))">
+          <figure class="media__item" @click="openMediaModal(getTmdbImageUrl(series.backdrop_path ?? '', 'original'))">
             <img
               :src="getTmdbImageUrl(series.backdrop_path, 'w1280')"
               :alt="series.name"
@@ -280,7 +280,7 @@
               :key="show.id"
               class="related__card"
             >
-              <a :href="`/tv/${show.id}-${slugify(show.name)}-${show.first_air_date ? new Date(show.first_air_date).getFullYear() : ''}`" class="related__link">
+              <a :href="`/tv-shows/${show.id}-${slugify(show.name)}-${show.first_air_date ? new Date(show.first_air_date).getFullYear() : ''}`" class="related__link">
                 <div class="related__poster">
                   <img
                     v-if="show.poster_path"
