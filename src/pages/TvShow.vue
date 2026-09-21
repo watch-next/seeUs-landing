@@ -278,7 +278,7 @@
             <div
               v-for="show in relatedShows"
               :key="show.id"
-              class="related__card cinematic-card"
+              class="related__card"
             >
               <a :href="`/tv/${show.id}-${slugify(show.name)}-${show.first_air_date ? new Date(show.first_air_date).getFullYear() : ''}`" class="related__link">
                 <div class="related__poster">
