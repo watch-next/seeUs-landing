@@ -1373,6 +1373,12 @@ useSeo({
   }
 }
 
+.movie-page__media,
+.movie-page__related {
+  margin-top: 3rem;
+  padding: 2rem;
+}
+
 .movie-page__ratings {
   display: flex;
   align-items: center;
@@ -2048,10 +2054,10 @@ useSeo({
 }
 
 /* Media section — Backdrops / Posters carousel (shares Credits carousel pattern) */
-.movie-page__media {
-  max-width: 1200px;
-  margin: 3.5rem auto 0;
-  padding: 0 1.5rem;
+.movie-page__media,
+.movie-page__related {
+  margin-top: 3rem;
+  padding: 2rem;
 }
 
 .media__title {
@@ -2185,11 +2191,6 @@ useSeo({
 }
 
 /* Related Movies section — horizontal carousel (shares Credits/Media pattern) */
-.movie-page__related {
-  max-width: 1200px;
-  margin: 3.5rem auto 0;
-  padding: 0 1.5rem;
-}
 
 .related__heading {
   font-size: 1.5rem;
