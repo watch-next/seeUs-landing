@@ -561,6 +561,21 @@ function formatMoney(amount: number | null): string {
   }).format(amount)
 }
 
+function formatDate(dateString: string | null): string {
+  if (!dateString) return ''
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return ''
+    return new Intl.DateTimeFormat(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    }).format(date)
+  } catch (e) {
+    return ''
+  }
+}
+
 function getProviderImageUrl(logoPath: string | null): string | undefined {
   return getTmdbImageUrl(logoPath, 'w92')
 }
