@@ -124,5 +124,41 @@
       "no_media": "Nenhuma mídia disponível"
     },
     "related": "Relacionados"
+  },
+  "tvShow": {
+    "watch_now": "Ver ahora",
+    "no_poster": "Sin póster disponible",
+    "no_synopsis": "Sin sinopsis disponible.",
+    "original_title": "Título original",
+    "popularity": "Popularidad",
+    "votes": "votos",
+    "synopsis": "Sinopsis",
+    "official_site": "Sitio oficial",
+    "seasons": "Temporadas",
+    "status": "Estado",
+    "watchlist": "Lista para ver",
+    "favorite": "Favorito",
+    "interest": "Interés",
+    "season": {
+      "title": "Temporada Actual",
+      "season": "Temporada",
+      "episodes": "Episodios",
+      "episode_count": "{count} episodios",
+      "air_date": "Fecha de emisión",
+      "overview": "Resumen",
+      "no_overview": "Sin resumen disponible.",
+      "loading": "Cargando temporada...",
+      "error": "Error al cargar temporada"
+    },
+    "media": {
+      "title": "Multimedia",
+      "posters": "Posters",
+      "backdrops": "Backdrops",
+      "no_media": "Sin multimedia disponible"
+    },
+    "related": {
+      "title": "Relacionados",
+      "no_related": "No se encontraron series relacionadas"
+    }
   }
 }

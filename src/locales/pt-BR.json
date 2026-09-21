@@ -546,7 +546,28 @@
     },
     "watchlist": "Lista para assistir",
     "favorite": "Favorito",
-    "interest": "Interesse"
+    "interest": "Interesse",
+    "season": {
+      "title": "Temporada Atual",
+      "season": "Temporada",
+      "episodes": "Episódios",
+      "episode_count": "{count} episódios",
+      "air_date": "Data de exibição",
+      "overview": "Visão geral",
+      "no_overview": "Sem visão geral disponível.",
+      "loading": "Carregando temporada...",
+      "error": "Falha ao carregar temporada"
+    },
+    "media": {
+      "title": "Mídia",
+      "posters": "Posters",
+      "backdrops": "Backdrops",
+      "no_media": "Nenhuma mídia disponível"
+    },
+    "related": {
+      "title": "Relacionados",
+      "no_related": "Nenhuma série relacionada encontrada"
+    }
   },
   "waitlist": {
     "error": {
