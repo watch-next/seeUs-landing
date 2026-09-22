@@ -288,19 +288,29 @@
     </section>
 
     <!-- Media Modal -->
-    <div v-if="isMediaDialogOpen" class="modal-overlay" role="dialog" aria-modal="true" :aria-label="t('movie.media.title')" @click="closeMediaDialog">
-      <div class="modal modal--media" @click.stop>
-        <div class="modal__header">
-          <button class="modal__close" @click="closeMediaDialog" :aria-label="t('global.close')">&times;</button>
-        </div>
-        <div class="modal__content">
-          <img
-            v-if="selectedMediaImage"
-            :src="selectedMediaImage"
-            :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`"
-            class="modal__image"
-          />
-        </div>
+    <div
+      v-if="isMediaDialogOpen"
+      class="media-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      :aria-label="t('movie.media.title')"
+      @click="closeMediaDialog"
+      @keydown.esc="closeMediaDialog"
+    >
+      <div class="media-modal" @click.stop>
+        <button
+          class="media-modal__close"
+          :aria-label="t('movie.watch_dialog.close')"
+          @click="closeMediaDialog"
+        >
+          ×
+        </button>
+        <img
+          v-if="selectedMediaImage"
+          :src="selectedMediaImage"
+          :alt="movie?.title || ''"
+          class="media-modal__image"
+        />
       </div>
     </div>
 
@@ -2296,63 +2306,105 @@ useSeo({
   padding: 2rem;
 }
 
-.movie-page__media .modal-overlay {
+/* Media Modal (cloned from TvShow.vue) */
+.media-modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
   z-index: 1000;
   animation: fadeIn 0.2s ease;
-}
 
-.movie-page__media .modal--media {
-  max-width: 90vw;
-  max-height: 90vh;
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--bg-primary);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-}
-
-.movie-page__media .modal__header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 1rem;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-}
-
-.movie-page__media .modal__close {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
-
-  &:hover {
-    background: var(--bg-hover);
-    border-color: var(--accent);
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+    align-items: center;
   }
 }
 
-.movie-page__media .modal__content {
-  padding: 0;
-  overflow: hidden;
+.media-modal {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 }
 
-.movie-page__media .modal__image {
-  max-width: 90vw;
-  max-height: 80vh;
-  display: block;
+.media-modal__close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 480px) {
+    top: -45px;
+    right: -5px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+}
+
+.media-modal__image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 480px) {
+    border-radius: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media__tab,
+  .media__item,
+  .related__link,
+  .related__nav,
+  .media-modal,
+  .media-modal__close {
+    transition: none;
+    animation: none;
+  }
 }
 
 /* Related Movies section — horizontal carousel (cloned from TvShow.vue) */
