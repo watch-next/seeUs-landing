@@ -99,7 +99,7 @@
               <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
             </div>
             <!-- Action Buttons (aligned in block) -->
-            <div class="movie-page__actions">
+            <div class="movie-page__actions">f
               <a v-if="movie.homepage" :href="movie.homepage" target="_blank" rel="noopener noreferrer"
                 class="movie-page__btn movie-page__btn--homepage">
                 🌐 {{ t('movie.official_site') }}
@@ -191,64 +191,150 @@
     </section>
 
     <!-- Media Section -->
-    <section v-if="mediaAvailable" class="movie-page__media" aria-label="Media">
-      <div class="media__header">
-        <h2 class="media__title">{{ t('movie.media.title') }}</h2>
-        <div class="media__tabs" role="tablist" aria-label="Media categories">
-          <button type="button" class="media__tab" :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }" role="tab" :aria-selected="activeMediaTab === 'backdrops'" @click="activeMediaTab = 'backdrops'">{{ t('movie.media.backdrops') }} ({{ mediaBackdrops.length }})</button>
-          <button type="button" class="media__tab" :class="{ 'media__tab--active': activeMediaTab === 'posters' }" role="tab" :aria-selected="activeMediaTab === 'posters'" @click="activeMediaTab = 'posters'">{{ t('movie.media.posters') }} ({{ mediaPosters.length }})</button>
+    <section v-if="mediaAvailable" class="movie-page__media section" aria-label="Media">
+      <div class="container">
+        <h2 class="section__title">{{ t('movie.media.title') }}</h2>
+
+        <!-- Media Tabs -->
+        <div class="media__tabs" role="tablist" :aria-label="t('movie.media.title')">
+          <button
+            v-if="mediaPosters.length > 0"
+            role="tab"
+            :aria-selected="activeMediaTab === 'posters'"
+            :aria-controls="activeMediaTab === 'posters' ? 'media-panel-posters' : undefined"
+            :id="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
+            class="media__tab"
+            :class="{ 'media__tab--active': activeMediaTab === 'posters' }"
+            @click="activeMediaTab = 'posters'"
+          >
+            {{ t('movie.media.posters') }}
+          </button>
+          <button
+            v-if="mediaBackdrops.length > 0"
+            role="tab"
+            :aria-selected="activeMediaTab === 'backdrops'"
+            :aria-controls="activeMediaTab === 'backdrops' ? 'media-panel-backdrops' : undefined"
+            :id="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
+            class="media__tab"
+            :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }"
+            @click="activeMediaTab = 'backdrops'"
+          >
+            {{ t('movie.media.backdrops') }}
+          </button>
         </div>
-      </div>
-      <div v-if="activeMediaCount > 0" class="media__carousel-container" :class="`media__carousel-container--${activeMediaTab}`">
-        <div class="media__carousel">
-          <div v-for="(image, index) in activeMediaImages" :key="`${activeMediaTab}-${index}`" class="media__card" role="button" tabindex="0" @click="openMediaDialog(image)" @keydown.enter="openMediaDialog(image)" @keydown.space.prevent="openMediaDialog(image)">
-            <img :src="getMediaImageUrl(image)" :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`" class="media__image" loading="lazy"/>
+
+        <!-- Posters Panel -->
+        <div
+          v-if="activeMediaTab === 'posters' && mediaPosters.length > 0"
+          role="tabpanel"
+          id="media-panel-posters"
+          :aria-labelledby="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
+          class="media__panel"
+        >
+          <div class="media__grid">
+            <figure
+              v-for="(image, index) in mediaPosters"
+              :key="`poster-${index}`"
+              class="media__item"
+              @click="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.enter="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))"
+              tabindex="0"
+              role="button"
+              :aria-label="`${movie?.title} - ${t('movie.media.posters')} ${index + 1}`"
+            >
+              <img
+                :src="getMediaImageUrl(image)"
+                :alt="`${movie?.title} - ${t('movie.media.posters')}`"
+                class="media__image"
+                loading="lazy"
+              />
+            </figure>
           </div>
         </div>
+
+        <!-- Backdrops Panel -->
+        <div
+          v-if="activeMediaTab === 'backdrops' && mediaBackdrops.length > 0"
+          role="tabpanel"
+          id="media-panel-backdrops"
+          :aria-labelledby="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
+          class="media__panel"
+        >
+          <div class="media__grid">
+            <figure
+              v-for="(image, index) in mediaBackdrops"
+              :key="`backdrop-${index}`"
+              class="media__item"
+              @click="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.enter="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))"
+              tabindex="0"
+              role="button"
+              :aria-label="`${movie?.title} - ${t('movie.media.backdrops')} ${index + 1}`"
+            >
+              <img
+                :src="getMediaImageUrl(image)"
+                :alt="`${movie?.title} - ${t('movie.media.backdrops')}`"
+                class="media__image"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </div>
+
+        <p v-if="activeMediaCount === 0" class="media__empty">{{ t('movie.media.no_media') }}</p>
       </div>
-      <p v-else class="media__empty">{{ t('movie.media.no_media') }}</p>
     </section>
+
+    <!-- Media Modal -->
     <div v-if="isMediaDialogOpen" class="modal-overlay" role="dialog" aria-modal="true" :aria-label="t('movie.media.title')" @click="closeMediaDialog">
       <div class="modal modal--media" @click.stop>
         <div class="modal__header">
-          <button class="modal__close" @click="closeMediaDialog" :aria-label="t('global.close')">×</button>
+          <button class="modal__close" @click="closeMediaDialog" :aria-label="t('global.close')">&times;</button>
         </div>
         <div class="modal__content">
-          <img v-if="selectedMediaImage" :src="getMediaImageUrl(selectedMediaImage)" :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`" class="modal__image"/>
+          <img
+            v-if="selectedMediaImage"
+            :src="selectedMediaImage"
+            :alt="`${movie?.title} - ${t(activeMediaTab === 'backdrops' ? 'movie.media.backdrops' : 'movie.media.posters')}`"
+            class="modal__image"
+          />
         </div>
       </div>
     </div>
 
     <!-- Related Movies Section -->
-    <section v-if="relatedMovies.length > 0" class="movie-page__related" aria-label="Related movies">
-      <h2 class="related__heading">{{ t('movie.related') }}:</h2>
+    <section v-if="relatedMovies.length > 0" class="movie-page__related section" aria-label="Related movies">
+      <div class="container">
+        <h2 class="section__title">{{ t('movie.related') }}</h2>
 
-      <div class="related__carousel-container">
-        <div class="related__carousel">
-          <router-link
-            v-for="related in relatedMovies"
-            :key="related.id"
-            :to="relatedMovieUrl(related)"
-            class="related__card"
-          >
-            <div class="related__poster">
-              <img
-                :src="related.poster_path ? getTmdbImageUrl(related.poster_path, 'w500') : undefined"
-                :alt="related.title"
-                class="related__image"
-                loading="lazy"
-              />
-            </div>
-            <div class="related__info">
-              <p class="related__title">{{ related.title }}</p>
-              <p class="related__meta">
-                <span v-if="related.release_date">{{ related.release_date.slice(0, 4) }}</span>
-                <span v-if="typeof related.vote_average === 'number' && related.vote_average">
+        <div class="related__carousel-container">
+          <div class="related__carousel">
+          
+            <a  v-for="related in relatedMovies"
+              :key="related.id" :href="`/movies/${related.id}-${related.slug}${related.year ? `-${related.year}` : ''}`" target="_blank" rel="noopener noreferrer" class="related__card">
+              <div class="related__poster">
+                <img
+                  v-if="related.poster_path"
+                  :src="getTmdbImageUrl(related.poster_path, 'w500')"
+                  :alt="related.title"
+                  class="related__image"
+                  loading="lazy"
+                />
+                <div v-else class="related__placeholder">
+                  <span>🎬</span>
+                </div>
+              </div>
+              <div class="related__info">
+                <h3 class="related__title">{{ related.title }}</h3>
+                <p v-if="related.vote_average !== undefined && related.vote_average !== null" class="related__rating">
                   ★ {{ Number(related.vote_average).toFixed(1) }}
-                </span>
-              </p>
-            </div>
-          </router-link>
+                </p>
+                <p v-if="related.release_date" class="related__year">{{ related.release_date.slice(0, 4) }}</p>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -446,7 +532,7 @@ const backdropUrl = computed(() => {
 })
 
 // --- Media section (Backdrops / Posters) ---
-const activeMediaTab = ref<'backdrops' | 'posters'>('backdrops')
+const activeMediaTab = ref<'backdrops' | 'posters'>('posters')
 
 // The movie API exposes a single poster/backdrop path per category (Case A).
 const mediaBackdrops = computed<string[]>(() =>
@@ -2051,152 +2137,193 @@ useSeo({
 }
 
 /* Media section — Backdrops / Posters carousel (shares Credits carousel pattern) */
-.movie-page__media,
-.movie-page__related {
+.movie-page__media {
   margin-top: 3rem;
-  padding: 2rem;
 }
 
-.media__title {
+.movie-page__media .section__title {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0 0 1rem;
   color: var(--text-primary);
 }
 
-.media__tabs {
+.movie-page__media .media__tabs {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    gap: 0.25rem;
+  }
 }
 
-.media__tab {
-  appearance: none;
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  background: var(--bg-tertiary, #1f2430);
+.movie-page__media .media__tab {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
   color: var(--text-secondary);
-  padding: 0.55rem 1.1rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition:
-    background 0.25s ease,
-    color 0.25s ease,
-    border-color 0.25s ease;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  &--active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
 }
 
-.media__tab:hover {
-  border-color: var(--color-primary, #7c5cff);
-  color: var(--text-primary);
+.movie-page__media .media__panel {
+  animation: fadeIn 0.2s ease;
 }
 
-.media__tab--active {
-  background: var(--color-primary, #7c5cff);
-  border-color: var(--color-primary, #7c5cff);
-  color: #fff;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.media__carousel-container {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
-
-.media__carousel {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: stretch;
+.movie-page__media .media__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
-  width: max-content;
-  min-width: 100%;
-  padding: 1rem 0.5rem;
-  scroll-behavior: smooth;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+  }
 }
 
-.media__card {
-  flex: 0 0 auto;
-  overflow: hidden;
-  border-radius: 12px;
-  background: var(--bg-tertiary, #1f2430);
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  padding: 0.4rem;
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.media__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  border-color: var(--color-primary, #7c5cff);
-}
-
-.media__image {
-  display: block;
-  width: 100%;
-  object-fit: cover;
-  background: var(--bg-tertiary, #1f2430);
-}
-
-/* Backdrops are wide; posters are tall. Keep aspect ratio per active category. */
-.media__carousel-container--backdrops .media__image {
-  aspect-ratio: 16 / 9;
-}
-.media__carousel-container--posters .media__image {
-  aspect-ratio: 2 / 3;
-}
-
-/* Carousel  scrolls horizontally — edge to edge within the constrained section. */
-.media__carousel-container--backdrops .media__card {
-  width: min(560px, 75vw);
-}
-.media__carousel-container--posters .media__card {
-  width: min(220px, 45vw);
-}
-
-.media__empty {
-  padding: 1rem 0;
+.movie-page__media .media__item {
   margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.movie-page__media .media__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.movie-page__media .media__empty {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  text-align: center;
+  padding: 2rem;
 }
 
-@media (max-width: 640px) {
-  .media__carousel-container--backdrops .media__card {
-    width: min(420px, 82vw);
-  }
-  .media__carousel-container--posters .media__card {
-    width: min(180px, 52vw);
+.movie-page__media .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.movie-page__media .modal--media {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-primary);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.movie-page__media .modal__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.movie-page__media .modal__close {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .media__tab,
-  .media__card {
-    transition: none;
-  }
-  .media__card:hover {
-    transform: none;
-  }
+.movie-page__media .modal__content {
+  padding: 0;
+  overflow: hidden;
 }
 
-/* Related Movies section — horizontal carousel (shares Credits/Media pattern) */
+.movie-page__media .modal__image {
+  max-width: 90vw;
+  max-height: 80vh;
+  display: block;
+}
 
-.related__heading {
+/* Related Movies section — horizontal carousel */
+.movie-page__related {
+  margin-top: 3rem;
+}
+
+.movie-page__related .section__title {
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
   color: var(--text-primary);
 }
 
-.related__carousel-container {
+.movie-page__related .related__carousel-container {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
@@ -2205,7 +2332,7 @@ useSeo({
   scrollbar-width: thin;
 }
 
-.related__carousel {
+.movie-page__related .related__carousel {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -2213,11 +2340,11 @@ useSeo({
   gap: 1rem;
   width: max-content;
   min-width: 100%;
-  padding: 1rem 0.5rem;
+  padding: 0.5rem;
   scroll-behavior: smooth;
 }
 
-.related__card {
+.movie-page__related .related__card {
   flex: 0 0 auto;
   width: 200px;
   overflow: hidden;
@@ -2229,19 +2356,22 @@ useSeo({
     transform 0.25s ease,
     box-shadow 0.25s ease,
     border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    border-color: var(--color-primary, #7c5cff);
+  }
 }
 
-.related__card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  border-color: var(--color-primary, #7c5cff);
-}
-
-.related__poster {
+.movie-page__related .related__poster {
+  position: relative;
   padding: 0.4rem 0.4rem 0;
 }
 
-.related__image {
+.movie-page__related .related__image {
   display: block;
   width: 100%;
   aspect-ratio: 2 / 3;
@@ -2250,12 +2380,26 @@ useSeo({
   background: var(--bg-tertiary, #1f2430);
 }
 
-.related__info {
-  padding: 0.6rem 0.6rem 0.75rem;
+.movie-page__related .related__placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  border-radius: 8px;
 }
 
-.related__title {
-  margin: 0 0 0.25rem;
+.movie-page__related .related__info {
+  padding: 0.6rem 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.movie-page__related .related__title {
+  margin: 0;
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.3;
@@ -2267,25 +2411,30 @@ useSeo({
   min-height: 2.4em;
 }
 
-.related__meta {
+.movie-page__related .related__rating {
   margin: 0;
-  display: flex;
-  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.movie-page__related .related__year {
+  margin: 0;
   font-size: 0.8rem;
   color: var(--text-secondary);
 }
 
 @media (max-width: 640px) {
-  .related__card {
+  .movie-page__related .related__card {
     width: 160px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .related__card {
+  .movie-page__related .related__card {
     transition: none;
   }
-  .related__card:hover {
+  .movie-page__related .related__card:hover {
     transform: none;
   }
 }
