@@ -99,7 +99,7 @@
               <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
             </div>
             <!-- Action Buttons (aligned in block) -->
-            <div class="movie-page__actions">f
+            <div class="movie-page__actions">
               <a v-if="movie.homepage" :href="movie.homepage" target="_blank" rel="noopener noreferrer"
                 class="movie-page__btn movie-page__btn--homepage">
                 🌐 {{ t('movie.official_site') }}
@@ -309,32 +309,56 @@
       <div class="container">
         <h2 class="section__title">{{ t('movie.related') }}</h2>
 
-        <div class="related__carousel-container">
-          <div class="related__carousel">
-          
-            <a  v-for="related in relatedMovies"
-              :key="related.id" :href="`/movies/${related.id}-${related.slug}${related.year ? `-${related.year}` : ''}`" target="_blank" rel="noopener noreferrer" class="related__card">
-              <div class="related__poster">
-                <img
-                  v-if="related.poster_path"
-                  :src="getTmdbImageUrl(related.poster_path, 'w500')"
-                  :alt="related.title"
-                  class="related__image"
-                  loading="lazy"
-                />
-                <div v-else class="related__placeholder">
-                  <span>🎬</span>
-                </div>
+        <div class="related__carousel">
+          <div class="related__scroll" ref="relatedScroll">
+            <div class="related__track" :style="{ transform: `translateX(-${relatedScrollX}px)` }">
+              <div
+                v-for="related in relatedMovies"
+                :key="related.id"
+                class="related__card"
+              >
+                <a :href="relatedMovieUrl(related)" class="related__link">
+                  <div class="related__poster">
+                    <img
+                      v-if="related.poster_path"
+                      :src="getTmdbImageUrl(related.poster_path, 'w342')"
+                      :alt="related.title"
+                      class="related__image"
+                      loading="lazy"
+                    />
+                    <div v-else class="related__placeholder">
+                      <span>🎬</span>
+                    </div>
+                  </div>
+                  <div class="related__info">
+                    <h3 class="related__title">{{ related.title }}</h3>
+                    <p v-if="related.vote_average !== undefined && related.vote_average !== null" class="related__rating">
+                      <span aria-hidden="true">★</span>
+                      {{ Number(related.vote_average).toFixed(1) }}
+                    </p>
+                  </div>
+                </a>
               </div>
-              <div class="related__info">
-                <h3 class="related__title">{{ related.title }}</h3>
-                <p v-if="related.vote_average !== undefined && related.vote_average !== null" class="related__rating">
-                  ★ {{ Number(related.vote_average).toFixed(1) }}
-                </p>
-                <p v-if="related.release_date" class="related__year">{{ related.release_date.slice(0, 4) }}</p>
-              </div>
-            </a>
+            </div>
           </div>
+
+          <!-- Scroll buttons -->
+          <button
+            class="related__nav related__nav--prev"
+            @click="scrollRelated(-1)"
+            :disabled="relatedScrollX <= 0"
+            :aria-label="t('movie.related.prev')"
+          >
+            &#8249;
+          </button>
+          <button
+            class="related__nav related__nav--next"
+            @click="scrollRelated(1)"
+            :disabled="relatedScrollX >= relatedMaxScroll"
+            :aria-label="t('movie.related.next')"
+          >
+            &#8250;
+          </button>
         </div>
       </div>
     </section>
@@ -599,6 +623,26 @@ interface RelatedMovie {
 
 const relatedMovies = ref<RelatedMovie[]>([])
 const isLoadingRelated = ref(false)
+
+// Related carousel scroll state
+const relatedScrollX = ref(0)
+const relatedScroll = ref<HTMLElement | null>(null)
+
+const relatedMaxScroll = computed(() => {
+  if (!relatedScroll.value) return 0
+  const containerWidth = relatedScroll.value.clientWidth
+  const trackWidth = relatedScroll.value.scrollWidth
+  return Math.max(0, trackWidth - containerWidth)
+})
+
+const cardWidth = 220 + 16 // card width + gap
+
+function scrollRelated(direction: -1 | 1) {
+  if (!relatedScroll.value) return
+  const newScrollX = relatedScrollX.value + direction * cardWidth * 2
+  relatedScrollX.value = Math.max(0, Math.min(newScrollX, relatedMaxScroll.value))
+  relatedScroll.value.scrollTo({ left: relatedScrollX.value, behavior: 'smooth' })
+}
 
 function relatedMovieUrl(m: RelatedMovie): string {
   const id = m.id
@@ -2311,7 +2355,7 @@ useSeo({
   display: block;
 }
 
-/* Related Movies section — horizontal carousel */
+/* Related Movies section — horizontal carousel (cloned from TvShow.vue) */
 .movie-page__related {
   margin-top: 3rem;
 }
@@ -2323,119 +2367,194 @@ useSeo({
   color: var(--text-primary);
 }
 
-.movie-page__related .related__carousel-container {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+.movie-page__related .related__carousel {
+  position: relative;
+  padding: 0 4rem;
+
+  @media (max-width: 768px) {
+    padding: 0 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 2.5rem;
+  }
 }
 
-.movie-page__related .related__carousel {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  gap: 1rem;
-  width: max-content;
-  min-width: 100%;
-  padding: 0.5rem;
+.movie-page__related .related__scroll {
+  overflow-x: auto;
   scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.movie-page__related .related__track {
+  display: flex;
+  gap: 1rem;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
 }
 
 .movie-page__related .related__card {
-  flex: 0 0 auto;
-  width: 200px;
-  overflow: hidden;
-  border-radius: 12px;
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+
+  @media (max-width: 768px) {
+    flex: 0 0 180px;
+  }
+
+  @media (max-width: 480px) {
+    flex: 0 0 150px;
+  }
+}
+
+.movie-page__related .related__link {
   text-decoration: none;
-  background: var(--bg-tertiary, #1f2430);
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-  display: flex;
-  flex-direction: column;
+  color: inherit;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    border-color: var(--color-primary, #7c5cff);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 }
 
 .movie-page__related .related__poster {
   position: relative;
-  padding: 0.4rem 0.4rem 0;
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
 }
 
 .movie-page__related .related__image {
-  display: block;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
-  background: var(--bg-tertiary, #1f2430);
+  display: block;
 }
 
 .movie-page__related .related__placeholder {
   width: 100%;
-  aspect-ratio: 2 / 3;
-  background: var(--bg-tertiary);
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
-  border-radius: 8px;
+  color: var(--text-tertiary);
 }
 
 .movie-page__related .related__info {
-  padding: 0.6rem 0.6rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  padding: 0.75rem 0.25rem 0;
+  text-align: center;
 }
 
 .movie-page__related .related__title {
-  margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  line-height: 1.3;
   color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.4em;
 }
 
 .movie-page__related .related__rating {
-  margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   color: var(--accent);
   font-weight: 600;
-}
-
-.movie-page__related .related__year {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
   margin: 0;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
 }
 
-@media (max-width: 640px) {
-  .movie-page__related .related__card {
-    width: 160px;
+.movie-page__related .related__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover:not(:disabled) {
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  &--prev {
+    left: 0;
+  }
+
+  &--next {
+    right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-page__related .related__nav {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-page__related .related__nav {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .movie-page__related .related__card {
+  .movie-page__related .related__track {
     transition: none;
   }
-  .movie-page__related .related__card:hover {
+  .movie-page__related .related__link {
+    transition: none;
+  }
+  .movie-page__related .related__link:hover {
     transform: none;
+  }
+  .movie-page__related .related__nav {
+    transition: none;
   }
 }
 </style>
