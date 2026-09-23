@@ -534,6 +534,7 @@
     "official_site": "Site Oficial",
     "seasons": "Temporadas",
     "status": "Status",
+    "trailer": "Trailer",
     "watch_dialog": {
       "title": "Assistir no SeeUs",
       "subtitle": "Escolha como você deseja assistir",
@@ -566,7 +567,9 @@
     },
     "related": {
       "title": "Relacionados",
-      "no_related": "Nenhuma série relacionada encontrada"
+      "no_related": "Nenhuma série relacionada encontrada",
+      "prev": "Anterior",
+      "next": "Próximo"
     }
   },
   "waitlist": {

@@ -484,18 +484,11 @@ function onProviderCardClick() {
 }
 
 // Route uses :slug param containing series ID in format: {id}-{title-slugified}
-const seriesId = computed(() => {
+const tmdbId = computed(() => {
   const slug = String(route.params.slug || '')
-
-  // Try UUID pattern first (8-4-4-4-12 hex chars)
-  const uuidMatch = slug.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i)
-  if (uuidMatch) {
-    return uuidMatch[1]
-  }
-
-  // Fallback: get first segment before any hyphen (works for both UUID and numeric IDs)
-  const parts = slug.split('-')
-  return parts[0] || ''
+  // Extract TMDB ID (numeric) from the beginning of the slug
+  const match = slug.match(/^(\d+)-/)
+  return match ? parseInt(match[1], 10) : null
 })
 
 const series = ref<Awaited<ReturnType<typeof getSeriesBySlug>> | null>(null)
@@ -508,12 +501,12 @@ const error = ref<number | string | null>(null)
 const breadcrumbItems = computed(() => [
   { label: t('common.home'), to: '/' },
   { label: t('tvShows.title'), to: '/tv-shows' },
-  { label: series.value?.name || seriesId.value },
+  { label: series.value?.name || tmdbId.value },
 ])
 
 const canonicalUrl = computed(() => {
   const baseUrl = import.meta.env.VITE_SITE_URL || 'https://watchnext.app'
-  return `${baseUrl}/tv-shows/${seriesId.value}`
+  return `${baseUrl}/tv-shows/${tmdbId.value}`
 })
 
 const posterUrl = computed(() => {
@@ -603,7 +596,7 @@ onMounted(async () => {
       (async () => {
         // For watch providers, we need to pass the series ID (TMDB ID)
         // We assume the watchProviders composable works with TMDB ID
-        const id = seriesId.value
+        const id = tmdbId.value
         if (id) {
           await loadProviders(id)
         }
@@ -617,7 +610,7 @@ onMounted(async () => {
       statusText: err?.response?.statusText,
       url: err?.config?.url,
       slug: route.params.slug,
-      seriesId: seriesId.value
+      tmdbId: tmdbId.value
     })
     error.value = err?.response?.status === 404 ? 404 : 'unknown'
     series.value = null
@@ -719,7 +712,20 @@ function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
 
 // Fetch current season (latest season based on number_of_seasons)
 async function loadCurrentSeason() {
-  if (!series.value?.number_of_seasons || series.value.number_of_seasons <= 0) {
+  // Use the TMDB ID from the route (already computed from slug)
+  const id = tmdbId.value
+  const seasonNumber = series.value?.number_of_seasons
+
+  // Log before early-return condition
+  console.log('[TvShow][SeasonDebug] loadCurrentSeason called:', {
+    tmdbId: id,
+    seasonNumber: series.value?.number_of_seasons,
+    earlyReturnCondition: !id || !seasonNumber || seasonNumber <= 0
+  })
+
+  // If we don't have a valid ID or season number, we can't proceed
+  if (!id || !seasonNumber || seasonNumber <= 0) {
+    console.log('[TvShow][SeasonDebug] Early return: invalid id or seasonNumber')
     return
   }
 
@@ -727,11 +733,19 @@ async function loadCurrentSeason() {
   seasonError.value = null
 
   try {
-    const season = await fetchSeasonDetails(series.value.id, series.value.number_of_seasons)
+    console.log('[TvShow][SeasonDebug] Calling fetchSeasonDetails with:', {
+      tmdbId: id,
+      seasonNumber: seasonNumber
+    })
+    const season = await fetchSeasonDetails(id, seasonNumber)
+    console.log('[TvShow][SeasonDebug] fetchSeasonDetails resolved:', {
+      season: season ? 'Season object received' : 'null/undefined'
+    })
     currentSeason.value = season
   } catch (err) {
+    console.log('[TvShow][SeasonDebug] fetchSeasonDetails failed:', err)
     seasonError.value = t('tvShow.season.error')
-    console.error('Failed to load season:', err)
+    console.log('Failed to load season:', err)
   } finally {
     isLoadingSeason.value = false
   }
