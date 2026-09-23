@@ -85,7 +85,7 @@ export async function getSeries(): Promise<TVShowDetail[]> {
 export async function getSeriesBySlug(slug: string): Promise<TVShowDetail | null> {
   // Check cache first
   const cached = seriesCache.get(slug);
-  if (cached) {
+  if (cached && cached.number_of_seasons && cached.number_of_seasons > 0) {
     return cached;
   }
 
@@ -108,7 +108,9 @@ export async function getSeriesByTmdbId(tmdbId: number): Promise<TVShowDetail | 
   const cachedSlug = tmdbIdToSlugCache.get(tmdbId);
   if (cachedSlug) {
     const cached = seriesCache.get(cachedSlug);
-    if (cached) return cached;
+    if (cached && cached.number_of_seasons && cached.number_of_seasons > 0) {
+      return cached;
+    }
   }
 
   try {

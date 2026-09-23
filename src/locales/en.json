@@ -547,6 +547,7 @@
     "official_site": "Official Site",
     "seasons": "Seasons",
     "status": "Status",
+    "trailer": "Trailer",
     "watch_dialog": {
       "title": "Watch on SeeUs",
       "subtitle": "Choose how you'd like to watch",
@@ -600,7 +601,9 @@
     },
     "related": {
       "title": "Related",
-      "no_related": "No related shows found"
+      "no_related": "No related shows found",
+      "prev": "Previous",
+      "next": "Next"
     }
   },
   "waitlist": {

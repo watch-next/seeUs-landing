@@ -136,6 +136,7 @@
     "official_site": "Sitio oficial",
     "seasons": "Temporadas",
     "status": "Estado",
+    "trailer": "Tráiler",
     "watchlist": "Lista para ver",
     "favorite": "Favorito",
     "interest": "Interés",
@@ -158,7 +159,9 @@
     },
     "related": {
       "title": "Relacionados",
-      "no_related": "No se encontraron series relacionadas"
+      "no_related": "No se encontraron series relacionadas",
+      "prev": "Anterior",
+      "next": "Siguiente"
     }
   }
 }
