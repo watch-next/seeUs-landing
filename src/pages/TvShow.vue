@@ -13,7 +13,9 @@
         <header class="tv-show-page__header">
           <div class="tv-show-page__media">
             <div class="tv-show-page__poster">
-              <img v-if="posterUrl" :src="posterUrl" :alt="series.name" class="tv-show-page__poster-img" loading="lazy" />
+              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="posterUrl" target="_blank" rel="noopener noreferrer">
+                <img :src="posterUrl" :alt="series.name" class="tv-show-page__poster-img" loading="lazy" />
+              </a>
               <div v-else class="tv-show-page__poster-placeholder">
                 <span>📺</span>
                 <p>{{ t('tvShow.no_poster') }}</p>
@@ -197,13 +199,13 @@
 
       <div v-else-if="currentSeason" class="season__card">
         <div class="season__media">
-          <img
-            v-if="currentSeason.poster_path"
-            :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')"
+           <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="currentSeason.poster_path" target="_blank" rel="noopener noreferrer">
+            <img
+           :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')"
             :alt="currentSeason.name"
             class="season__poster"
             loading="lazy"
-          />
+          /></a>
           <div v-else class="season__poster-placeholder">
             <span>📺</span>
             <p>{{ t('tvShow.no_poster') }}</p>
