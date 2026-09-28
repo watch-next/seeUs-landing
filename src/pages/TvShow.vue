@@ -120,6 +120,67 @@
     </div>
   </article>
 
+  <!-- Discussions / Comments Section -->
+  <section v-if="series" class="tv-show-page__discussions-comments section">
+    <div class="container">
+      <h2 class="section__title">{{ t('tvShow.discussions_comments.title') }}</h2>
+
+      <div class="discussions-comments__tabs" role="tablist" aria-label="{{ t('tvShow.discussions_comments.title') }}">
+        <button
+          role="tab"
+          :aria-selected="activeTab === 'discussions'"
+          :aria-controls="activeTab === 'discussions' ? 'tab-panel-discussions' : undefined"
+          :id="activeTab === 'discussions' ? 'tab-discussions' : undefined"
+          class="discussions-comments__tab"
+          :class="{ 'discussions-comments__tab--active': activeTab === 'discussions' }"
+          @click="activeTab = 'discussions'"
+        >
+          {{ t('tvShow.discussions') }}
+        </button>
+        <button
+          role="tab"
+          :aria-selected="activeTab === 'comments'"
+          :aria-controls="activeTab === 'comments' ? 'tab-panel-comments' : undefined"
+          :id="activeTab === 'comments' ? 'tab-comments' : undefined"
+          class="discussions-comments__tab"
+          :class="{ 'discussions-comments__tab--active': activeTab === 'comments' }"
+          @click="activeTab = 'comments'"
+        >
+          {{ t('tvShow.comments') }}
+        </button>
+      </div>
+
+      <!-- Discussions Panel -->
+      <div
+        v-if="activeTab === 'discussions'"
+        role="tabpanel"
+        id="tab-panel-discussions"
+        :aria-labelledby="activeTab === 'discussions' ? 'tab-discussions' : undefined"
+        class="discussions-comments__panel"
+      >
+        <div v-if="!isAppAuthenticated" class="discussions__auth-required">
+          <p>{{ t('tvShow.discussions_auth_required') }}</p>
+          <CommentAuthSelector />
+        </div>
+        <div v-else class="discussions__content">
+          <p>{{ t('tvShow.discussions_placeholder') }}</p>
+          <!-- Discussion functionality would go here if backend existed -->
+        </div>
+      </div>
+
+      <!-- Comments Panel -->
+      <div
+        v-else-if="activeTab === 'comments'"
+        role="tabpanel"
+        id="tab-panel-comments"
+        :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined"
+        class="discussions-comments__panel"
+      >
+        <CommentSection :postSlug="route.params.slug" />
+      </div>
+    </div>
+  </section>
+
   <!-- Current Season Section -->
   <section v-if="series && series.number_of_seasons && series.number_of_seasons > 0" class="tv-show-page__season section">
     <div class="container">
@@ -452,6 +513,8 @@ import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
 import { fetchSeasonDetails, fetchSimilarShows } from '@/lib/api/tvDataSource'
 import { slugify } from '@/lib/content/slugify'
 import type { SeasonDetail, TVShowDetail } from '@/lib/tmdb/types'
+import CommentSection from '@/components/comments/CommentSection.vue'
+import CommentAuthSelector from '@/components/comments/CommentAuthSelector.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -690,6 +753,9 @@ const activeActions = ref<{ watchlist: boolean; favorite: boolean; interest: boo
   favorite: false,
   interest: false,
 })
+
+// Tab state for Discussions/Comments section
+const activeTab = ref<'discussions' | 'comments'>('comments')
 
 // Current Season state
 const currentSeason = ref<SeasonDetail | null>(null)
