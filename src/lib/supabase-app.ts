@@ -4,8 +4,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_APP_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_APP_ANON_KEY
 
 export const supabaseApp = createClient(
-  supabaseUrl,
-  supabaseAnonKey,
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key',
   {
     auth: {
       flowType: 'pkce',

@@ -373,16 +373,6 @@
       </div>
     </section>
 
-  <!-- Comments Section -->
-    <CommentSection v-if="movie"
-                    content-type="movie"
-                    :content-id="movieId" />
-
-  <!-- Comments Section -->
-    <CommentSection v-if="movie"
-                    content-type="movie"
-                    :content-id="movieId" />
-
   </article>
 
   <div v-else-if="isLoading" class="container movie-page__loading">
