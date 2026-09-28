@@ -14,7 +14,9 @@
         <header class="movie-page__header">
           <div class="movie-page__media">
             <div class="movie-page__poster">
-              <img v-if="posterUrl" :src="posterUrl" :alt="movie.title" class="movie-page__poster-img" loading="lazy" />
+              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
+                v-if="posterUrl"><img :src="posterUrl" :alt="movie.title" class="movie-page__poster-img"
+                  loading="lazy" /></a>
               <div v-else class="movie-page__poster-placeholder">
                 <span>🎬</span>
                 <p>{{ t('movie.no_poster') }}</p>
@@ -153,11 +155,11 @@
         <div class="credits__carousel-container">
           <div class="credits__carousel">
             <div v-for="credit in credits.cast.slice(0, 10)" :key="credit.id" class="credits__grid-item">
-              <img
-                :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w185') : undefined"
-                :alt="`${credit.name} as ${credit.character}`"
-                class="credits__poster"
-              />
+              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
+                v-if="credit.profile_path" target="_blank" rel="noopener noreferrer">
+                <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w185') : undefined"
+                  :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
+              </a>
               <div class="credits__info">
                 <p class="credits__name">{{ credit.name }}</p>
                 <p class="credits__character">{{ credit.character }}</p>
@@ -187,7 +189,8 @@
         </div>
       </div> -->
 
-      <p v-if="credits.cast.length === 0 && credits.crew.length === 0" class="credits__empty">{{ t('credits.no_credits') }}</p>
+      <p v-if="credits.cast.length === 0 && credits.crew.length === 0" class="credits__empty">{{ t('credits.no_credits')
+        }}</p>
     </section>
 
     <!-- Media Section -->
@@ -197,88 +200,47 @@
 
         <!-- Media Tabs -->
         <div class="media__tabs" role="tablist" :aria-label="t('movie.media.title')">
-          <button
-            v-if="mediaPosters.length > 0"
-            role="tab"
-            :aria-selected="activeMediaTab === 'posters'"
+          <button v-if="mediaPosters.length > 0" role="tab" :aria-selected="activeMediaTab === 'posters'"
             :aria-controls="activeMediaTab === 'posters' ? 'media-panel-posters' : undefined"
-            :id="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
-            class="media__tab"
-            :class="{ 'media__tab--active': activeMediaTab === 'posters' }"
-            @click="activeMediaTab = 'posters'"
-          >
+            :id="activeMediaTab === 'posters' ? 'tab-posters' : undefined" class="media__tab"
+            :class="{ 'media__tab--active': activeMediaTab === 'posters' }" @click="activeMediaTab = 'posters'">
             {{ t('movie.media.posters') }}
           </button>
-          <button
-            v-if="mediaBackdrops.length > 0"
-            role="tab"
-            :aria-selected="activeMediaTab === 'backdrops'"
+          <button v-if="mediaBackdrops.length > 0" role="tab" :aria-selected="activeMediaTab === 'backdrops'"
             :aria-controls="activeMediaTab === 'backdrops' ? 'media-panel-backdrops' : undefined"
-            :id="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
-            class="media__tab"
-            :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }"
-            @click="activeMediaTab = 'backdrops'"
-          >
+            :id="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined" class="media__tab"
+            :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }" @click="activeMediaTab = 'backdrops'">
             {{ t('movie.media.backdrops') }}
           </button>
         </div>
 
         <!-- Posters Panel -->
-        <div
-          v-if="activeMediaTab === 'posters' && mediaPosters.length > 0"
-          role="tabpanel"
-          id="media-panel-posters"
-          :aria-labelledby="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
-          class="media__panel"
-        >
+        <div v-if="activeMediaTab === 'posters' && mediaPosters.length > 0" role="tabpanel" id="media-panel-posters"
+          :aria-labelledby="activeMediaTab === 'posters' ? 'tab-posters' : undefined" class="media__panel">
           <div class="media__grid">
-            <figure
-              v-for="(image, index) in mediaPosters"
-              :key="`poster-${index}`"
-              class="media__item"
+            <figure v-for="(image, index) in mediaPosters" :key="`poster-${index}`" class="media__item"
               @click="openMediaDialog(getMediaImageUrl(image))"
               @keydown.enter="openMediaDialog(getMediaImageUrl(image))"
-              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))"
-              tabindex="0"
-              role="button"
-              :aria-label="`${movie?.title} - ${t('movie.media.posters')} ${index + 1}`"
-            >
-              <img
-                :src="getMediaImageUrl(image)"
-                :alt="`${movie?.title} - ${t('movie.media.posters')}`"
-                class="media__image"
-                loading="lazy"
-              />
+              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))" tabindex="0" role="button"
+              :aria-label="`${movie?.title} - ${t('movie.media.posters')} ${index + 1}`">
+              <img :src="getMediaImageUrl(image)" :alt="`${movie?.title} - ${t('movie.media.posters')}`"
+                class="media__image" loading="lazy" />
             </figure>
           </div>
         </div>
 
         <!-- Backdrops Panel -->
-        <div
-          v-if="activeMediaTab === 'backdrops' && mediaBackdrops.length > 0"
-          role="tabpanel"
-          id="media-panel-backdrops"
-          :aria-labelledby="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
-          class="media__panel"
-        >
+        <div v-if="activeMediaTab === 'backdrops' && mediaBackdrops.length > 0" role="tabpanel"
+          id="media-panel-backdrops" :aria-labelledby="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
+          class="media__panel">
           <div class="media__grid">
-            <figure
-              v-for="(image, index) in mediaBackdrops"
-              :key="`backdrop-${index}`"
-              class="media__item"
+            <figure v-for="(image, index) in mediaBackdrops" :key="`backdrop-${index}`" class="media__item"
               @click="openMediaDialog(getMediaImageUrl(image))"
               @keydown.enter="openMediaDialog(getMediaImageUrl(image))"
-              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))"
-              tabindex="0"
-              role="button"
-              :aria-label="`${movie?.title} - ${t('movie.media.backdrops')} ${index + 1}`"
-            >
-              <img
-                :src="getMediaImageUrl(image)"
-                :alt="`${movie?.title} - ${t('movie.media.backdrops')}`"
-                class="media__image"
-                loading="lazy"
-              />
+              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))" tabindex="0" role="button"
+              :aria-label="`${movie?.title} - ${t('movie.media.backdrops')} ${index + 1}`">
+              <img :src="getMediaImageUrl(image)" :alt="`${movie?.title} - ${t('movie.media.backdrops')}`"
+                class="media__image" loading="lazy" />
             </figure>
           </div>
         </div>
@@ -288,29 +250,13 @@
     </section>
 
     <!-- Media Modal -->
-    <div
-      v-if="isMediaDialogOpen"
-      class="media-modal-overlay"
-      role="dialog"
-      aria-modal="true"
-      :aria-label="t('movie.media.title')"
-      @click="closeMediaDialog"
-      @keydown.esc="closeMediaDialog"
-    >
+    <div v-if="isMediaDialogOpen" class="media-modal-overlay" role="dialog" aria-modal="true"
+      :aria-label="t('movie.media.title')" @click="closeMediaDialog" @keydown.esc="closeMediaDialog">
       <div class="media-modal" @click.stop>
-        <button
-          class="media-modal__close"
-          :aria-label="t('movie.watch_dialog.close')"
-          @click="closeMediaDialog"
-        >
+        <button class="media-modal__close" :aria-label="t('movie.watch_dialog.close')" @click="closeMediaDialog">
           ×
         </button>
-        <img
-          v-if="selectedMediaImage"
-          :src="selectedMediaImage"
-          :alt="movie?.title || ''"
-          class="media-modal__image"
-        />
+        <img v-if="selectedMediaImage" :src="selectedMediaImage" :alt="movie?.title || ''" class="media-modal__image" />
       </div>
     </div>
 
@@ -322,27 +268,19 @@
         <div class="related__carousel">
           <div class="related__scroll" ref="relatedScroll">
             <div class="related__track" :style="{ transform: `translateX(-${relatedScrollX}px)` }">
-              <div
-                v-for="related in relatedMovies"
-                :key="related.id"
-                class="related__card"
-              >
+              <div v-for="related in relatedMovies" :key="related.id" class="related__card">
                 <a :href="relatedMovieUrl(related)" class="related__link">
                   <div class="related__poster">
-                    <img
-                      v-if="related.poster_path"
-                      :src="getTmdbImageUrl(related.poster_path, 'w342')"
-                      :alt="related.title"
-                      class="related__image"
-                      loading="lazy"
-                    />
+                    <img v-if="related.poster_path" :src="getTmdbImageUrl(related.poster_path, 'w342')"
+                      :alt="related.title" class="related__image" loading="lazy" />
                     <div v-else class="related__placeholder">
                       <span>🎬</span>
                     </div>
                   </div>
                   <div class="related__info">
                     <h3 class="related__title">{{ related.title }}</h3>
-                    <p v-if="related.vote_average !== undefined && related.vote_average !== null" class="related__rating">
+                    <p v-if="related.vote_average !== undefined && related.vote_average !== null"
+                      class="related__rating">
                       <span aria-hidden="true">★</span>
                       {{ Number(related.vote_average).toFixed(1) }}
                     </p>
@@ -353,20 +291,12 @@
           </div>
 
           <!-- Scroll buttons -->
-          <button
-            class="related__nav related__nav--prev"
-            @click="scrollRelated(-1)"
-            :disabled="relatedScrollX <= 0"
-            :aria-label="t('movie.related.prev')"
-          >
+          <button class="related__nav related__nav--prev" @click="scrollRelated(-1)" :disabled="relatedScrollX <= 0"
+            :aria-label="t('movie.related.prev')">
             &#8249;
           </button>
-          <button
-            class="related__nav related__nav--next"
-            @click="scrollRelated(1)"
-            :disabled="relatedScrollX >= relatedMaxScroll"
-            :aria-label="t('movie.related.next')"
-          >
+          <button class="related__nav related__nav--next" @click="scrollRelated(1)"
+            :disabled="relatedScrollX >= relatedMaxScroll" :aria-label="t('movie.related.next')">
             &#8250;
           </button>
         </div>
@@ -1393,7 +1323,7 @@ useSeo({
       }
     }
 
-&__carousel-container {
+    &__carousel-container {
       width: 100%;
       max-width: 100%;
       overflow-x: auto;
@@ -1421,7 +1351,7 @@ useSeo({
       }
     }
 
-&__carousel {
+    &__carousel {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -1433,7 +1363,7 @@ useSeo({
       scroll-behavior: smooth;
     }
 
-&__view-more {
+    &__view-more {
       margin-top: 2rem;
       text-align: center;
     }
@@ -1485,7 +1415,7 @@ useSeo({
       &:before {
         content: "• ";
         color: var(--text-tertiary);
- margin-right: 2px;
+        margin-right: 2px;
       }
     }
 
@@ -2081,7 +2011,7 @@ useSeo({
   .provider__card,
   .movie-page__btn {
     transition: none;
-    }
+  }
 }
 
 /* Cast credits — horizontal carousel */
@@ -2252,6 +2182,7 @@ useSeo({
     opacity: 0;
     transform: translateY(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -2338,6 +2269,7 @@ useSeo({
       opacity: 0;
       transform: translateY(20px) scale(0.95);
     }
+
     to {
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -2396,6 +2328,7 @@ useSeo({
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .media__tab,
   .media__item,
   .related__link,
@@ -2599,12 +2532,15 @@ useSeo({
   .movie-page__related .related__track {
     transition: none;
   }
+
   .movie-page__related .related__link {
     transition: none;
   }
+
   .movie-page__related .related__link:hover {
     transform: none;
   }
+
   .movie-page__related .related__nav {
     transition: none;
   }
