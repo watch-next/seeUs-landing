@@ -197,8 +197,63 @@
     </section>
 
     <!-- Comments -->
-    <section>
-      <CommentSection :content-type="'movie'" :content-id="movie?.id" />
+    <section class="movie-page__discussions-comments section">
+      <div class="container">
+          <h2 class="section__title">{{ t('movie.discussions_comments.title') }}</h2>
+          <div class="discussions-comments__tabs" role="tablist" aria-label="{{ t('movie.discussions_comments.title') }}">
+            <button
+          role="tab"
+          :aria-selected="activeTab === 'discussions'"
+          :aria-controls="activeTab === 'discussions' ? 'tab-panel-discussions' : undefined"
+          :id="activeTab === 'discussions' ? 'tab-discussions' : undefined"
+          class="discussions-comments__tab"
+          :class="{ 'discussions-comments__tab--active': activeTab === 'discussions' }"
+          @click="activeTab = 'discussions'"
+        >
+          {{ t('tvShow.discussions') }}
+        </button>
+        <button
+          role="tab"
+          :aria-selected="activeTab === 'comments'"
+          :aria-controls="activeTab === 'comments' ? 'tab-panel-comments' : undefined"
+          :id="activeTab === 'comments' ? 'tab-comments' : undefined"
+          class="discussions-comments__tab"
+          :class="{ 'discussions-comments__tab--active': activeTab === 'comments' }"
+          @click="activeTab = 'comments'"
+        >
+          {{ t('movie.comments') }}
+        </button>
+          </div>
+            <!-- Discussions Panel -->
+      <div
+        v-if="activeTab === 'discussions'"
+        role="tabpanel"
+        id="tab-panel-discussions"
+        :aria-labelledby="activeTab === 'discussions' ? 'tab-discussions' : undefined"
+        class="discussions-comments__panel"
+      >
+        <div v-if="!isAppAuthenticated" class="discussions__auth-required">
+          <p>{{ t('tvShow.discussions_auth_required') }}</p>
+          <CommentAuthSelector />
+        </div>
+        <div v-else class="discussions__content">
+          <p>{{ t('tvShow.discussions_placeholder') }}</p>
+          <!-- Discussion functionality would go here if backend existed -->
+        </div>
+      </div>
+       <!-- Comments Panel -->
+      <div
+        v-else-if="activeTab === 'comments'"
+        role="tabpanel"
+        id="tab-panel-comments"
+        :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined"
+        class="discussions-comments__panel"
+      >
+       <CommentSection :content-type="'movie'" :content-id="movie?.id" />
+      </div>
+        
+      </div>
+      
     </section>
 
     <!-- Media Section -->
@@ -482,6 +537,7 @@ const isLoadingCredits = ref(false)
 const creditsError = ref<string | null>(null)
 const showWatchModal = ref(false)
 const error = ref<number | string | null>(null)
+const activeTab = ref<'discussions' | 'comments'>('comments')
 
 // providers, isLoadingProviders, loadedMovieId já vêm do composable
 
@@ -785,6 +841,7 @@ watchEffect(() => {
 
 // Handle login-required actions
 const { isAuthenticated, signIn } = useSupabaseAppAuth()
+const isAppAuthenticated = isAuthenticated
 
 function handleLoginRequired() {
   if (!isAuthenticated.value) {

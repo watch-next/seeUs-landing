@@ -122,7 +122,66 @@
     </div>
   </article>
 
-  <!-- Discussions / Comments Section -->
+ 
+  <!-- Current Season Section -->
+  <section v-if="series && series.number_of_seasons && series.number_of_seasons > 0" class="tv-show-page__season section">
+    <div class="container">
+      <h2 class="section__title">{{ t('tvShow.season.title') }}</h2>
+
+      <div v-if="isLoadingSeason" class="season__loading">
+        <div class="spinner"></div>
+        <p>{{ t('tvShow.season.loading') }}</p>
+      </div>
+
+      <div v-else-if="seasonError" class="season__error">
+        <p>{{ seasonError }}</p>
+      </div>
+
+      <div v-else-if="currentSeason" class="season__card">
+        <div class="season__media">
+           <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="currentSeason.poster_path" target="_blank" rel="noopener noreferrer">
+            <img
+           :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')"
+            :alt="currentSeason.name"
+            class="season__poster"
+            loading="lazy"
+          /></a>
+          <div v-else class="season__poster-placeholder">
+            <span>📺</span>
+            <p>{{ t('tvShow.no_poster') }}</p>
+          </div>
+        </div>
+
+        <div class="season__info">
+          <h3 class="season__name">{{ currentSeason.name || `${t('tvShow.season.season')} ${currentSeason.season_number}` }}</h3>
+
+          <p v-if="currentSeason.air_date" class="season__air-date">
+            <span class="label">{{ t('tvShow.season.air_date') }}:</span>
+            {{ formatDate(currentSeason.air_date) }}
+          </p>
+
+          <p v-if="currentSeason.episode_count > 0" class="season__episodes">
+            <span class="label">{{ t('tvShow.season.episodes') }}:</span>
+            {{ t('tvShow.season.episode_count', { count: currentSeason.episode_count }) }}
+          </p>
+
+          <p v-if="currentSeason.vote_average !== undefined && currentSeason.vote_average !== null" class="season__rating">
+            <span class="label">{{ t('tvShow.votes') }}:</span>
+            <span class="rating">{{ currentSeason.vote_average.toFixed(1) }}</span>
+            <span class="rating__stars" aria-hidden="true">★</span>
+          </p>
+
+          <p v-if="currentSeason.overview" class="season__overview">
+            <span class="label">{{ t('tvShow.season.overview') }}:</span>
+            {{ currentSeason.overview }}
+          </p>
+        </div>
+      </div>
+
+      <p v-else class="season__empty">{{ t('tvShow.season.no_overview') }}</p>
+    </div>
+  </section>
+ <!-- Discussions / Comments Section -->
   <section v-if="series" class="tv-show-page__discussions-comments section">
     <div class="container">
       <h2 class="section__title">{{ t('tvShow.discussions_comments.title') }}</h2>
@@ -180,65 +239,6 @@
       >
         <CommentSection :content-type="'tvShow'" :content-id="tmdbId.value" />
       </div>
-    </div>
-  </section>
-
-  <!-- Current Season Section -->
-  <section v-if="series && series.number_of_seasons && series.number_of_seasons > 0" class="tv-show-page__season section">
-    <div class="container">
-      <h2 class="section__title">{{ t('tvShow.season.title') }}</h2>
-
-      <div v-if="isLoadingSeason" class="season__loading">
-        <div class="spinner"></div>
-        <p>{{ t('tvShow.season.loading') }}</p>
-      </div>
-
-      <div v-else-if="seasonError" class="season__error">
-        <p>{{ seasonError }}</p>
-      </div>
-
-      <div v-else-if="currentSeason" class="season__card">
-        <div class="season__media">
-           <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="currentSeason.poster_path" target="_blank" rel="noopener noreferrer">
-            <img
-           :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')"
-            :alt="currentSeason.name"
-            class="season__poster"
-            loading="lazy"
-          /></a>
-          <div v-else class="season__poster-placeholder">
-            <span>📺</span>
-            <p>{{ t('tvShow.no_poster') }}</p>
-          </div>
-        </div>
-
-        <div class="season__info">
-          <h3 class="season__name">{{ currentSeason.name || `${t('tvShow.season.season')} ${currentSeason.season_number}` }}</h3>
-
-          <p v-if="currentSeason.air_date" class="season__air-date">
-            <span class="label">{{ t('tvShow.season.air_date') }}:</span>
-            {{ formatDate(currentSeason.air_date) }}
-          </p>
-
-          <p v-if="currentSeason.episode_count > 0" class="season__episodes">
-            <span class="label">{{ t('tvShow.season.episodes') }}:</span>
-            {{ t('tvShow.season.episode_count', { count: currentSeason.episode_count }) }}
-          </p>
-
-          <p v-if="currentSeason.vote_average !== undefined && currentSeason.vote_average !== null" class="season__rating">
-            <span class="label">{{ t('tvShow.votes') }}:</span>
-            <span class="rating">{{ currentSeason.vote_average.toFixed(1) }}</span>
-            <span class="rating__stars" aria-hidden="true">★</span>
-          </p>
-
-          <p v-if="currentSeason.overview" class="season__overview">
-            <span class="label">{{ t('tvShow.season.overview') }}:</span>
-            {{ currentSeason.overview }}
-          </p>
-        </div>
-      </div>
-
-      <p v-else class="season__empty">{{ t('tvShow.season.no_overview') }}</p>
     </div>
   </section>
 
