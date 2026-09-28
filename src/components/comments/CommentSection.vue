@@ -35,6 +35,8 @@
       <CommentComposer
         ref="composerRef"
         :post-slug="postSlug"
+        :content-type="contentType"
+        :content-id="contentId"
         :display-name="profile.displayName"
         :submitting="submitting"
         @submit="onSubmit"
@@ -43,6 +45,8 @@
       <CommentList
         :comments="comments"
         :post-slug="postSlug"
+        :content-type="contentType"
+        :content-id="contentId"
         :auth="profile"
         :submitting="submitting"
         :loading="loading"
@@ -111,7 +115,9 @@ import CommentAuthSelector from './CommentAuthSelector.vue'
 import BottomDialog from '@/components/BottomDialog.vue'
 
 const props = defineProps<{
-  postSlug: string
+  postSlug?: string
+  contentType?: 'blog_post' | 'movie' | 'tv_show'
+  contentId?: string
 }>()
 
 const {
@@ -135,7 +141,11 @@ const {
   reportComment,
   selectProvider,
   logout,
-} = useComments(props.postSlug)
+} = useComments({
+  postSlug: props.postSlug,
+  contentType: props.contentType,
+  contentId: props.contentId,
+})
 
 const composerRef = ref<InstanceType<typeof CommentComposer> | null>(null)
 const showReportModal = ref(false)

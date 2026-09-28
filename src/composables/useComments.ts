@@ -25,8 +25,16 @@ import { providerRegistry } from '@/services/comments/providers/registry'
 
 const PAGE_SIZE = 20
 
-export function useComments(slug: Ref<string> | string) {
+export function useComments(
+  slug: Ref<string> | string,
+  options?: {
+    contentType?: 'blog_post' | 'movie' | 'tv_show'
+    contentId?: string
+  }
+) {
   const slugRef = computed(() => (typeof slug === 'string' ? slug : slug.value))
+  const contentTypeRef = computed(() => options?.contentType)
+  const contentIdRef = computed(() => options?.contentId)
 
   const comments = ref<Comment[]>([])
   const loading = ref(false)
@@ -95,6 +103,8 @@ export function useComments(slug: Ref<string> | string) {
         cursor: nextCursor.value,
         limit: PAGE_SIZE,
         auth: profile.value,
+        contentType: contentTypeRef.value,
+        contentId: contentIdRef.value,
       })
 
       if (initial) {
@@ -202,6 +212,8 @@ export function useComments(slug: Ref<string> | string) {
 
       const created = await createComment({
         postSlug: slugRef.value,
+        contentType: contentTypeRef.value,
+        contentId: contentIdRef.value,
         parentId: input.parentId ?? null,
         content: input.content,
         auth: profile.value,
@@ -249,6 +261,8 @@ export function useComments(slug: Ref<string> | string) {
         content,
         auth: profile.value,
         mentions,
+        contentType: contentTypeRef.value,
+        contentId: contentIdRef.value,
       })
       replaceComment(updated)
     } catch (e) {

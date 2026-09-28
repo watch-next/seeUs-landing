@@ -118,7 +118,8 @@
         </header>
       </div>
     </div>
-  </article>
+  <CommentSection :post-slug="series.id" :content-type="'tv_show'" :content-id="series.id" />
+</article>
 
   <!-- Discussions / Comments Section -->
   <section v-if="series" class="tv-show-page__discussions-comments section">
@@ -780,18 +781,10 @@ function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
 async function loadCurrentSeason() {
   // Use the TMDB ID from the route (already computed from slug)
   const id = tmdbId.value
-  const seasonNumber = series.value?.number_of_seasons
-
-  // Log before early-return condition
-  console.log('[TvShow][SeasonDebug] loadCurrentSeason called:', {
-    tmdbId: id,
-    seasonNumber: series.value?.number_of_seasons,
-    earlyReturnCondition: !id || !seasonNumber || seasonNumber <= 0
-  })
+  const seasonNumber = series.value?.number_of_seasons;
 
   // If we don't have a valid ID or season number, we can't proceed
   if (!id || !seasonNumber || seasonNumber <= 0) {
-    console.log('[TvShow][SeasonDebug] Early return: invalid id or seasonNumber')
     return
   }
 
@@ -799,17 +792,9 @@ async function loadCurrentSeason() {
   seasonError.value = null
 
   try {
-    console.log('[TvShow][SeasonDebug] Calling fetchSeasonDetails with:', {
-      tmdbId: id,
-      seasonNumber: seasonNumber
-    })
     const season = await fetchSeasonDetails(id, seasonNumber)
-    console.log('[TvShow][SeasonDebug] fetchSeasonDetails resolved:', {
-      season: season ? 'Season object received' : 'null/undefined'
-    })
     currentSeason.value = season
   } catch (err) {
-    console.log('[TvShow][SeasonDebug] fetchSeasonDetails failed:', err)
     seasonError.value = t('tvShow.season.error')
     console.log('Failed to load season:', err)
   } finally {
