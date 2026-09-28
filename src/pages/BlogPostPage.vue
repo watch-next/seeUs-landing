@@ -1,15 +1,6 @@
 <template>
   <article v-if="post" class="blog-post">
-    <!-- AdSense Banner após a imagem de capa -->
-      <AdSenseAd
-        format="auto"
-        layout="in-article"
-        responsive
-        class="blog-post__ad"
-      />
-
-      <!-- Adsterra Banner após a imagem de capa -->
-      <AdsterraBanner class="blog-post__adsterra" />
+  
     <div class="container blog-post__container">
       <header class="blog-post__header">
         <nav class="blog-post__breadcrumb" aria-label="Breadcrumb">
@@ -29,6 +20,17 @@
             </li>
           </ol>
         </nav>
+
+          <!-- AdSense Banner após a imagem de capa -->
+      <AdSenseAd
+        format="auto"
+        layout="in-article"
+        responsive
+        class="blog-post__ad"
+      />
+
+      <!-- Adsterra Banner após a imagem de capa -->
+      <AdsterraBanner class="blog-post__adsterra" />
 
         <div class="blog-post__meta-header">
           <span class="blog-post__category" :style="{ backgroundColor: categoryColor }">
