@@ -68,7 +68,7 @@ export interface Comment {
 /** Row shape returned by list_comments RPC. */
 export interface CommentListRow {
   comment_id: string
-  post_slug: string
+  post_slug: string | null
   parent_id: string | null
   user_id: string
   content: string
