@@ -6,6 +6,8 @@
     <CommentComposer
       ref="composerRef"
       :post-slug="postSlug"
+      :content-type="contentType"
+      :content-id="contentId"
       :display-name="displayName"
       :placeholder="`Reply to ${replyToName}...`"
       :submit-label="'Reply'"
@@ -23,7 +25,9 @@ import type { CommentMentionDraft } from '@/types/comments'
 import CommentComposer from './CommentComposer.vue'
 
 const props = defineProps<{
-  postSlug: string
+  postSlug?: string
+  contentType?: string
+  contentId?: string | number
   replyToName: string
   parentId: string
   displayName?: string

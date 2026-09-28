@@ -115,7 +115,12 @@ function tryMention() {
 
 async function runSearch(query: string) {
   try {
-    autocomplete.candidates = await searchCommenters(props.postSlug, query)
+    autocomplete.candidates = await searchCommenters({
+      postSlug: props.postSlug,
+      contentType: props.contentType,
+      contentId: props.contentId,
+      query,
+    })
     autocomplete.activeIndex = 0
     if (autocomplete.candidates.length === 0) autocomplete.active = false
   } catch {

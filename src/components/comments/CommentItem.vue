@@ -41,7 +41,9 @@
 
       <CommentComposer
         v-if="showEdit && !isDeleted"
-        :post-slug="postSlug"
+        :post-slug="props.postSlug"
+        :content-type="props.contentType"
+        :content-id="props.contentId"
         :display-name="auth.displayName"
         :initial-value="comment.content"
         :submit-label="'Save'"
@@ -53,7 +55,9 @@
 
       <ReplyComposer
         v-if="showReply && !isDeleted"
-        :post-slug="postSlug"
+        :post-slug="props.postSlug"
+        :content-type="props.contentType"
+        :content-id="props.contentId"
         :reply-to-name="authorName"
         :parent-id="comment.id"
         :display-name="auth.displayName"

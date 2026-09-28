@@ -97,7 +97,9 @@ export function useComments(source: Ref<CommentSource> | CommentSource) {
     error.value = null
     try {
       const page: CommentsPage = await listComments({
-        slug: slugRef.value,
+        slug: sourceRef.value.postSlug,
+        contentType: sourceRef.value.contentType,
+        contentId: sourceRef.value.contentId,
         cursor: nextCursor.value,
         limit: PAGE_SIZE,
         auth: profile.value,

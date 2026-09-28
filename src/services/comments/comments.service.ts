@@ -370,8 +370,7 @@ export async function listComments({
 }
 
 export async function createComment(input: CreateCommentInput): Promise<Comment> {
-  const { data, error } = await commentsSupabase.rpc('create_comment', {
-    p_post_slug: input.postSlug,
+  const rpcArgs: Record<string, unknown> = {
     p_parent_id: input.parentId,
     p_content: input.content,
     p_display_name: input.auth.displayName,
@@ -382,7 +381,22 @@ export async function createComment(input: CreateCommentInput): Promise<Comment>
     // here would encode it as a scalar jsonb string, and jsonb_array_elements
     // would raise SQLSTATE 22023 "cannot extract elements from a scalar".
     p_mentions: mentionsToDrafts(input.mentions),
-  })
+    // Always include p_post_slug to match production function signature
+    // For blog posts: actual slug value (legacy compatibility)
+    // For movies/tv_shows: null (new content types use content_type/content_id)
+    p_post_slug: input.postSlug ?? null,
+  }
+
+  // Handle backward compatibility: if contentType/contentId provided, use them
+  // Otherwise fall back to post_slug for existing blog posts (sets content_type='blog_post' and content_id=post_slug in DB function)
+  if (input.contentType !== undefined && input.contentId !== undefined) {
+    rpcArgs.p_content_type = input.contentType
+    rpcArgs.p_content_id = String(input.contentId)
+  }
+  // Note: When only postSlug is provided (legacy), content_type and content_id
+  // will be undefined and the DB function will default them appropriately
+
+  const { data, error } = await commentsSupabase.rpc('create_comment', rpcArgs)
 
   if (error) {
     console.error('[comments.service] create_comment failed', error)
