@@ -34,7 +34,9 @@
     <template v-else>
       <CommentComposer
         ref="composerRef"
-        :post-slug="postSlug"
+        :post-slug="props.postSlug"
+        :content-type="props.contentType"
+        :content-id="props.contentId"
         :display-name="profile.displayName"
         :submitting="submitting"
         @submit="onSubmit"
@@ -121,7 +123,7 @@ const commentSource = computed(() => {
     return { contentType: props.contentType, contentId: String(props.contentId) };
   }
   // Fallback to legacy postSlug (must be provided for backward compatibility)
-  return { postSlug: props.postSlug! };
+  return { postSlug: props.postSlug ?? '' };
 });
 
 const {

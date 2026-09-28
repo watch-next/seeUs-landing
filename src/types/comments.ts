@@ -113,7 +113,9 @@ export interface ListCommentsParams {
 }
 
 export interface CreateCommentInput {
-  postSlug: string
+  postSlug?: string
+  contentType?: string
+  contentId?: string | number
   parentId: string | null
   content: string
   auth: CommentAuthProfile
