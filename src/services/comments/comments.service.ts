@@ -299,13 +299,23 @@ export async function upsertFacebookCommentUser(input: {
 
 export async function listComments({
   slug,
+  contentType,
+  contentId,
   cursor = null,
   limit = DEFAULT_LIMIT,
   auth,
 }: ListCommentsParams): Promise<CommentsPage> {
   const rpcArgs: Record<string, unknown> = {
-    p_post_slug: slug,
     p_limit: limit,
+  }
+
+  // Handle backward compatibility: if contentType/contentId provided, use them
+  // Otherwise fall back to post_slug for existing blog posts
+  if (contentType !== undefined && contentId !== undefined) {
+    rpcArgs.p_content_type = contentType
+    rpcArgs.p_content_id = String(contentId)
+  } else {
+    rpcArgs.p_post_slug = slug
   }
 
   if (cursor !== null) {

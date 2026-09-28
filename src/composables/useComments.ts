@@ -25,8 +25,14 @@ import { providerRegistry } from '@/services/comments/providers/registry'
 
 const PAGE_SIZE = 20
 
-export function useComments(slug: Ref<string> | string) {
-  const slugRef = computed(() => (typeof slug === 'string' ? slug : slug.value))
+interface CommentSource {
+  postSlug?: string
+  contentType?: string
+  contentId?: string | number
+}
+
+export function useComments(source: Ref<CommentSource> | CommentSource) {
+  const sourceRef = computed(() => (typeof source === 'object' && !('value' in source) ? source : source.value))
 
   const comments = ref<Comment[]>([])
   const loading = ref(false)

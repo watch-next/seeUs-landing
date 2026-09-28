@@ -36,7 +36,9 @@ import CommentItem from './CommentItem.vue'
 
 defineProps<{
   comments: Comment[]
-  postSlug: string
+  postSlug?: string
+  contentType?: string
+  contentId?: string | number
   auth: CommentAuthProfile
   submitting?: boolean
   loading?: boolean

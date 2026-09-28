@@ -103,7 +103,9 @@ export interface CommentsPage {
 }
 
 export interface ListCommentsParams {
-  slug: string
+  slug?: string
+  contentType?: string
+  contentId?: string | number
   cursor?: string | null
   limit?: number
   /** Current comments auth session. */
