@@ -42,6 +42,21 @@
       </div>
 
       <div class="footer__bottom">
+        <div class="footer__ad">
+          <a
+            href="https://beta.publishers.adsterra.com/referral/tauU4wz8nL"
+            class="footer__ad-link"
+            rel="nofollow"
+            aria-label="Adsterra"
+          >
+            <img
+              class="footer__ad-image"
+              src="/assets/banners/ADSTERRA+BANNER200x200_px.png"
+              alt="Adsterra"
+            />
+          </a>
+        </div>
+
         <p class="footer__copyright">
           &copy; {{ year }} SeeUs. All rights reserved.
         </p>
@@ -228,6 +243,28 @@ const year = new Date().getFullYear()
     padding-top: $space-8;
     border-top: 1px solid $color-border;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    align-items: center;
+  }
+
+  /* Ad banner */
+  .footer__ad {
+    max-width: 200px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer__ad-link {
+    display: inline-block;
+  }
+
+  .footer__ad-image {
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    object-fit: contain;
   }
 
   &__copyright {
