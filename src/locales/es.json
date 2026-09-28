@@ -137,6 +137,13 @@
     "seasons": "Temporadas",
     "status": "Estado",
     "trailer": "Tráiler",
+    "discussions_comments": {
+      "title": "Discusiones & Comentarios"
+    },
+    "discussions": "Discusiones",
+    "comments": "Comentarios",
+    "discussions_auth_required": "Por favor inicia sesión para participar en las discusiones",
+    "discussions_placeholder": "La funcionalidad de discusión estará disponible pronto.",
     "watchlist": "Lista para ver",
     "favorite": "Favorito",
     "interest": "Interés",

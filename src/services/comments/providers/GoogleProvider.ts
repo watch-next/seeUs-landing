@@ -1,4 +1,4 @@
-import { upsertGoogleCommentUser } from '@/services/comments/comments.service'
+import { upsertGoogleCommentUser } from '../comments.service'
 import { commentsSupabase } from '../client'
 import type { CommentAuthProfile, CommentUser } from '@/types/comments'
 import type { CommentAuthProvider } from './CommentAuthProvider'

@@ -535,6 +535,13 @@
     "seasons": "Temporadas",
     "status": "Status",
     "trailer": "Trailer",
+    "discussions_comments": {
+      "title": "Discussões & Comentários"
+    },
+    "discussions": "Discussões",
+    "comments": "Comentários",
+    "discussions_auth_required": "Por favor faça login para participar das discussões",
+    "discussions_placeholder": "A funcionalidade de discussão estará disponível em breve.",
     "watch_dialog": {
       "title": "Assistir no SeeUs",
       "subtitle": "Escolha como você deseja assistir",

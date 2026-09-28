@@ -548,6 +548,13 @@
     "seasons": "Seasons",
     "status": "Status",
     "trailer": "Trailer",
+    "discussions_comments": {
+      "title": "Discussions & Comments"
+    },
+    "discussions": "Discussions",
+    "comments": "Comments",
+    "discussions_auth_required": "Please sign in to participate in discussions",
+    "discussions_placeholder": "Discussion functionality will be available soon.",
     "watch_dialog": {
       "title": "Watch on SeeUs",
       "subtitle": "Choose how you'd like to watch",
