@@ -201,7 +201,9 @@ export function useComments(slug: Ref<string> | string) {
       }
 
       const created = await createComment({
-        postSlug: slugRef.value,
+        ...('postSlug' in sourceRef.value ? { postSlug: sourceRef.value.postSlug } : {}),
+        ...('contentType' in sourceRef.value ? { contentType: sourceRef.value.contentType } : {}),
+        ...('contentId' in sourceRef.value ? { contentId: sourceRef.value.contentId } : {}),
         parentId: input.parentId ?? null,
         content: input.content,
         auth: profile.value,
