@@ -122,7 +122,9 @@
 
 
 
-            <!--Financial Info 
+
+
+            <!--Financial Info
           <section class="movie-page__financial" v-if="movie.budget || movie.revenue">
             <h2 class="financial__title">{{ t('movie.financial') }}</h2>
             <div class="financial__grid">
@@ -189,8 +191,14 @@
         </div>
       </div> -->
 
+
       <p v-if="credits.cast.length === 0 && credits.crew.length === 0" class="credits__empty">{{ t('credits.no_credits')
-        }}</p>
+      }}</p>
+    </section>
+
+    <!-- Comments -->
+    <section>
+      <CommentSection :content-type="'movie'" :content-id="movie?.id" />
     </section>
 
     <!-- Media Section -->
@@ -415,6 +423,7 @@ import { fetchSimilarMovies } from '@/lib/api/movieDataSource'
 import { slugify } from '@/lib/content/slugify'
 import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
+import CommentSection from '@/components/comments/CommentSection.vue'
 
 const { t } = useI18n()
 // Debug token state

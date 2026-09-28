@@ -94,7 +94,9 @@ import ReplyComposer from './ReplyComposer.vue'
 const props = withDefaults(
   defineProps<{
     comment: Comment
-    postSlug: string
+    postSlug?: string
+    contentType?: string
+    contentId?: string | number
     auth: CommentAuthProfile
     submitting?: boolean
     replyCount?: number

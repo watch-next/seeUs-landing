@@ -178,7 +178,7 @@
         :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined"
         class="discussions-comments__panel"
       >
-        <CommentSection :postSlug="route.params.slug" />
+        <CommentSection :content-type="'tvShow'" :content-id="tmdbId.value" />
       </div>
     </div>
   </section>

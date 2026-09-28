@@ -100,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import type { CommentMentionDraft, ReportCategory } from '@/types/comments'
 import { useComments } from '@/composables/useComments'
 import CommentComposer from './CommentComposer.vue'
@@ -111,8 +111,18 @@ import CommentAuthSelector from './CommentAuthSelector.vue'
 import BottomDialog from '@/components/BottomDialog.vue'
 
 const props = defineProps<{
-  postSlug: string
+  postSlug?: string
+  contentType?: string
+  contentId?: string | number
 }>()
+
+const commentSource = computed(() => {
+  if (props.contentType !== undefined && props.contentId !== undefined) {
+    return { contentType: props.contentType, contentId: String(props.contentId) };
+  }
+  // Fallback to legacy postSlug (must be provided for backward compatibility)
+  return { postSlug: props.postSlug! };
+});
 
 const {
   comments,
@@ -135,7 +145,7 @@ const {
   reportComment,
   selectProvider,
   logout,
-} = useComments(props.postSlug)
+} = useComments(commentSource)
 
 const composerRef = ref<InstanceType<typeof CommentComposer> | null>(null)
 const showReportModal = ref(false)
