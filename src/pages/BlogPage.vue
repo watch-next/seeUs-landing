@@ -1,8 +1,8 @@
 <template>
   <div class="blog-page">
     <div class="container blog-page__container">
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="fixed" responsive class="blog-page__ad" />
+      <!-- AdSense Banner 
+      <AdSenseAd format="auto" layout="fixed" responsive class="blog-page__ad" />-->
 
       <!-- Adsterra Banner -->
       <AdsterraBanner class="blog-page__adsterra" />

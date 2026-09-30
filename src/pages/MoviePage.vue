@@ -8,8 +8,8 @@
         <!-- Adsterra Banner -->
         <AdsterraBanner class="movie-page__adsterra" />
 
-        <!-- AdSense Banner -->
-        <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
+        <!-- AdSense Banner 
+        <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />-->
         <!-- Header with Poster and Backdrop -->
         <header class="movie-page__header">
           <div class="movie-page__media">

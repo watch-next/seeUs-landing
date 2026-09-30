@@ -7,8 +7,8 @@
         <!-- Adsterra Banner -->
       <AdsterraBanner class="tv-shows-page__adsterra" />
 
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="tv-shows-page__ad" />
+      <!-- AdSense Banner 
+      <AdSenseAd format="auto" layout="in-feed" responsive class="tv-shows-page__ad" />-->
         <h1 class="tv-shows-page__title">{{ t('tvShows.title') }}</h1>
         <p class="tv-shows-page__subtitle">{{ t('tvShows.subtitle') }}</p>
       </header>

@@ -21,13 +21,13 @@
           </ol>
         </nav>
 
-          <!-- AdSense Banner após a imagem de capa -->
+          <!-- AdSense Banner após a imagem de capa 
       <AdSenseAd
         format="auto"
         layout="in-article"
         responsive
         class="blog-post__ad"
-      />
+      /> -->
 
       <!-- Adsterra Banner após a imagem de capa -->
       <AdsterraBanner class="blog-post__adsterra" />

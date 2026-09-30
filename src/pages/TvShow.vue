@@ -7,8 +7,8 @@
          <!-- Adsterra Banner -->
             <AdsterraBanner class="tv-show-page__adsterra" />
 
-            <!-- AdSense Banner -->
-            <AdSenseAd format="auto" layout="in-feed" responsive class="tv-show-page__ad" />
+            <!-- AdSense Banner
+            <AdSenseAd format="auto" layout="in-feed" responsive class="tv-show-page__ad" /> -->
         <!-- Header with Poster and Backdrop -->
         <header class="tv-show-page__header">
           <div class="tv-show-page__media">
