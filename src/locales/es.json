@@ -123,7 +123,10 @@
       "posters": "Posters",
       "no_media": "Nenhuma mídia disponível"
     },
-    "related": "Relacionados"
+    "related": "Relacionados",
+    "official_site": "Sitio oficial",
+    "trailer": "Tráiler",
+    "trailer_unavailable": "Tráiler no disponible"
   },
   "tvShow": {
     "watch_now": "Ver ahora",
