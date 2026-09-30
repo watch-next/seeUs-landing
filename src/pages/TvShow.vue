@@ -518,7 +518,7 @@ import type { SeasonDetail, TVShowDetail } from '@/lib/tmdb/types'
 import CommentSection from '@/components/comments/CommentSection.vue'
 import CommentAuthSelector from '@/components/comments/CommentAuthSelector.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 
 // Watch dialog state: platform choice first, streaming providers below (collapsible)
@@ -875,6 +875,31 @@ watch(series, (newSeries) => {
   if (newSeries) {
     loadCurrentSeason()
     loadRelatedShows()
+  }
+})
+
+// Refetch series data when locale changes
+watch(locale, () => {
+  const slug = String(route.params.slug || '')
+  if (slug) {
+    // Reload series data with new locale
+    isLoading.value = true
+    error.value = null
+    getSeriesBySlug(slug)
+      .then((loadedSeries) => {
+        series.value = loadedSeries
+        if (!loadedSeries) {
+          throw new Error('Series not found')
+        }
+      })
+      .catch((err) => {
+        console.error('[TvShow.vue] Error fetching series:', err)
+        error.value = err?.response?.status === 404 ? 404 : 'unknown'
+        series.value = null
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
   }
 })
 
