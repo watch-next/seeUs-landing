@@ -5,9 +5,9 @@
       <header class="tv-shows-page__header">
         <Breadcrumbs :items="[{ label: t('common.home'), to: '/' }, { label: t('tvShows.title') }]" />
         <!-- Adsterra Banner -->
-      <AdsterraBanner class="tv-shows-page__adsterra" />
+        <AdsterraBanner class="tv-shows-page__adsterra" />
 
-      <!-- AdSense Banner 
+        <!-- AdSense Banner 
       <AdSenseAd format="auto" layout="in-feed" responsive class="tv-shows-page__ad" />-->
         <h1 class="tv-shows-page__title">{{ t('tvShows.title') }}</h1>
         <p class="tv-shows-page__subtitle">{{ t('tvShows.subtitle') }}</p>
@@ -33,7 +33,7 @@
           </button>
         </div>
       </div>
-      
+
 
       <!-- Search Results Counter -->
       <div v-if="filteredShows.length > 0 && searchQuery" class="tv-shows-page__search-results">
@@ -70,7 +70,7 @@
 
       <!-- Empty State -->
       <div v-else-if="shows.length === 0 && !error" class="tv-shows-page__empty">
-         <div class="tv-shows-page__empty-icon" aria-hidden="true">◌</div>
+        <div class="tv-shows-page__empty-icon" aria-hidden="true">◌</div>
         <p class="tv-shows-page__empty-title">{{ t('tvShows.serverSleeping') }}</p>
         <p class="tv-shows-page__empty-text">{{ t('tvShows.serverSleepingDescription') }}</p>
         <button type="button" class="btn btn-primary" @click="loadShows">
@@ -94,11 +94,7 @@
               </span>
             </p>
             <div v-if="show.tags && show.tags.length" class="tv-show-card__tags">
-              <span
-                v-for="tag in show.tags.slice(0, 3)"
-                :key="tag"
-                class="tv-show-card__tag"
-              >
+              <span v-for="tag in show.tags.slice(0, 3)" :key="tag" class="tv-show-card__tag">
                 {{ tag }}
               </span>
             </div>
@@ -106,7 +102,7 @@
         </router-link>
       </div>
 
-      </div>
+    </div>
 
     <AdsterraNative class="tv-shows-page__adsterra-native" />
   </div>
@@ -498,12 +494,10 @@ useSeo({
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(
-        90deg,
-        var(--bg-muted) 0%,
-        var(--border-color) 50%,
-        var(--bg-muted) 100%
-      );
+      background: linear-gradient(90deg,
+          var(--bg-muted) 0%,
+          var(--border-color) 50%,
+          var(--bg-muted) 100%);
       background-size: 200% 100%;
       animation: loading 1.5s infinite;
     }
@@ -600,6 +594,7 @@ useSeo({
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }

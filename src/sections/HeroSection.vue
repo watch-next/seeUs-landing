@@ -29,10 +29,10 @@
       <div ref="visualReveal" class="hero__visual reveal-right">
         <picture>
           <source type="image/svg+xml" srcset="@/images/hero/hero.webp" />
-          <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
-             target="_blank" rel="noopener noreferrer">
-          <img class="hero__image float-animation" src="@/images/hero/hero.webp" alt="SeeUs dashboard preview"
-            loading="eager" decoding="async" importance="high" width="560" height="350" />
+          <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" target="_blank"
+            rel="noopener noreferrer">
+            <img class="hero__image float-animation" src="@/images/hero/hero.webp" alt="SeeUs dashboard preview"
+              loading="eager" decoding="async" importance="high" width="560" height="350" />
           </a>
         </picture>
       </div>

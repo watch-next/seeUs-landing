@@ -1,14 +1,14 @@
 <template>
   <div class="movies-page">
     <div class="container">
-      
+
       <!-- Header -->
       <header class="movies-page__header">
         <Breadcrumbs :items="[{ label: t('common.home'), to: '/' }, { label: t('movies.title') }]" />
-           <!-- Adsterra Banner -->
-      <AdsterraBanner class="movies-page__adsterra" />
+        <!-- Adsterra Banner -->
+        <AdsterraBanner class="movies-page__adsterra" />
 
-      <!-- AdSense Banner 
+        <!-- AdSense Banner 
       <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />-->
         <h1 class="movies-page__title">{{ t('movies.title') }}</h1>
         <p class="movies-page__subtitle">{{ t('movies.subtitle') }}</p>
@@ -35,7 +35,7 @@
           </button>
         </div>
       </div>
-   
+
 
       <!-- Search Results Counter -->
       <div v-if="movies.length > 0 && searchQuery" class="movies-page__search-results">
@@ -62,7 +62,7 @@
 
       <!-- Empty State -->
       <div v-else-if="movies.length === 0 && !error" class="movies-page__empty">
-         <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
+        <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
         <p class="movies-page__empty-title">{{ t('movies.serverSleeping') }}</p>
         <p class="movies-page__empty-text">{{ t('movies.serverSleepingDescription') }}</p>
         <button type="button" class="btn btn-primary" @click="loadMovies">
@@ -75,7 +75,7 @@
         <router-link v-for="movie in filteredMovies" :key="movie.slug" :to="`/movies/${movie.slug}`" class="movie-card">
           <div class="movie-card__poster-wrapper">
             <img :src="movie.cover" :alt="movie.title" class="movie-card__poster" loading="lazy" />
-           
+
           </div>
           <div class="movie-card__content">
             <h2 class="movie-card__title">{{ movie.title }}</h2>
@@ -99,7 +99,7 @@
           </div>
         </router-link>
       </div>
-       </div>
+    </div>
 
     <AdsterraNative class="movies-page__adsterra-native" />
   </div>
