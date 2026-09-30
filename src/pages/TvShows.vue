@@ -4,6 +4,11 @@
       <!-- Header -->
       <header class="tv-shows-page__header">
         <Breadcrumbs :items="[{ label: t('common.home'), to: '/' }, { label: t('tvShows.title') }]" />
+        <!-- Adsterra Banner -->
+      <AdsterraBanner class="tv-shows-page__adsterra" />
+
+      <!-- AdSense Banner -->
+      <AdSenseAd format="auto" layout="in-feed" responsive class="tv-shows-page__ad" />
         <h1 class="tv-shows-page__title">{{ t('tvShows.title') }}</h1>
         <p class="tv-shows-page__subtitle">{{ t('tvShows.subtitle') }}</p>
       </header>
@@ -28,11 +33,7 @@
           </button>
         </div>
       </div>
-      <!-- Adsterra Banner -->
-      <AdsterraBanner class="tv-shows-page__adsterra" />
-
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="tv-shows-page__ad" />
+      
 
       <!-- Search Results Counter -->
       <div v-if="filteredShows.length > 0 && searchQuery" class="tv-shows-page__search-results">
