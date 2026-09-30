@@ -2,28 +2,45 @@
   <section id="hero" class="hero">
     <div class="hero__bg gradient-flow-bg"></div>
     <div class="hero__glow glow-behind"></div>
+
+    <!-- Banner no topo do Hero, acima do conteúdo -->
+    <div class="hero__ad">
+      <AdsterraBanner />
+    </div>
+
     <div class="container hero__inner">
       <div ref="heroReveal" class="hero__content reveal">
         <h1 class="hero__headline" v-html="hero.headline.replace('\n', '<br />')"></h1>
         <p class="hero__subtitle">{{ hero.subtitle }}</p>
+
         <div class="hero__actions">
           <a href="#features" class="hero__cta hero__cta--primary glow-pulse btn-hover-smooth"
-            @click="trackEvent(trackHeroCta('features'))">{{ hero.ctaPrimary }}</a>
-          <a href="#premium" class="hero__cta hero__cta--secondary btn-hover-smooth"
-            @click="trackEvent(trackHeroCta('premium'))">{{ hero.ctaSecondary }}</a>
-        </div>
+            @click="trackEvent(trackHeroCta('features'))">
+            {{ hero.ctaPrimary }}
+          </a>
 
+          <a href="#premium" class="hero__cta hero__cta--secondary btn-hover-smooth"
+            @click="trackEvent(trackHeroCta('premium'))">
+            {{ hero.ctaSecondary }}
+          </a>
+        </div>
       </div>
+
       <div ref="visualReveal" class="hero__visual reveal-right">
         <picture>
           <source type="image/svg+xml" srcset="@/images/hero/hero.webp" />
+          <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
+             target="_blank" rel="noopener noreferrer">
           <img class="hero__image float-animation" src="@/images/hero/hero.webp" alt="SeeUs dashboard preview"
             loading="eager" decoding="async" importance="high" width="560" height="350" />
+          </a>
         </picture>
       </div>
     </div>
   </section>
 </template>
+
+
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
@@ -31,6 +48,7 @@ import { useScrollReveal } from '@/composables/useScrollReveal'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { joinWaitlist } from '@/services/waitlist'
 import { trackEvent, trackHeroCta } from '@/services/analytics'
+import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 
 const { t } = useI18n()
 
@@ -179,7 +197,8 @@ onMounted(() => {
 
   &__inner {
     position: relative;
-    z-index: $z-base;
+    z-index: 2;
+
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -209,6 +228,24 @@ onMounted(() => {
     display: flex;
     gap: $space-4;
     flex-wrap: wrap;
+  }
+
+  &__ad {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    margin-bottom: $space-8;
+    padding-inline: $space-4;
+
+    @media (max-width: 639px) {
+      margin-bottom: $space-6;
+      padding-inline: $space-2;
+    }
   }
 
   &__cta {
@@ -241,6 +278,7 @@ onMounted(() => {
         background-color: $color-glass-hover;
       }
     }
+
   }
 
   &__signup {
