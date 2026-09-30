@@ -4,8 +4,8 @@
       <!-- AdSense Banner -->
       <AdSenseAd format="auto" layout="fixed" responsive class="blog-page__ad" />
 
-      <!-- Adsterra Banner -->
-      <AdsterraBanner class="blog-page__adsterra" />
+      <!-- Adsterra Banner 
+      <AdsterraBanner class="blog-page__adsterra" />-->
 
       <header class="blog-page__header">
         <h1 class="blog-page__title">{{ t('blog.title') }}</h1>

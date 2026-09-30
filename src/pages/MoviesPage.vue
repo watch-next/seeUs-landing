@@ -8,8 +8,8 @@
            <!-- Adsterra Banner -->
       <AdsterraBanner class="movies-page__adsterra" />
 
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
+      <!-- AdSense Banner 
+      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />-->
         <h1 class="movies-page__title">{{ t('movies.title') }}</h1>
         <p class="movies-page__subtitle">{{ t('movies.subtitle') }}</p>
       </header>
