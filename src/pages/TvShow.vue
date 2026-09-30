@@ -39,7 +39,7 @@
                 {{ firstAirYear }}
               </span>
               <span class="tv-show-page__year" v-if="lastAirYear && lastAirYear !== firstAirYear">–{{ lastAirYear
-                }}</span>
+              }}</span>
               <span class="tv-show-page__seasons" v-if="numberOfSeasons">
                 {{ numberOfSeasons }} {{ t('tvShow.seasons') }}
               </span>
@@ -123,6 +123,7 @@
         </header>
       </div>
     </div>
+    <AdsterraNative class="tv-show-page__adsterra-native" />
   </article>
 
 
@@ -428,7 +429,7 @@
     </div>
   </div>
 
-  <AdsterraNative class="tv-show-page__adsterra-native" />
+
 </template>
 
 <script setup lang="ts">
