@@ -117,20 +117,7 @@ axiosInstance.interceptors.request.use(
     }
 
     // Inject i18n locale as `language` query parameter for API requests
-    // Read from localStorage where the locale is already persisted by the i18n setup
-    const storedLocale = localStorage.getItem('watchnext-locale');
-    let language: string | undefined;
-
-    if (storedLocale) {
-      // Map frontend locales to backend API format
-      const localeMap: Record<string, string> = {
-        'pt-BR': 'pt-BR',
-        'en': 'en-US',
-        'es': 'es-ES',
-      };
-      language = localeMap[storedLocale];
-    }
-
+    const language = getI18nLanguage();
     if (language && config.params) {
       config.params = { ...config.params, language };
     } else if (language && config.params === undefined) {
@@ -150,25 +137,19 @@ axiosInstance.interceptors.request.use(
  * Backend expects: pt-BR, en-US, es-ES
  */
 function getI18nLanguage(): string | undefined {
-  try {
-    // Import here to avoid circular dependencies at module load time
-    const { useI18n } = require('vue-i18n');
-    const { t } = useI18n();
-    const locale = t._locale.value || t.locale;
-
-    // Map frontend locales to backend API format
-    const localeMap: Record<string, string> = {
-      'pt-BR': 'pt-BR',
-      'en': 'en-US',
-      'es': 'es-ES',
-    };
-
-    return localeMap[locale] || undefined;
-  } catch {
-    // If i18n is not available (e.g., during SSR or test setup), return undefined
-    // The caller will handle the absence gracefully
+  if (typeof localStorage === 'undefined') {
     return undefined;
   }
+  const savedLang = localStorage.getItem('watchnext-locale');
+  if (!savedLang || !['en', 'pt-BR', 'es'].includes(savedLang)) {
+    return undefined;
+  }
+  const localeMap: Record<string, string> = {
+    'pt-BR': 'pt-BR',
+    'en': 'en-US',
+    'es': 'es-ES',
+  };
+  return localeMap[savedLang];
 }
 
 /**

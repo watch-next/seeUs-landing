@@ -480,10 +480,90 @@ import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
 import CommentSection from '@/components/comments/CommentSection.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 // Debug token state
 
 const route = useRoute()
+
+// Function to load movie data
+async function loadMovieData() {
+  try {
+    isLoading.value = true
+    error.value = null
+    const id = movieId.value
+    if (!id) {
+      throw new Error('Invalid movie ID')
+    }
+
+    // Load movie details
+    console.debug('[MoviePage.vue] Attempting to load movie with id:', id)
+    try {
+      movie.value = await getMovieByUuid(id)
+      console.debug('[MoviePage.vue] Movie loaded successfully:', movie.value?.title || 'unknown')
+    } catch (movieError) {
+      console.error('[MoviePage.vue] Error loading movie:', movieError)
+      throw movieError // Re-throw to be caught by outer try/catch
+    }
+
+    // Load watch providers (non-blocking)
+    try {
+      await loadProviders(id)
+    } catch (providersError) {
+      console.error('[MoviePage.vue] Error loading watch providers:', providersError)
+      // Continue execution - providers failure doesn't block movie display
+    }
+
+
+    // Load credits (non-blocking) - using movie's UUID after movie details are loaded
+    isLoadingCredits.value = true
+    try {
+      credits.value = await getMovieCredits(movie.value?.id ?? '')
+      console.debug('[MoviePage.vue] Credits loaded successfully')
+    } catch (err: any) {
+      creditsError.value = err?.message ?? 'Unknown error'
+      console.warn('[MoviePage.vue] Failed to load credits:', err)
+    } finally {
+      isLoadingCredits.value = false
+    }
+
+    // Load similar movies (non-blocking, optional content)
+    isLoadingRelated.value = true
+    try {
+      const similar = await fetchSimilarMovies(movie.value?.tmdb_id ?? 0)
+      relatedMovies.value = (similar?.results ?? []).slice(0, 10) as RelatedMovie[]
+    } catch (relatedError) {
+      relatedMovies.value = []
+      console.warn('[MoviePage.vue] Failed to load similar movies:', relatedError)
+    } finally {
+      isLoadingRelated.value = false
+    }
+  } catch (err: any) {
+    console.error('[MoviePage.vue] Error fetching movie:', {
+      message: err?.message,
+      isAxiosError: !!err?.isAxiosError,
+      status: err?.response?.status,
+      statusText: err?.response?.statusText,
+      url: err?.config?.url,
+      id: movieId.value
+    })
+
+    // Check if this error is from the movie request (not watch providers or credits)
+    const isMovieRequestError =
+      err?.isAxiosError &&
+      err?.config?.url === `/movies/${movieId.value}`
+
+    if (isMovieRequestError) {
+      // This is an error loading the movie itself
+      error.value = err?.response?.status === 404 ? 404 : 'unknown'
+      movie.value = null
+    }
+    // For errors from watch providers or credits requests,
+    // we don't update movie.value or error.value here
+    // as they have their own error handling
+  } finally {
+    isLoading.value = false
+  }
+}
 
 // Watch dialog state: platform choice first, streaming providers below (collapsible)
 const showStreams = ref(true)
@@ -827,6 +907,13 @@ watch(movie, (newMovie) => {
       animatedRatingPercentage.value = null
       ratingAnimated.value = true
     }
+  }
+})
+
+// Refetch movie data when locale changes
+watch(locale, () => {
+  if (movieId.value) {
+    loadMovieData()
   }
 })
 
