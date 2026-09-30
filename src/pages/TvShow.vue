@@ -784,13 +784,6 @@ async function loadCurrentSeason() {
   const id = tmdbId.value
   const seasonNumber = series.value?.number_of_seasons
 
-  // Log before early-return condition
-  console.log('[TvShow][SeasonDebug] loadCurrentSeason called:', {
-    tmdbId: id,
-    seasonNumber: series.value?.number_of_seasons,
-    earlyReturnCondition: !id || !seasonNumber || seasonNumber <= 0
-  })
-
   // If we don't have a valid ID or season number, we can't proceed
   if (!id || !seasonNumber || seasonNumber <= 0) {
     console.log('[TvShow][SeasonDebug] Early return: invalid id or seasonNumber')
@@ -801,14 +794,7 @@ async function loadCurrentSeason() {
   seasonError.value = null
 
   try {
-    console.log('[TvShow][SeasonDebug] Calling fetchSeasonDetails with:', {
-      tmdbId: id,
-      seasonNumber: seasonNumber
-    })
     const season = await fetchSeasonDetails(id, seasonNumber)
-    console.log('[TvShow][SeasonDebug] fetchSeasonDetails resolved:', {
-      season: season ? 'Season object received' : 'null/undefined'
-    })
     currentSeason.value = season
   } catch (err) {
     console.log('[TvShow][SeasonDebug] fetchSeasonDetails failed:', err)

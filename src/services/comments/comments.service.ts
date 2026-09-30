@@ -325,7 +325,7 @@ export async function listComments({
   const { data, error } = await commentsSupabase.rpc('list_comments', rpcArgs)
 
   if (error) {
-    console.error('[comments.service] list_comments failed', error)
+    //console.error('[comments.service] list_comments failed', error)
     throw error
   }
 
