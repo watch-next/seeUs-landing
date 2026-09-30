@@ -1,9 +1,15 @@
 <template>
   <div class="movies-page">
     <div class="container">
+      
       <!-- Header -->
       <header class="movies-page__header">
         <Breadcrumbs :items="[{ label: t('common.home'), to: '/' }, { label: t('movies.title') }]" />
+           <!-- Adsterra Banner -->
+      <AdsterraBanner class="movies-page__adsterra" />
+
+      <!-- AdSense Banner -->
+      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
         <h1 class="movies-page__title">{{ t('movies.title') }}</h1>
         <p class="movies-page__subtitle">{{ t('movies.subtitle') }}</p>
       </header>
@@ -29,11 +35,7 @@
           </button>
         </div>
       </div>
-      <!-- Adsterra Banner -->
-      <AdsterraBanner class="movies-page__adsterra" />
-
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
+   
 
       <!-- Search Results Counter -->
       <div v-if="movies.length > 0 && searchQuery" class="movies-page__search-results">
