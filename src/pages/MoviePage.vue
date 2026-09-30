@@ -107,6 +107,9 @@
                 🌐 {{ t('movie.official_site') }}
                 <span class="external-link-icon">↗</span>
               </a>
+              <button type="button" @click="showTrailerModal = true" class="movie-page__btn movie-page__btn--trailer">
+                🎬 {{ t('movie.trailer') }}
+              </button>
               <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
                 📺 {{ t('movie.watch_now') }}
               </button>
@@ -435,6 +438,48 @@
     </div>
   </div>
 
+  <!-- Trailer Modal -->
+  <div v-if="showTrailerModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="trailer-modal-title"
+    @click="showTrailerModal = false" @keydown.esc="showTrailerModal = false">
+    <div class="modal trailer-modal" @click.stop>
+      <div class="modal__header trailer-modal__header">
+        <div>
+          <h2 id="trailer-modal-title">{{ t('movie.trailer') }}</h2>
+        </div>
+        <button class="modal__close trailer-modal__close" :aria-label="t('common.close')" @click="showTrailerModal = false">
+          ×
+        </button>
+      </div>
+
+      <div class="modal__content trailer-modal__content">
+        <div v-if="isLoadingTrailer" class="trailer-modal__loading">
+          <span class="trailer-modal__loading-icon" aria-hidden="true">⏳</span>
+          <p>{{ t('common.loading') }}</p>
+        </div>
+
+        <div v-else-if="trailerError" class="trailer-modal__error">
+          <span class="trailer-modal__error-icon" aria-hidden="true">❌</span>
+          <p>{{ trailerError }}</p>
+        </div>
+
+        <div v-else-if="trailerVideoId" class="trailer-modal__video-container">
+          <iframe
+            :src="'https://www.youtube.com/embed/' + trailerVideoId"
+            title="Movie trailer"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div v-else class="trailer-modal__error">
+          <span class="trailer-modal__error-icon" aria-hidden="true">❌</span>
+          <p>{{ t('movie.trailer_unavailable') }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 </template>
 
@@ -452,7 +497,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Chip from '@/components/Chip.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
-import { getMovieByUuid, getTmdbImageUrl, type MovieDetail } from '@/services/movie.service'
+import { getMovieByUuid, getTmdbImageUrl, type MovieDetail, getMovieVideos } from '@/services/movie.service'
 import { loadDownloadConfig } from '@/services/downloads'
 import { fetchSimilarMovies } from '@/lib/api/movieDataSource'
 import { slugify } from '@/lib/content/slugify'
@@ -516,6 +561,25 @@ async function loadMovieData() {
       console.warn('[MoviePage.vue] Failed to load similar movies:', relatedError)
     } finally {
       isLoadingRelated.value = false
+    }
+
+    // Load trailer (non-blocking)
+    isLoadingTrailer.value = true
+    trailerError.value = null
+    trailerVideoId.value = null
+    try {
+      const videos = await getMovieVideos(movie.value?.id ?? '')
+      const trailer = selectBestTrailer(videos)
+      if (trailer && trailer.key) {
+        trailerVideoId.value = trailer.key
+      } else {
+        trailerError.value = t('movie.trailer_unavailable')
+      }
+    } catch (trailerError) {
+      console.warn('[MoviePage.vue] Failed to load trailer:', trailerError)
+      trailerError.value = t('common.error')
+    } finally {
+      isLoadingTrailer.value = false
     }
   } catch (err: any) {
     console.error('[MoviePage.vue] Error fetching movie:', {
@@ -596,6 +660,10 @@ const credits = ref<MovieCreditsResponse | null>(null)
 const isLoadingCredits = ref(false)
 const creditsError = ref<string | null>(null)
 const showWatchModal = ref(false)
+const showTrailerModal = ref(false)
+const trailerVideoId = ref<string | null>(null)
+const isLoadingTrailer = ref(false)
+const trailerError = ref<string | null>(null)
 const error = ref<number | string | null>(null)
 const activeTab = ref<'discussions' | 'comments'>('comments')
 
@@ -805,6 +873,25 @@ onMounted(async () => {
       isLoadingRelated.value = false
     }
 
+    // Load trailer (non-blocking)
+    isLoadingTrailer.value = true
+    trailerError.value = null
+    trailerVideoId.value = null
+    try {
+      const videos = await getMovieVideos(movie.value?.id ?? '')
+      const trailer = selectBestTrailer(videos)
+      if (trailer && trailer.key) {
+        trailerVideoId.value = trailer.key
+      } else {
+        trailerError.value = t('movie.trailer_unavailable')
+      }
+    } catch (trailerError) {
+      console.warn('[MoviePage.vue] Failed to load trailer:', trailerError)
+      trailerError.value = t('common.error')
+    } finally {
+      isLoadingTrailer.value = false
+    }
+
   } catch (err: any) {
     console.error('[MoviePage.vue] Error fetching movie:', {
       message: err?.message,
@@ -923,6 +1010,47 @@ const activeActions = ref<{ watchlist: boolean; favorite: boolean; interest: boo
   favorite: false,
   interest: false,
 })
+
+// Helper function to select the best trailer from available videos
+function selectBestTrailer(videos: Video[]): Video | null {
+  if (!videos || videos.length === 0) return null
+
+  // Filter for trailers only
+  const trailers = videos.filter(video =>
+    video.type === 'Trailer' &&
+    video.site === 'YouTube'
+  )
+
+  if (trailers.length === 0) {
+    // Fallback to any YouTube video if no trailers found
+    const youtubeVideos = videos.filter(video => video.site === 'YouTube')
+    if (youtubeVideos.length > 0) {
+      // Prefer official videos
+      const officialVideos = youtubeVideos.filter(video =>
+        video.name.toLowerCase().includes('official') ||
+        video.name.toLowerCase().includes('trailer')
+      )
+      return officialVideos[0] || youtubeVideos[0]
+    }
+    return null
+  }
+
+  // Sort by preference: official, then by name (putting "trailer" first), then by published date
+  return trailers.sort((a, b) => {
+    const aIsOfficial = a.name.toLowerCase().includes('official')
+    const bIsOfficial = b.name.toLowerCase().includes('official')
+    if (aIsOfficial && !bIsOfficial) return -1
+    if (!aIsOfficial && bIsOfficial) return 1
+
+    const aHasTrailer = a.name.toLowerCase().includes('trailer')
+    const bHasTrailer = b.name.toLowerCase().includes('trailer')
+    if (aHasTrailer && !bHasTrailer) return -1
+    if (!aHasTrailer && bHasTrailer) return 1
+
+    // Sort by published date (newer first)
+    return new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+  })[0]
+}
 
 function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
   handleLoginRequired()
@@ -1262,6 +1390,23 @@ useSeo({
       &:hover:not(:disabled) {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(var(--brand-accent-rgb), 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    &--trailer {
+      flex: 1;
+      min-width: 200px;
+      background: var(--brand-secondary);
+      color: var(--text-primary);
+
+      &:hover:not(:disabled) {
+        background: var(--bg-tertiary);
+        transform: translateY(-2px);
       }
 
       &:disabled {
@@ -2676,6 +2821,147 @@ useSeo({
 
   .movie-page__related .related__nav {
     transition: none;
+  }
+}
+
+/* Trailer modal styles */
+.trailer-modal {
+  max-width: 640px;
+  width: 90vw;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-primary);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.trailer-modal__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trailer-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.trailer-modal__close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border);
+}
+
+.trailer-modal__close:hover {
+  background: var(--bg-secondary);
+  transform: translateY(-2px);
+}
+
+.trailer-modal__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.trailer-modal__content {
+  padding: 1.5rem;
+  position: relative;
+}
+
+.trailer-modal__video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.trailer-modal__video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.trailer-modal__error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.trailer-modal__error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.trailer-modal__loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.trailer-modal__loading-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: block;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 640px) {
+  .trailer-modal {
+    width: 90vw;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .trailer-modal__header {
+    padding: 1.25rem;
+  }
+
+  .trailer-modal__title {
+    font-size: 1.125rem;
+  }
+
+  .trailer-modal__content {
+    padding: 1.25rem;
+  }
+
+  .trailer-modal__video-container {
+    margin-bottom: 1rem;
+  }
+
+  .trailer-modal__close {
+    width: 32px;
+    height: 32px;
   }
 }
 </style>
