@@ -1,14 +1,14 @@
 <template>
   <div class="home-page">
     <HeroSection />
-    <AdsterraBanner/>
+    <AdsterraBanner />
     <FeaturesSection />
+    <AdsterraNative class="home-page__adsterra-native" />
     <PlatformsSection />
     <PremiumSection />
     <RoadmapSection />
     <NewsletterSection />
     <FaqSection />
-    <AdsterraNative class="home-page__adsterra-native" />
   </div>
 </template>
 

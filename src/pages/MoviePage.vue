@@ -122,8 +122,6 @@
 
 
 
-
-
             <!--Financial Info
           <section class="movie-page__financial" v-if="movie.budget || movie.revenue">
             <h2 class="financial__title">{{ t('movie.financial') }}</h2>
@@ -143,7 +141,7 @@
         </header>
       </div>
     </div>
-
+    <AdsterraNative class="movie-page__adsterra-native" />
     <!-- Credits Card -->
     <section v-if="credits" class="movie-page__credits" aria-label="Credits">
       <h2 class="credits__title">{{ t('credits.title') }}:</h2>
@@ -199,61 +197,43 @@
     <!-- Comments -->
     <section class="movie-page__discussions-comments section">
       <div class="container">
-          <h2 class="section__title">{{ t('movie.discussions_comments.title') }}</h2>
-          <div class="discussions-comments__tabs" role="tablist" aria-label="{{ t('movie.discussions_comments.title') }}">
-            <button
-          role="tab"
-          :aria-selected="activeTab === 'discussions'"
-          :aria-controls="activeTab === 'discussions' ? 'tab-panel-discussions' : undefined"
-          :id="activeTab === 'discussions' ? 'tab-discussions' : undefined"
-          class="discussions-comments__tab"
-          :class="{ 'discussions-comments__tab--active': activeTab === 'discussions' }"
-          @click="activeTab = 'discussions'"
-        >
-          {{ t('tvShow.discussions') }}
-        </button>
-        <button
-          role="tab"
-          :aria-selected="activeTab === 'comments'"
-          :aria-controls="activeTab === 'comments' ? 'tab-panel-comments' : undefined"
-          :id="activeTab === 'comments' ? 'tab-comments' : undefined"
-          class="discussions-comments__tab"
-          :class="{ 'discussions-comments__tab--active': activeTab === 'comments' }"
-          @click="activeTab = 'comments'"
-        >
-          {{ t('movie.comments') }}
-        </button>
+        <h2 class="section__title">{{ t('movie.discussions_comments.title') }}</h2>
+        <div class="discussions-comments__tabs" role="tablist" aria-label="{{ t('movie.discussions_comments.title') }}">
+          <button role="tab" :aria-selected="activeTab === 'discussions'"
+            :aria-controls="activeTab === 'discussions' ? 'tab-panel-discussions' : undefined"
+            :id="activeTab === 'discussions' ? 'tab-discussions' : undefined" class="discussions-comments__tab"
+            :class="{ 'discussions-comments__tab--active': activeTab === 'discussions' }"
+            @click="activeTab = 'discussions'">
+            {{ t('tvShow.discussions') }}
+          </button>
+          <button role="tab" :aria-selected="activeTab === 'comments'"
+            :aria-controls="activeTab === 'comments' ? 'tab-panel-comments' : undefined"
+            :id="activeTab === 'comments' ? 'tab-comments' : undefined" class="discussions-comments__tab"
+            :class="{ 'discussions-comments__tab--active': activeTab === 'comments' }" @click="activeTab = 'comments'">
+            {{ t('movie.comments') }}
+          </button>
+        </div>
+        <!-- Discussions Panel -->
+        <div v-if="activeTab === 'discussions'" role="tabpanel" id="tab-panel-discussions"
+          :aria-labelledby="activeTab === 'discussions' ? 'tab-discussions' : undefined"
+          class="discussions-comments__panel">
+          <div v-if="!isAppAuthenticated" class="discussions__auth-required">
+            <p>{{ t('tvShow.discussions_auth_required') }}</p>
+            <CommentAuthSelector />
           </div>
-            <!-- Discussions Panel -->
-      <div
-        v-if="activeTab === 'discussions'"
-        role="tabpanel"
-        id="tab-panel-discussions"
-        :aria-labelledby="activeTab === 'discussions' ? 'tab-discussions' : undefined"
-        class="discussions-comments__panel"
-      >
-        <div v-if="!isAppAuthenticated" class="discussions__auth-required">
-          <p>{{ t('tvShow.discussions_auth_required') }}</p>
-          <CommentAuthSelector />
+          <div v-else class="discussions__content">
+            <p>{{ t('tvShow.discussions_placeholder') }}</p>
+            <!-- Discussion functionality would go here if backend existed -->
+          </div>
         </div>
-        <div v-else class="discussions__content">
-          <p>{{ t('tvShow.discussions_placeholder') }}</p>
-          <!-- Discussion functionality would go here if backend existed -->
+        <!-- Comments Panel -->
+        <div v-else-if="activeTab === 'comments'" role="tabpanel" id="tab-panel-comments"
+          :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined" class="discussions-comments__panel">
+          <CommentSection :content-type="'movie'" :content-id="movie?.id" />
         </div>
+
       </div>
-       <!-- Comments Panel -->
-      <div
-        v-else-if="activeTab === 'comments'"
-        role="tabpanel"
-        id="tab-panel-comments"
-        :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined"
-        class="discussions-comments__panel"
-      >
-       <CommentSection :content-type="'movie'" :content-id="movie?.id" />
-      </div>
-        
-      </div>
-      
+
     </section>
 
     <!-- Media Section -->
@@ -455,7 +435,7 @@
     </div>
   </div>
 
-  <AdsterraNative class="movie-page__adsterra-native" />
+
 </template>
 
 <script setup lang="ts">

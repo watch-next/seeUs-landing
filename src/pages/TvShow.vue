@@ -1,19 +1,21 @@
 <template>
   <article v-if="series" class="tv-show-page">
-    <div class="cinematic-card" :style="{ backgroundImage: series.backdrop_path ? `url('https://image.tmdb.org/t/p/original${series.backdrop_path}')` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: series.backdrop_path ? 'transparent' : 'var(--bg-primary)' }">
+    <div class="cinematic-card"
+      :style="{ backgroundImage: series.backdrop_path ? `url('https://image.tmdb.org/t/p/original${series.backdrop_path}')` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: series.backdrop_path ? 'transparent' : 'var(--bg-primary)' }">
       <div class="container tv-show-page__container">
         <!-- Breadcrumb -->
         <Breadcrumbs :items="breadcrumbItems" />
-         <!-- Adsterra Banner -->
-            <AdsterraBanner class="tv-show-page__adsterra" />
+        <!-- Adsterra Banner -->
+        <AdsterraBanner class="tv-show-page__adsterra" />
 
-            <!-- AdSense Banner
+        <!-- AdSense Banner
             <AdSenseAd format="auto" layout="in-feed" responsive class="tv-show-page__ad" /> -->
         <!-- Header with Poster and Backdrop -->
         <header class="tv-show-page__header">
           <div class="tv-show-page__media">
             <div class="tv-show-page__poster">
-              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="posterUrl" target="_blank" rel="noopener noreferrer">
+              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="posterUrl"
+                target="_blank" rel="noopener noreferrer">
                 <img :src="posterUrl" :alt="series.name" class="tv-show-page__poster-img" loading="lazy" />
               </a>
               <div v-else class="tv-show-page__poster-placeholder">
@@ -36,7 +38,8 @@
               <span class="tv-show-page__year" v-if="firstAirYear">
                 {{ firstAirYear }}
               </span>
-              <span class="tv-show-page__year" v-if="lastAirYear && lastAirYear !== firstAirYear">–{{ lastAirYear }}</span>
+              <span class="tv-show-page__year" v-if="lastAirYear && lastAirYear !== firstAirYear">–{{ lastAirYear
+                }}</span>
               <span class="tv-show-page__seasons" v-if="numberOfSeasons">
                 {{ numberOfSeasons }} {{ t('tvShow.seasons') }}
               </span>
@@ -122,9 +125,10 @@
     </div>
   </article>
 
- 
+
   <!-- Current Season Section -->
-  <section v-if="series && series.number_of_seasons && series.number_of_seasons > 0" class="tv-show-page__season section">
+  <section v-if="series && series.number_of_seasons && series.number_of_seasons > 0"
+    class="tv-show-page__season section">
     <div class="container">
       <h2 class="section__title">{{ t('tvShow.season.title') }}</h2>
 
@@ -139,13 +143,10 @@
 
       <div v-else-if="currentSeason" class="season__card">
         <div class="season__media">
-           <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="currentSeason.poster_path" target="_blank" rel="noopener noreferrer">
-            <img
-           :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')"
-            :alt="currentSeason.name"
-            class="season__poster"
-            loading="lazy"
-          /></a>
+          <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
+            v-if="currentSeason.poster_path" target="_blank" rel="noopener noreferrer">
+            <img :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')" :alt="currentSeason.name"
+              class="season__poster" loading="lazy" /></a>
           <div v-else class="season__poster-placeholder">
             <span>📺</span>
             <p>{{ t('tvShow.no_poster') }}</p>
@@ -153,7 +154,8 @@
         </div>
 
         <div class="season__info">
-          <h3 class="season__name">{{ currentSeason.name || `${t('tvShow.season.season')} ${currentSeason.season_number}` }}</h3>
+          <h3 class="season__name">{{ currentSeason.name || `${t('tvShow.season.season')}
+            ${currentSeason.season_number}` }}</h3>
 
           <p v-if="currentSeason.air_date" class="season__air-date">
             <span class="label">{{ t('tvShow.season.air_date') }}:</span>
@@ -165,7 +167,8 @@
             {{ t('tvShow.season.episode_count', { count: currentSeason.episode_count }) }}
           </p>
 
-          <p v-if="currentSeason.vote_average !== undefined && currentSeason.vote_average !== null" class="season__rating">
+          <p v-if="currentSeason.vote_average !== undefined && currentSeason.vote_average !== null"
+            class="season__rating">
             <span class="label">{{ t('tvShow.votes') }}:</span>
             <span class="rating">{{ currentSeason.vote_average.toFixed(1) }}</span>
             <span class="rating__stars" aria-hidden="true">★</span>
@@ -181,44 +184,31 @@
       <p v-else class="season__empty">{{ t('tvShow.season.no_overview') }}</p>
     </div>
   </section>
- <!-- Discussions / Comments Section -->
+  <!-- Discussions / Comments Section -->
   <section v-if="series" class="tv-show-page__discussions-comments section">
     <div class="container">
       <h2 class="section__title">{{ t('tvShow.discussions_comments.title') }}</h2>
 
       <div class="discussions-comments__tabs" role="tablist" aria-label="{{ t('tvShow.discussions_comments.title') }}">
-        <button
-          role="tab"
-          :aria-selected="activeTab === 'discussions'"
+        <button role="tab" :aria-selected="activeTab === 'discussions'"
           :aria-controls="activeTab === 'discussions' ? 'tab-panel-discussions' : undefined"
-          :id="activeTab === 'discussions' ? 'tab-discussions' : undefined"
-          class="discussions-comments__tab"
+          :id="activeTab === 'discussions' ? 'tab-discussions' : undefined" class="discussions-comments__tab"
           :class="{ 'discussions-comments__tab--active': activeTab === 'discussions' }"
-          @click="activeTab = 'discussions'"
-        >
+          @click="activeTab = 'discussions'">
           {{ t('tvShow.discussions') }}
         </button>
-        <button
-          role="tab"
-          :aria-selected="activeTab === 'comments'"
+        <button role="tab" :aria-selected="activeTab === 'comments'"
           :aria-controls="activeTab === 'comments' ? 'tab-panel-comments' : undefined"
-          :id="activeTab === 'comments' ? 'tab-comments' : undefined"
-          class="discussions-comments__tab"
-          :class="{ 'discussions-comments__tab--active': activeTab === 'comments' }"
-          @click="activeTab = 'comments'"
-        >
+          :id="activeTab === 'comments' ? 'tab-comments' : undefined" class="discussions-comments__tab"
+          :class="{ 'discussions-comments__tab--active': activeTab === 'comments' }" @click="activeTab = 'comments'">
           {{ t('tvShow.comments') }}
         </button>
       </div>
 
       <!-- Discussions Panel -->
-      <div
-        v-if="activeTab === 'discussions'"
-        role="tabpanel"
-        id="tab-panel-discussions"
+      <div v-if="activeTab === 'discussions'" role="tabpanel" id="tab-panel-discussions"
         :aria-labelledby="activeTab === 'discussions' ? 'tab-discussions' : undefined"
-        class="discussions-comments__panel"
-      >
+        class="discussions-comments__panel">
         <div v-if="!isAppAuthenticated" class="discussions__auth-required">
           <p>{{ t('tvShow.discussions_auth_required') }}</p>
           <CommentAuthSelector />
@@ -230,13 +220,8 @@
       </div>
 
       <!-- Comments Panel -->
-      <div
-        v-else-if="activeTab === 'comments'"
-        role="tabpanel"
-        id="tab-panel-comments"
-        :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined"
-        class="discussions-comments__panel"
-      >
+      <div v-else-if="activeTab === 'comments'" role="tabpanel" id="tab-panel-comments"
+        :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined" class="discussions-comments__panel">
         <CommentSection :content-type="'tvShow'" :content-id="tmdbId.value" />
       </div>
     </div>
@@ -249,69 +234,39 @@
 
       <!-- Media Tabs -->
       <div class="media__tabs" role="tablist" aria-label="{{ t('tvShow.media.title') }}">
-        <button
-          v-if="series.poster_path"
-          role="tab"
-          :aria-selected="activeMediaTab === 'posters'"
+        <button v-if="series.poster_path" role="tab" :aria-selected="activeMediaTab === 'posters'"
           :aria-controls="activeMediaTab === 'posters' ? 'media-panel-posters' : undefined"
-          :id="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
-          class="media__tab"
-          :class="{ 'media__tab--active': activeMediaTab === 'posters' }"
-          @click="activeMediaTab = 'posters'"
-        >
+          :id="activeMediaTab === 'posters' ? 'tab-posters' : undefined" class="media__tab"
+          :class="{ 'media__tab--active': activeMediaTab === 'posters' }" @click="activeMediaTab = 'posters'">
           {{ t('tvShow.media.posters') }}
         </button>
-        <button
-          v-if="series.backdrop_path"
-          role="tab"
-          :aria-selected="activeMediaTab === 'backdrops'"
+        <button v-if="series.backdrop_path" role="tab" :aria-selected="activeMediaTab === 'backdrops'"
           :aria-controls="activeMediaTab === 'backdrops' ? 'media-panel-backdrops' : undefined"
-          :id="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
-          class="media__tab"
-          :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }"
-          @click="activeMediaTab = 'backdrops'"
-        >
+          :id="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined" class="media__tab"
+          :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }" @click="activeMediaTab = 'backdrops'">
           {{ t('tvShow.media.backdrops') }}
         </button>
       </div>
 
       <!-- Posters Panel -->
-      <div
-        v-if="activeMediaTab === 'posters' && series.poster_path"
-        role="tabpanel"
-        id="media-panel-posters"
-        :aria-labelledby="activeMediaTab === 'posters' ? 'tab-posters' : undefined"
-        class="media__panel"
-      >
+      <div v-if="activeMediaTab === 'posters' && series.poster_path" role="tabpanel" id="media-panel-posters"
+        :aria-labelledby="activeMediaTab === 'posters' ? 'tab-posters' : undefined" class="media__panel">
         <div class="media__grid">
           <figure class="media__item" @click="openMediaModal(getTmdbImageUrl(series.poster_path, 'original'))">
-            <img
-              :src="getTmdbImageUrl(series.poster_path, 'w500')"
-              :alt="series.name"
-              class="media__image"
-              loading="lazy"
-            />
+            <img :src="getTmdbImageUrl(series.poster_path, 'w500')" :alt="series.name" class="media__image"
+              loading="lazy" />
             <figcaption class="media__caption">{{ series.name }} - Poster</figcaption>
           </figure>
         </div>
       </div>
 
       <!-- Backdrops Panel -->
-      <div
-        v-else-if="activeMediaTab === 'backdrops' && series.backdrop_path"
-        role="tabpanel"
-        id="media-panel-backdrops"
-        :aria-labelledby="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
-        class="media__panel"
-      >
+      <div v-else-if="activeMediaTab === 'backdrops' && series.backdrop_path" role="tabpanel" id="media-panel-backdrops"
+        :aria-labelledby="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined" class="media__panel">
         <div class="media__grid">
           <figure class="media__item" @click="openMediaModal(getTmdbImageUrl(series.backdrop_path ?? '', 'original'))">
-            <img
-              :src="getTmdbImageUrl(series.backdrop_path, 'w1280')"
-              :alt="series.name"
-              class="media__image"
-              loading="lazy"
-            />
+            <img :src="getTmdbImageUrl(series.backdrop_path, 'w1280')" :alt="series.name" class="media__image"
+              loading="lazy" />
             <figcaption class="media__caption">{{ series.name }} - Backdrop</figcaption>
           </figure>
         </div>
@@ -338,20 +293,12 @@
       <div v-else-if="relatedShows.length > 0" class="related__carousel">
         <div class="related__scroll" ref="relatedScroll">
           <div class="related__track" :style="{ transform: `translateX(-${relatedScrollX}px)` }">
-            <div
-              v-for="show in relatedShows"
-              :key="show.id"
-              class="related__card"
-            >
-              <a :href="`/tv-shows/${show.id}-${slugify(show.name)}-${show.first_air_date ? new Date(show.first_air_date).getFullYear() : ''}`" class="related__link">
+            <div v-for="show in relatedShows" :key="show.id" class="related__card">
+              <a :href="`/tv-shows/${show.id}-${slugify(show.name)}-${show.first_air_date ? new Date(show.first_air_date).getFullYear() : ''}`"
+                class="related__link">
                 <div class="related__poster">
-                  <img
-                    v-if="show.poster_path"
-                    :src="getTmdbImageUrl(show.poster_path, 'w342')"
-                    :alt="show.name"
-                    class="related__image"
-                    loading="lazy"
-                  />
+                  <img v-if="show.poster_path" :src="getTmdbImageUrl(show.poster_path, 'w342')" :alt="show.name"
+                    class="related__image" loading="lazy" />
                   <div v-else class="related__placeholder">
                     <span>📺</span>
                   </div>
@@ -369,20 +316,12 @@
         </div>
 
         <!-- Scroll buttons -->
-        <button
-          class="related__nav related__nav--prev"
-          :aria-label="t('tvShow.related.prev')"
-          @click="scrollRelated(-1)"
-          :disabled="relatedScrollX <= 0"
-        >
+        <button class="related__nav related__nav--prev" :aria-label="t('tvShow.related.prev')"
+          @click="scrollRelated(-1)" :disabled="relatedScrollX <= 0">
           ‹
         </button>
-        <button
-          class="related__nav related__nav--next"
-          :aria-label="t('tvShow.related.next')"
-          @click="scrollRelated(1)"
-          :disabled="relatedScrollX >= relatedMaxScroll"
-        >
+        <button class="related__nav related__nav--next" :aria-label="t('tvShow.related.next')" @click="scrollRelated(1)"
+          :disabled="relatedScrollX >= relatedMaxScroll">
           ›
         </button>
       </div>
@@ -392,17 +331,13 @@
   </section>
 
   <!-- Media Modal -->
-  <div v-if="showMediaModal" class="media-modal-overlay" role="dialog" aria-modal="true" aria-label="{{ t('tvShow.media.title') }}" @click="closeMediaModal" @keydown.esc="closeMediaModal">
+  <div v-if="showMediaModal" class="media-modal-overlay" role="dialog" aria-modal="true"
+    aria-label="{{ t('tvShow.media.title') }}" @click="closeMediaModal" @keydown.esc="closeMediaModal">
     <div class="media-modal" @click.stop>
       <button class="media-modal__close" :aria-label="t('tvShow.watch_dialog.close')" @click="closeMediaModal">
         ×
       </button>
-      <img
-        v-if="selectedMediaImage"
-        :src="selectedMediaImage"
-        :alt="series?.name || ''"
-        class="media-modal__image"
-      />
+      <img v-if="selectedMediaImage" :src="selectedMediaImage" :alt="series?.name || ''" class="media-modal__image" />
     </div>
   </div>
 
@@ -1702,6 +1637,7 @@ useSeo({
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .watch-platform,
   .watch-streams__toggle,
   .provider__card,
@@ -1779,18 +1715,16 @@ useSeo({
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.9) 25%,
-      rgba(0, 0, 0, 0.7) 90%,
-      rgba(0, 0, 0, 0.4) 100%,
-      transparent 80%
-    );
+    background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0.9) 25%,
+        rgba(0, 0, 0, 0.7) 90%,
+        rgba(0, 0, 0, 0.4) 100%,
+        transparent 80%);
     pointer-events: none;
     z-index: 1;
   }
 
-  & > .container {
+  &>.container {
     position: relative;
     z-index: 2;
   }
@@ -1814,7 +1748,9 @@ useSeo({
     }
   }
 }
+
 @media (prefers-reduced-motion: reduce) {
+
   .watch-platform,
   .watch-streams__toggle,
   .provider__card,
@@ -1854,6 +1790,7 @@ useSeo({
 
 /* Current Season Section */
 .tv-show-page__season {
+
   .season__loading,
   .season__error,
   .season__empty {
@@ -2034,6 +1971,7 @@ useSeo({
       opacity: 0;
       transform: translateY(4px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -2084,7 +2022,8 @@ useSeo({
   }
 
   .media__caption {
-    display: none; /* Hidden by default, shown on hover if needed */
+    display: none;
+    /* Hidden by default, shown on hover if needed */
   }
 
   .media__empty {
@@ -2096,6 +2035,7 @@ useSeo({
 
 /* Related Shows Section */
 .tv-show-page__related {
+
   .related__loading,
   .related__error,
   .related__empty {
@@ -2305,6 +2245,7 @@ useSeo({
       opacity: 0;
       transform: translateY(20px) scale(0.95);
     }
+
     to {
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -2363,6 +2304,7 @@ useSeo({
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .media__tab,
   .media__item,
   .related__link,
