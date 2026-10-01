@@ -144,7 +144,7 @@
         </header>
       </div>
     </div>
-    <AdsterraNative class="movie-page__adsterra-native" />
+    
     <!-- Credits Card -->
     <section v-if="credits" class="movie-page__credits" aria-label="Credits">
       <h2 class="credits__title">{{ t('credits.title') }}:</h2>
@@ -480,7 +480,7 @@
     </div>
   </div>
 
-
+<AdsterraNative class="movie-page__adsterra-native" />
 </template>
 
 <script setup lang="ts">

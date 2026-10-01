@@ -126,7 +126,7 @@
         </header>
       </div>
     </div>
-    <AdsterraNative class="tv-show-page__adsterra-native" />
+    
   </article>
 
 
@@ -470,7 +470,7 @@
     </div>
   </div>
 </div>
-
+<AdsterraNative class="tv-show-page__adsterra-native" />
 
 </template>
 
