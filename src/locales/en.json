@@ -548,6 +548,7 @@
     "seasons": "Seasons",
     "status": "Status",
     "trailer": "Trailer",
+    "trailer_unavailable": "Trailer unavailable",
     "discussions_comments": {
       "title": "Discussions & Comments"
     },
