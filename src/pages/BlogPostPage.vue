@@ -59,7 +59,7 @@
         </figcaption>
       </figure>
 
-      <AdsterraNative class="blog-post__adsterra-native" />
+      
 
       <div class="blog-post__content">
         <MarkdownRenderer :content="post.content" />
@@ -98,7 +98,7 @@
     </div>
   </div>
 
-
+<AdsterraNative class="blog-post__adsterra-native" />
 </template>
 
 <script setup lang="ts">
