@@ -293,9 +293,9 @@ export interface TvShowVideo {
  * @param tmdbId - TMDB ID of the TV show
  */
 export async function getTvShowVideos(tmdbId: number): Promise<TvShowVideo[]> {
-  const response = await httpClient.get<{ success: boolean; results: TvShowVideo[] }>(`/tv/${tmdbId}/videos`);
+  const response = await httpClient.get<{ success: boolean; videos: TvShowVideo[] }>(`/tv/${tmdbId}/videos`);
   if (!response.data.success) {
     throw new Error('Failed to fetch videos');
   }
-  return response.data.results;
+  return response.data.videos;
 }
