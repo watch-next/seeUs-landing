@@ -271,3 +271,31 @@ export async function fetchAllShows(
   });
   return mapTVListToTMDBFormat(response.data);
 }
+
+/**
+ * Video entity (from TMDB API).
+ */
+export interface TvShowVideo {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+}
+
+/**
+ * Get videos for a TV show by TMDB ID.
+ * @param tmdbId - TMDB ID of the TV show
+ */
+export async function getTvShowVideos(tmdbId: number): Promise<TvShowVideo[]> {
+  const response = await httpClient.get<{ success: boolean; results: TvShowVideo[] }>(`/tv/${tmdbId}/videos`);
+  if (!response.data.success) {
+    throw new Error('Failed to fetch videos');
+  }
+  return response.data.results;
+}
