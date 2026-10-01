@@ -108,6 +108,9 @@
                 🌐 {{ t('tvShow.official_site') }}
                 <span class="external-link-icon">↗</span>
               </a>
+              <button type="button" @click="fetchTrailer" class="tv-show-page__btn tv-show-page__btn--trailer" :disabled="isLoadingTrailer">
+                🎬 {{ t('tvShow.trailer') }}
+              </button>
               <button type="button" @click="showWatchModal = true" class="tv-show-page__btn tv-show-page__btn--watch">
                 📺 {{ t('tvShow.watch_now') }}
               </button>
@@ -342,6 +345,7 @@
     </div>
   </div>
 
+  <!-- Trailer state -->
   <div v-else-if="isLoading" class="container tv-show-page__loading">
     <div class="tv-show-page__skeleton">
       <div class="tv-show-page__skeleton-poster"></div>
@@ -429,6 +433,44 @@
     </div>
   </div>
 
+<!-- Trailer Modal -->
+<div v-if="showTrailerModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="trailer-modal-title"
+  @click="showTrailerModal = false" @keydown.esc="showTrailerModal = false">
+  <div class="modal" @click.stop>
+    <div class="modal__header">
+      <div>
+        <h2 id="trailer-modal-title">{{ t('tvShow.trailer') }}</h2>
+      </div>
+      <button class="modal__close" :aria-label="t('tvShow.watch_dialog.close')" @click="showTrailerModal = false">
+        ×
+      </button>
+    </div>
+    <div class="modal__content">
+      <div v-if="isLoadingTrailer" class="trailer__loading">
+        <div class="spinner"></div>
+        <p>{{ t('common.loading') }}</p>
+      </div>
+      <div v-else-if="trailerError" class="trailer__error">
+        <p>{{ trailerError }}</p>
+      </div>
+      <div v-else-if="trailerVideoId" class="trailer__video">
+        <iframe
+          width="100%"
+          height="400"
+          :src="`https://www.youtube.com/embed/${trailerVideoId}?rel=0&showinfo=0&autoplay=1`"
+          title="YouTube trailer"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <div v-else class="trailer__empty">
+        <p>{{ t('tvShow.trailer_unavailable') }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 </template>
 
@@ -448,7 +490,7 @@ import { loadDownloadConfig } from '@/services/downloads'
 import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 import { getTmdbImageUrl } from '@/services/movie.service'
 import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
-import { fetchSeasonDetails, fetchSimilarShows } from '@/lib/api/tvDataSource'
+import { fetchSeasonDetails, fetchSimilarShows, getTvShowVideos } from '@/lib/api/tvDataSource'
 import { slugify } from '@/lib/content/slugify'
 import type { SeasonDetail, TVShowDetail } from '@/lib/tmdb/types'
 import CommentSection from '@/components/comments/CommentSection.vue'
@@ -498,6 +540,12 @@ const showWatchModal = ref(false)
 const error = ref<number | string | null>(null)
 
 // providers, isLoadingProviders, loadedMovieId já vêm do composable
+
+// Trailer state
+const showTrailerModal = ref(false)
+const trailerVideoId = ref<string | null>(null)
+const isLoadingTrailer = ref(false)
+const trailerError = ref<string | null>(null)
 
 const breadcrumbItems = computed(() => [
   { label: t('common.home'), to: '/' },
@@ -572,6 +620,67 @@ function formatDate(dateString: string | null): string {
 
 function getProviderImageUrl(logoPath: string | null): string | undefined {
   return getTmdbImageUrl(logoPath, 'w92')
+}
+
+// Trailer helper functions
+function selectBestTrailer(videos: TvShowVideo[]): string | null {
+  // Filter for YouTube trailers
+  const youtubeTrailers = videos.filter(
+    (video) => video.site === 'YouTube' && video.type === 'Trailer'
+  )
+
+  if (youtubeTrailers.length === 0) {
+    // Fallback to any YouTube video
+    const youtubeVideos = videos.filter((video) => video.site === 'YouTube')
+    if (youtubeVideos.length > 0) {
+      // Sort by official status and name preference
+      youtubeVideos.sort((a, b) => {
+        if (a.official !== b.official) return b.official ? -1 : 1
+        // Prefer trailers in name
+        const aIsTrailer = a.name.toLowerCase().includes('trailer')
+        const bIsTrailer = b.name.toLowerCase().includes('trailer')
+        if (aIsTrailer !== bIsTrailer) return bIsTrailer ? -1 : 1
+        return a.name.localeCompare(b.name)
+      })
+      return youtubeVideos[0].key
+    }
+    return null
+  }
+
+  // Sort trailers: official first, then by name
+  youtubeTrailers.sort((a, b) => {
+    if (a.official !== b.official) return b.official ? -1 : 1
+    // Prefer trailers in name
+    const aIsTrailer = a.name.toLowerCase().includes('trailer')
+    const bIsTrailer = b.name.toLowerCase().includes('trailer')
+    if (aIsTrailer !== bIsTrailer) return bIsTrailer ? -1 : 1
+    return a.name.localeCompare(b.name)
+  })
+
+  return youtubeTrailers[0].key
+}
+
+async function fetchTrailer() {
+  if (!series.value) return
+
+  isLoadingTrailer.value = true
+  trailerError.value = null
+
+  try {
+    const videos = await getTvShowVideos(series.value.id)
+    const videoKey = selectBestTrailer(videos ?? [])
+    if (videoKey) {
+      trailerVideoId.value = videoKey
+      showTrailerModal.value = true
+    } else {
+      trailerError.value = t('tvShow.trailer_unavailable')
+    }
+  } catch (err) {
+    console.error('Failed to fetch trailer:', err)
+    trailerError.value = t('tvShow.trailer_unavailable')
+  } finally {
+    isLoadingTrailer.value = false
+  }
 }
 
 // Load series data and watch providers in parallel
