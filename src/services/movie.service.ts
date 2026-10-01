@@ -127,11 +127,11 @@ export async function getWatchProviders(movieId: string | number, region: string
  * @param movieId - UUID do filme ou TMDB ID
  */
 export async function getMovieVideos(movieId: string | number): Promise<Video[]> {
-  const response: AxiosResponse<{ success: boolean; data: { results: Video[] } }> = await httpClient.get(`/movies/${movieId}/videos`);
+  const response: AxiosResponse<{ success: boolean; videos: Video[] }> = await httpClient.get(`/movies/${movieId}/videos`);
   if (!response.data.success) {
     throw new Error('Failed to fetch movie videos');
   }
-  return response.data.results;
+  return response.data.videos;
 }
 
 /**

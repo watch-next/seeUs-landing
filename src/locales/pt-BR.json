@@ -6,7 +6,8 @@
     "processing": "Processando...",
     "active": "Ativo",
     "retry": "Tentar novamente",
-    "more": "Mais"
+    "more": "Mais",
+    "close": "Fechar"
   },
   "navigation": {
     "home": "Início",

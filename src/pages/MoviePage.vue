@@ -107,7 +107,7 @@
                 🌐 {{ t('movie.official_site') }}
                 <span class="external-link-icon">↗</span>
               </a>
-              <button type="button" @click="showTrailerModal = true" class="movie-page__btn movie-page__btn--trailer">
+              <button type="button" @click="fetchTrailer" class="movie-page__btn movie-page__btn--trailer" :disabled="isLoadingTrailer">
                 🎬 {{ t('movie.trailer') }}
               </button>
               <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
@@ -471,7 +471,7 @@
             allowfullscreen>
           </iframe>
         </div>
-
+        
         <div v-else class="trailer-modal__error">
           <span class="trailer-modal__error-icon" aria-hidden="true">❌</span>
           <p>{{ t('movie.trailer_unavailable') }}</p>
@@ -873,25 +873,6 @@ onMounted(async () => {
       isLoadingRelated.value = false
     }
 
-    // Load trailer (non-blocking)
-    isLoadingTrailer.value = true
-    trailerError.value = null
-    trailerVideoId.value = null
-    try {
-      const videos = await getMovieVideos(movie.value?.id ?? '')
-      const trailer = selectBestTrailer(videos)
-      if (trailer && trailer.key) {
-        trailerVideoId.value = trailer.key
-      } else {
-        trailerError.value = t('movie.trailer_unavailable')
-      }
-    } catch (trailerError) {
-      console.warn('[MoviePage.vue] Failed to load trailer:', trailerError)
-      trailerError.value = t('common.error')
-    } finally {
-      isLoadingTrailer.value = false
-    }
-
   } catch (err: any) {
     console.error('[MoviePage.vue] Error fetching movie:', {
       message: err?.message,
@@ -1050,6 +1031,31 @@ function selectBestTrailer(videos: Video[]): Video | null {
     // Sort by published date (newer first)
     return new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
   })[0]
+}
+
+// Fetch trailer when button is clicked
+async function fetchTrailer() {
+  if (!movie.value) return
+
+  isLoadingTrailer.value = true
+  trailerError.value = null
+  trailerVideoId.value = null
+  showTrailerModal.value = true
+
+  try {
+    const videos = await getMovieVideos(movie.value.id)
+    const trailer = selectBestTrailer(videos)
+    if (trailer && trailer.key) {
+      trailerVideoId.value = trailer.key
+    } else {
+      trailerError.value = t('movie.trailer_unavailable')
+    }
+  } catch (err) {
+    console.warn('[MoviePage.vue] Failed to load trailer:', err)
+    trailerError.value = t('common.error')
+  } finally {
+    isLoadingTrailer.value = false
+  }
 }
 
 function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
