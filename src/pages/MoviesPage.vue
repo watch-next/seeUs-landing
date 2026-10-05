@@ -1,9 +1,15 @@
 <template>
   <div class="movies-page">
     <div class="container">
+
       <!-- Header -->
       <header class="movies-page__header">
         <Breadcrumbs :items="[{ label: t('common.home'), to: '/' }, { label: t('movies.title') }]" />
+        <!-- Adsterra Banner -->
+        <AdsterraBanner class="movies-page__adsterra" />
+
+        <!-- AdSense Banner 
+      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />-->
         <h1 class="movies-page__title">{{ t('movies.title') }}</h1>
         <p class="movies-page__subtitle">{{ t('movies.subtitle') }}</p>
       </header>
@@ -29,11 +35,7 @@
           </button>
         </div>
       </div>
-      <!-- Adsterra Banner -->
-      <AdsterraBanner class="movies-page__adsterra" />
 
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
 
       <!-- Search Results Counter -->
       <div v-if="movies.length > 0 && searchQuery" class="movies-page__search-results">
@@ -58,21 +60,14 @@
         </div>
       </div>
 
-      <!-- Error State -->
-      <div v-else-if="error" class="movies-page__empty">
-        <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
-        <p class="movies-page__empty-title">{{ t('movies.loadError') }}</p>
-        <p class="movies-page__empty-text">{{ t('movies.loadErrorDescription') }}</p>
-        <button type="button" class="btn btn-secondary" @click="loadMovies">
-          {{ t('movies.retry') }}
-        </button>
-      </div>
-
       <!-- Empty State -->
-      <div v-else-if="movies.length === 0" class="movies-page__empty">
-        <div class="movies-page__empty-icon" aria-hidden="true">∅</div>
-        <p class="movies-page__empty-title">{{ t('movies.noMoviesAvailable') }}</p>
-        <p class="movies-page__empty-text">{{ t('movies.noMoviesAvailableDescription') }}</p>
+      <div v-else-if="movies.length === 0 && !error" class="movies-page__empty">
+        <div class="movies-page__empty-icon" aria-hidden="true">◌</div>
+        <p class="movies-page__empty-title">{{ t('movies.serverSleeping') }}</p>
+        <p class="movies-page__empty-text">{{ t('movies.serverSleepingDescription') }}</p>
+        <button type="button" class="btn btn-primary" @click="loadMovies">
+          {{ t('movies.wakeServer') }}
+        </button>
       </div>
 
       <!-- Movies Grid -->
@@ -80,7 +75,7 @@
         <router-link v-for="movie in filteredMovies" :key="movie.slug" :to="`/movies/${movie.slug}`" class="movie-card">
           <div class="movie-card__poster-wrapper">
             <img :src="movie.cover" :alt="movie.title" class="movie-card__poster" loading="lazy" />
-           
+
           </div>
           <div class="movie-card__content">
             <h2 class="movie-card__title">{{ movie.title }}</h2>
@@ -104,17 +99,15 @@
           </div>
         </router-link>
       </div>
-       <!-- Adsterra Banner -->
-      <AdsterraBanner class="movies-page__adsterra" />
-
-      <!-- AdSense Banner -->
-      <AdSenseAd format="auto" layout="in-feed" responsive class="movies-page__ad" />
     </div>
+
+    <AdsterraNative class="movies-page__adsterra-native" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getMovies } from '@/lib/content/MovieRepository'
 import type { Movie } from '@/lib/content/types'
@@ -122,6 +115,7 @@ import { useSeo } from '@/composables/useSeo'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
 
@@ -129,6 +123,16 @@ const movies = ref<Movie[]>([])
 const searchQuery = ref('')
 const loading = ref(true)
 const error = ref(false)
+const retryTimeout = ref<ReturnType<typeof setTimeout> | null>(null)
+const startTime = ref<number | null>(null)
+
+
+function clearRetryTimeout() {
+  if (retryTimeout.value !== null) {
+    clearTimeout(retryTimeout.value)
+    retryTimeout.value = null
+  }
+}
 
 function formatDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60)
@@ -172,21 +176,47 @@ function searchMovies(query: string): Movie[] {
 const filteredMovies = computed(() => searchMovies(searchQuery.value))
 const hasSearchResults = computed(() => filteredMovies.value.length > 0)
 
-// Load movies
+// Load movies with retry mechanism
 async function loadMovies() {
+  clearRetryTimeout()
+  startTime.value = null
+  attemptLoad()
+}
+
+async function attemptLoad() {
   loading.value = true
   error.value = false
   try {
     movies.value = await getMovies()
-  } catch (err) {
-    error.value = true
-    movies.value = []
-  } finally {
     loading.value = false
+    clearRetryTimeout()
+    startTime.value = null
+  } catch (err) {
+    if (startTime.value === null) {
+      startTime.value = Date.now()
+    }
+    if (Date.now() - startTime.value >= 30000) {
+      loading.value = false
+      error.value = true
+      clearRetryTimeout()
+      startTime.value = null
+    } else {
+      scheduleRetry()
+    }
   }
 }
 
+function scheduleRetry() {
+  clearRetryTimeout()
+  retryTimeout.value = setTimeout(() => {
+    attemptLoad()
+  }, 5000)
+}
+
 onMounted(loadMovies)
+onUnmounted(() => {
+  clearRetryTimeout()
+})
 
 // SEO
 // SEO setup (run during component setup, before async operations)

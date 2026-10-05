@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="adsterraConfig.enabled"
+    v-if="shouldRender"
     class="adsterra-banner"
     role="complementary"
     aria-label="Advertisement"
@@ -13,13 +13,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
 import { adsterraConfig } from '@/config/adsterra'
+import { usePremiumStatus } from '@/composables/usePremiumStatus'
 
 // Only verified 728x90 Banner unit supplied by the publisher. Do not guess keys.
 const ADSTERRA_KEY = '18edba3d817bfdf664d51648f42b40e4'
 const ADSTERRA_SCRIPT =
   'https://www.highrevenueformat.com/18edba3d817bfdf664d51648f42b40e4/invoke.js'
+
+const { isPremiumActive, checkPremiumStatus } = usePremiumStatus()
+
+const shouldRender = computed(() => adsterraConfig.enabled && !isPremiumActive.value)
 
 const slotRef = ref<HTMLElement | null>(null)
 let injectedScript: HTMLScriptElement | null = null
@@ -50,8 +55,9 @@ function loadBanner(): void {
   injectedScript = script
 }
 
-onMounted(() => {
-  if (!adsterraConfig.enabled) return
+onMounted(async () => {
+  await checkPremiumStatus()
+  if (!shouldRender.value) return
   loadBanner()
 })
 

@@ -19,11 +19,14 @@ function getApiUrl(): string {
   const envUrl = import.meta.env.VITE_FASTAPI_URL;
 
   if (envUrl) {
-    return envUrl.trim().replace(/\/$/, ''); // Remove trailing slash
+    const trimmed = envUrl.trim();
+    if (trimmed) {
+      return trimmed.replace(/\/$/, ''); // Remove trailing slash
+    }
   }
 
   // Default for local development (when not using ngrok)
-  return envUrl ||'http://localhost:8001/api/v1';
+  return 'http://localhost:8001/api/v1';
 }
 
 /**

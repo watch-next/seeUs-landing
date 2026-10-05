@@ -68,7 +68,7 @@ export interface Comment {
 /** Row shape returned by list_comments RPC. */
 export interface CommentListRow {
   comment_id: string
-  post_slug: string
+  post_slug: string | null
   parent_id: string | null
   user_id: string
   content: string
@@ -103,7 +103,9 @@ export interface CommentsPage {
 }
 
 export interface ListCommentsParams {
-  slug: string
+  slug?: string
+  contentType?: string
+  contentId?: string | number
   cursor?: string | null
   limit?: number
   /** Current comments auth session. */
@@ -111,7 +113,9 @@ export interface ListCommentsParams {
 }
 
 export interface CreateCommentInput {
-  postSlug: string
+  postSlug?: string
+  contentType?: string
+  contentId?: string | number
   parentId: string | null
   content: string
   auth: CommentAuthProfile

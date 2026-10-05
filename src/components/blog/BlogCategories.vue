@@ -71,7 +71,7 @@ const selectCategory = (category: string) => {
 
   &__list {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: $space-2;
   }
 
@@ -89,6 +89,9 @@ const selectCategory = (category: string) => {
     align-items: center;
     gap: $space-2;
     white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover {
       border-color: $color-border-hover;

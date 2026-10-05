@@ -1,125 +1,131 @@
 <template>
   <article v-if="movie" class="movie-page">
-    <div class="cinematic-card" :style="{ backgroundImage: movie.backdrop_path ? `url('https://image.tmdb.org/t/p/original${movie.backdrop_path}')` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: movie.backdrop_path ? 'transparent' : 'var(--bg-primary)' }">
+    <div class="cinematic-card"
+      :style="{ backgroundImage: movie.backdrop_path ? `url('https://image.tmdb.org/t/p/original${movie.backdrop_path}')` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: movie.backdrop_path ? 'transparent' : 'var(--bg-primary)' }">
       <div class="container movie-page__container">
-      <!-- Breadcrumb -->
-      <Breadcrumbs :items="breadcrumbItems" />
-       <!-- Adsterra Banner -->
-          <AdsterraBanner class="movie-page__adsterra" />
+        <!-- Breadcrumb -->
+        <Breadcrumbs :items="breadcrumbItems" />
+        <!-- Adsterra Banner -->
+        <AdsterraBanner class="movie-page__adsterra" />
 
-          <!-- AdSense Banner -->
-          <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />
-      <!-- Header with Poster and Backdrop -->
-      <header class="movie-page__header">
-        <div class="movie-page__media">
-          <div class="movie-page__poster">
-            <img v-if="posterUrl" :src="posterUrl" :alt="movie.title" class="movie-page__poster-img" loading="lazy" />
-            <div v-else class="movie-page__poster-placeholder">
-              <span>🎬</span>
-              <p>{{ t('movie.no_poster') }}</p>
+        <!-- AdSense Banner 
+        <AdSenseAd format="auto" layout="in-feed" responsive class="movie-page__ad" />-->
+        <!-- Header with Poster and Backdrop -->
+        <header class="movie-page__header">
+          <div class="movie-page__media">
+            <div class="movie-page__poster">
+              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
+                v-if="posterUrl"><img :src="posterUrl" :alt="movie.title" class="movie-page__poster-img"
+                  loading="lazy" /></a>
+              <div v-else class="movie-page__poster-placeholder">
+                <span>🎬</span>
+                <p>{{ t('movie.no_poster') }}</p>
+              </div>
             </div>
+
           </div>
 
-        </div>
+          <div class="movie-page__info">
 
-        <div class="movie-page__info">
+            <h1 class="movie-page__title">{{ movie.title }}</h1>
 
-          <h1 class="movie-page__title">{{ movie.title }}</h1>
+            <p v-if="movie.original_title && movie.original_title !== movie.title" class="movie-page__original-title">
+              <span class="label">{{ t('movie.original_title') }}:</span> {{ movie.original_title }}
+            </p>
 
-          <p v-if="movie.original_title && movie.original_title !== movie.title" class="movie-page__original-title">
-            <span class="label">{{ t('movie.original_title') }}:</span> {{ movie.original_title }}
-          </p>
+            <p v-if="movie.tagline" class="movie-page__tagline">"{{ movie.tagline }}"</p>
 
-          <p v-if="movie.tagline" class="movie-page__tagline">"{{ movie.tagline }}"</p>
+            <div class="movie-page__meta">
+              <span class="movie-page__year" v-if="releaseYear">
+                {{ releaseYear }}
+              </span>
+              <span class="movie-page__duration" v-if="movie.runtime_minutes">
+                {{ formatDuration(movie.runtime_minutes) }}
+              </span>
+              <span class="movie-page__status" v-if="movie.status">
+                {{ movie.status }}
+              </span>
+              <span class="movie-page__popularity" v-if="movie.popularity">
+                {{ t('movie.popularity') }}: {{ movie.popularity.toFixed(0) }}
+              </span>
+            </div>
 
-          <div class="movie-page__meta">
-            <span class="movie-page__year" v-if="releaseYear">
-              {{ releaseYear }}
-            </span>
-            <span class="movie-page__duration" v-if="movie.runtime_minutes">
-              {{ formatDuration(movie.runtime_minutes) }}
-            </span>
-            <span class="movie-page__status" v-if="movie.status">
-              {{ movie.status }}
-            </span>
-            <span class="movie-page__popularity" v-if="movie.popularity">
-              {{ t('movie.popularity') }}: {{ movie.popularity.toFixed(0) }}
-            </span>
-          </div>
-
-          <!-- Ratings -->
-          <div class="movie-page__ratings" v-if="movie">
-            <div class="movie-page__rating-circle" :style="{
-              background: animatedRatingPercentage !== null
-                ? `conic-gradient(
+            <!-- Ratings -->
+            <div class="movie-page__ratings" v-if="movie">
+              <div class="movie-page__rating-circle" :style="{
+                background: animatedRatingPercentage !== null
+                  ? `conic-gradient(
                     from -90deg,
                     #3E8BFF 0%,
                     #3E8BFF ${animatedRatingPercentage}%,
                     #1A1F55 ${animatedRatingPercentage}%,
                     #1A1F55 100%
                   )`
-                : '#1A1F55',
-              boxShadow: animatedRatingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
-            }">
-              <div class="movie-page__rating-circle__inner">
-                <span class="movie-page__rating-circle__rating-value">{{ animatedRatingPercentage !== null ?
-                  `${animatedRatingPercentage}%` : 'N/A' }}</span>
+                  : '#1A1F55',
+                boxShadow: animatedRatingPercentage !== null ? '0 0 12px rgba(62, 139, 255, 0.12)' : 'none'
+              }">
+                <div class="movie-page__rating-circle__inner">
+                  <span class="movie-page__rating-circle__rating-value">{{ animatedRatingPercentage !== null ?
+                    `${animatedRatingPercentage}%` : 'N/A' }}</span>
+                </div>
+              </div>
+              <div class="movie-page__ratings__count" v-if="movie.vote_count">
+                {{ movie.vote_count.toLocaleString() }} {{ t('movie.votes') }}
               </div>
             </div>
-            <div class="movie-page__ratings__count" v-if="movie.vote_count">
-              {{ movie.vote_count.toLocaleString() }} {{ t('movie.votes') }}
+
+            <!-- Action Buttons -->
+            <div class="movie-page__action-buttons" v-if="movie">
+              <button type="button" @click="toggleAction('watchlist')" :aria-pressed="activeActions.watchlist"
+                :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.watchlist }]"
+                title="Add to your watch list">
+                <img :src="`/assets/icons/discover.svg`" alt="" class="action-icon" aria-hidden="true" />
+                <span class="action-label">{{ t('movie.watchlist') }}</span>
+              </button>
+              <button type="button" @click="toggleAction('favorite')" :aria-pressed="activeActions.favorite"
+                :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.favorite }]"
+                title="Add to your favorites">
+                <img :src="`/assets/icons/rating.svg`" alt="" class="action-icon" aria-hidden="true" />
+                <span class="action-label">{{ t('movie.favorite') }}</span>
+              </button>
+              <button type="button" @click="toggleAction('interest')" :aria-pressed="activeActions.interest"
+                :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.interest }]"
+                title="Mark as interested">
+                <img :src="`/assets/icons/track.svg`" alt="" class="action-icon" aria-hidden="true" />
+                <span class="action-label">{{ t('movie.interest') }}</span>
+              </button>
             </div>
-          </div>
 
-          <!-- Action Buttons -->
-          <div class="movie-page__action-buttons" v-if="movie">
-            <button type="button" @click="toggleAction('watchlist')" :aria-pressed="activeActions.watchlist"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.watchlist }]"
-              title="Add to your watch list">
-              <img :src="`/assets/icons/discover.svg`" alt="" class="action-icon" aria-hidden="true" />
-              <span class="action-label">{{ t('movie.watchlist') }}</span>
-            </button>
-            <button type="button" @click="toggleAction('favorite')" :aria-pressed="activeActions.favorite"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.favorite }]"
-              title="Add to your favorites">
-              <img :src="`/assets/icons/rating.svg`" alt="" class="action-icon" aria-hidden="true" />
-              <span class="action-label">{{ t('movie.favorite') }}</span>
-            </button>
-            <button type="button" @click="toggleAction('interest')" :aria-pressed="activeActions.interest"
-              :class="['movie-page__action-btn', { 'movie-page__action-btn--active': activeActions.interest }]"
-              title="Mark as interested">
-              <img :src="`/assets/icons/track.svg`" alt="" class="action-icon" aria-hidden="true" />
-              <span class="action-label">{{ t('movie.interest') }}</span>
-            </button>
-          </div>
-
-          <!-- Genres as Chips -->
-          <div class="movie-page__genres" v-if="movie.genres && movie.genres.length">
-            <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
-          </div>
-          <!-- Action Buttons (aligned in block) -->
-          <div class="movie-page__actions">
-            <a v-if="movie.homepage" :href="movie.homepage" target="_blank" rel="noopener noreferrer"
-              class="movie-page__btn movie-page__btn--homepage">
-              🌐 {{ t('movie.official_site') }}
-              <span class="external-link-icon">↗</span>
-            </a>
-            <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
-              📺 {{ t('movie.watch_now') }}
-            </button>
-          </div>
+            <!-- Genres as Chips -->
+            <div class="movie-page__genres" v-if="movie.genres && movie.genres.length">
+              <Chip v-for="genre in movie.genres" :key="genre.id" :label="genre.name" />
+            </div>
+            <!-- Action Buttons (aligned in block) -->
+            <div class="movie-page__actions">
+              <a v-if="movie.homepage" :href="movie.homepage" target="_blank" rel="noopener noreferrer"
+                class="movie-page__btn movie-page__btn--homepage">
+                🌐 {{ t('movie.official_site') }}
+                <span class="external-link-icon">↗</span>
+              </a>
+              <button type="button" @click="fetchTrailer" class="movie-page__btn movie-page__btn--trailer" :disabled="isLoadingTrailer">
+                🎬 {{ t('movie.trailer') }}
+              </button>
+              <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
+                📺 {{ t('movie.watch_now') }}
+              </button>
+            </div>
 
 
-  <!-- Synopsis -->
-          <section class="movie-page__synopsis">
-            <h2 class="synopsis__title">{{ t('movie.synopsis') }}</h2>
-            <p v-if="movie.overview" class="synopsis__content">{{ movie.overview }}</p>
-            <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
-          </section>
+            <!-- Synopsis -->
+            <section class="movie-page__synopsis">
+              <h2 class="synopsis__title">{{ t('movie.synopsis') }}:</h2>
+              <p v-if="movie.overview" class="synopsis__content">{{ movie.overview }}</p>
+              <p v-else class="synopsis__empty">{{ t('movie.no_synopsis') }}</p>
+            </section>
 
-         
 
-          <!--Financial Info 
+
+            <!--Financial Info
           <section class="movie-page__financial" v-if="movie.budget || movie.revenue">
             <h2 class="financial__title">{{ t('movie.financial') }}</h2>
             <div class="financial__grid">
@@ -134,12 +140,215 @@
             </div>
           </section> -->
 
-        </div>
-      </header>
+          </div>
+        </header>
+      </div>
     </div>
-  </div>
+    <AdsterraNative class="movie-page__adsterra-native" />
+    <!-- Credits Card -->
+    <section v-if="credits" class="movie-page__credits" aria-label="Credits">
+      <h2 class="credits__title">{{ t('credits.title') }}:</h2>
 
- 
+      <!-- Section description -->
+      <p class="credits__description">{{ t('credits.description') }}</p>
+
+      <!-- Cast Section -->
+      <div v-if="credits.cast.length > 0" class="credits__grid credits__grid--cast">
+        <!-- <h3 class="credits__section-title">{{ t('credits.cast') }}</h3>-->
+        <div class="credits__carousel-container">
+          <div class="credits__carousel">
+            <div v-for="credit in credits.cast.slice(0, 10)" :key="credit.id" class="credits__grid-item">
+              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
+                v-if="credit.profile_path" target="_blank" rel="noopener noreferrer">
+                <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w185') : undefined"
+                  :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
+              </a>
+              <div class="credits__info">
+                <p class="credits__name">{{ credit.name }}</p>
+                <p class="credits__character">{{ credit.character }}</p>
+              </div>
+            </div>
+            <div class="credits__grid-item credits__grid-item--more">
+              <button type="button" class="btn btn--ghost">
+                {{ t('common.more') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crew Section
+      <div v-if="credits.crew.length > 0" class="credits__grid credits__grid--crew">
+        <h3 class="credits__section-title">{{ t('credits.crew') }}</h3>
+        <div class="credits__grid-items">
+          <div v-for="credit in credits.crew" :key="`${credit.id}-${credit.job || ''}`" class="credits__grid-item">
+            <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w92') : undefined"
+              :alt="`${credit.name} - ${credit.job}`" class="credits__poster" />
+            <div class="credits__info">
+              <p class="credits__name">{{ credit.name }}</p>
+              <p class="credits__job">{{ credit.job }}</p>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+
+      <p v-if="credits.cast.length === 0 && credits.crew.length === 0" class="credits__empty">{{ t('credits.no_credits')
+      }}</p>
+    </section>
+
+    <!-- Comments -->
+    <section class="movie-page__discussions-comments section">
+      <div class="container">
+        <h2 class="section__title">{{ t('movie.discussions_comments.title') }}</h2>
+        <div class="discussions-comments__tabs" role="tablist" aria-label="{{ t('movie.discussions_comments.title') }}">
+          <button role="tab" :aria-selected="activeTab === 'discussions'"
+            :aria-controls="activeTab === 'discussions' ? 'tab-panel-discussions' : undefined"
+            :id="activeTab === 'discussions' ? 'tab-discussions' : undefined" class="discussions-comments__tab"
+            :class="{ 'discussions-comments__tab--active': activeTab === 'discussions' }"
+            @click="activeTab = 'discussions'">
+            {{ t('tvShow.discussions') }}
+          </button>
+          <button role="tab" :aria-selected="activeTab === 'comments'"
+            :aria-controls="activeTab === 'comments' ? 'tab-panel-comments' : undefined"
+            :id="activeTab === 'comments' ? 'tab-comments' : undefined" class="discussions-comments__tab"
+            :class="{ 'discussions-comments__tab--active': activeTab === 'comments' }" @click="activeTab = 'comments'">
+            {{ t('movie.comments') }}
+          </button>
+        </div>
+        <!-- Discussions Panel -->
+        <div v-if="activeTab === 'discussions'" role="tabpanel" id="tab-panel-discussions"
+          :aria-labelledby="activeTab === 'discussions' ? 'tab-discussions' : undefined"
+          class="discussions-comments__panel">
+          <div v-if="!isAppAuthenticated" class="discussions__auth-required">
+            <p>{{ t('tvShow.discussions_auth_required') }}</p>
+            <CommentAuthSelector />
+          </div>
+          <div v-else class="discussions__content">
+            <p>{{ t('tvShow.discussions_placeholder') }}</p>
+            <!-- Discussion functionality would go here if backend existed -->
+          </div>
+        </div>
+        <!-- Comments Panel -->
+        <div v-else-if="activeTab === 'comments'" role="tabpanel" id="tab-panel-comments"
+          :aria-labelledby="activeTab === 'comments' ? 'tab-comments' : undefined" class="discussions-comments__panel">
+          <CommentSection :content-type="'movie'" :content-id="movie?.id" />
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Media Section -->
+    <section v-if="mediaAvailable" class="movie-page__media section" aria-label="Media">
+      <div class="container">
+        <h2 class="section__title">{{ t('movie.media.title') }}</h2>
+
+        <!-- Media Tabs -->
+        <div class="media__tabs" role="tablist" :aria-label="t('movie.media.title')">
+          <button v-if="mediaPosters.length > 0" role="tab" :aria-selected="activeMediaTab === 'posters'"
+            :aria-controls="activeMediaTab === 'posters' ? 'media-panel-posters' : undefined"
+            :id="activeMediaTab === 'posters' ? 'tab-posters' : undefined" class="media__tab"
+            :class="{ 'media__tab--active': activeMediaTab === 'posters' }" @click="activeMediaTab = 'posters'">
+            {{ t('movie.media.posters') }}
+          </button>
+          <button v-if="mediaBackdrops.length > 0" role="tab" :aria-selected="activeMediaTab === 'backdrops'"
+            :aria-controls="activeMediaTab === 'backdrops' ? 'media-panel-backdrops' : undefined"
+            :id="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined" class="media__tab"
+            :class="{ 'media__tab--active': activeMediaTab === 'backdrops' }" @click="activeMediaTab = 'backdrops'">
+            {{ t('movie.media.backdrops') }}
+          </button>
+        </div>
+
+        <!-- Posters Panel -->
+        <div v-if="activeMediaTab === 'posters' && mediaPosters.length > 0" role="tabpanel" id="media-panel-posters"
+          :aria-labelledby="activeMediaTab === 'posters' ? 'tab-posters' : undefined" class="media__panel">
+          <div class="media__grid">
+            <figure v-for="(image, index) in mediaPosters" :key="`poster-${index}`" class="media__item"
+              @click="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.enter="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))" tabindex="0" role="button"
+              :aria-label="`${movie?.title} - ${t('movie.media.posters')} ${index + 1}`">
+              <img :src="getMediaImageUrl(image)" :alt="`${movie?.title} - ${t('movie.media.posters')}`"
+                class="media__image" loading="lazy" />
+            </figure>
+          </div>
+        </div>
+
+        <!-- Backdrops Panel -->
+        <div v-if="activeMediaTab === 'backdrops' && mediaBackdrops.length > 0" role="tabpanel"
+          id="media-panel-backdrops" :aria-labelledby="activeMediaTab === 'backdrops' ? 'tab-backdrops' : undefined"
+          class="media__panel">
+          <div class="media__grid">
+            <figure v-for="(image, index) in mediaBackdrops" :key="`backdrop-${index}`" class="media__item"
+              @click="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.enter="openMediaDialog(getMediaImageUrl(image))"
+              @keydown.space.prevent="openMediaDialog(getMediaImageUrl(image))" tabindex="0" role="button"
+              :aria-label="`${movie?.title} - ${t('movie.media.backdrops')} ${index + 1}`">
+              <img :src="getMediaImageUrl(image)" :alt="`${movie?.title} - ${t('movie.media.backdrops')}`"
+                class="media__image" loading="lazy" />
+            </figure>
+          </div>
+        </div>
+
+        <p v-if="activeMediaCount === 0" class="media__empty">{{ t('movie.media.no_media') }}</p>
+      </div>
+    </section>
+
+    <!-- Media Modal -->
+    <div v-if="isMediaDialogOpen" class="media-modal-overlay" role="dialog" aria-modal="true"
+      :aria-label="t('movie.media.title')" @click="closeMediaDialog" @keydown.esc="closeMediaDialog">
+      <div class="media-modal" @click.stop>
+        <button class="media-modal__close" :aria-label="t('movie.watch_dialog.close')" @click="closeMediaDialog">
+          ×
+        </button>
+        <img v-if="selectedMediaImage" :src="selectedMediaImage" :alt="movie?.title || ''" class="media-modal__image" />
+      </div>
+    </div>
+
+    <!-- Related Movies Section -->
+    <section v-if="relatedMovies.length > 0" class="movie-page__related section" aria-label="Related movies">
+      <div class="container">
+        <h2 class="section__title">{{ t('movie.related') }}</h2>
+
+        <div class="related__carousel">
+          <div class="related__scroll" ref="relatedScroll">
+            <div class="related__track" :style="{ transform: `translateX(-${relatedScrollX}px)` }">
+              <div v-for="related in relatedMovies" :key="related.id" class="related__card">
+                <a :href="relatedMovieUrl(related)" class="related__link">
+                  <div class="related__poster">
+                    <img v-if="related.poster_path" :src="getTmdbImageUrl(related.poster_path, 'w342')"
+                      :alt="related.title" class="related__image" loading="lazy" />
+                    <div v-else class="related__placeholder">
+                      <span>🎬</span>
+                    </div>
+                  </div>
+                  <div class="related__info">
+                    <h3 class="related__title">{{ related.title }}</h3>
+                    <p v-if="related.vote_average !== undefined && related.vote_average !== null"
+                      class="related__rating">
+                      <span aria-hidden="true">★</span>
+                      {{ Number(related.vote_average).toFixed(1) }}
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scroll buttons -->
+          <button class="related__nav related__nav--prev" @click="scrollRelated(-1)" :disabled="relatedScrollX <= 0"
+            :aria-label="t('movie.related.prev')">
+            &#8249;
+          </button>
+          <button class="related__nav related__nav--next" @click="scrollRelated(1)"
+            :disabled="relatedScrollX >= relatedMaxScroll" :aria-label="t('movie.related.next')">
+            &#8250;
+          </button>
+        </div>
+      </div>
+    </section>
+
   </article>
 
   <div v-else-if="isLoading" class="container movie-page__loading">
@@ -214,7 +423,8 @@
               <section v-for="section in providerSections" :key="section.key" class="providers__category">
                 <h3>{{ t(section.label) }}</h3>
                 <div class="providers__grid">
-                  <div v-for="provider in section.providers" :key="provider.id" class="provider__card">
+                  <div v-for="provider in section.providers" :key="provider.id" class="provider__card"
+                    @click="onProviderCardClick">
                     <img v-if="provider.logo_path" :src="getProviderImageUrl(provider.logo_path)" :alt="provider.name"
                       class="provider__logo" />
                     <span class="provider__name">{{ provider.name }}</span>
@@ -228,26 +438,176 @@
     </div>
   </div>
 
+  <!-- Trailer Modal -->
+  <div v-if="showTrailerModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="trailer-modal-title"
+    @click="showTrailerModal = false" @keydown.esc="showTrailerModal = false">
+    <div class="modal trailer-modal" @click.stop>
+      <div class="modal__header trailer-modal__header">
+        <div>
+          <h2 id="trailer-modal-title">{{ t('movie.trailer') }}</h2>
+        </div>
+        <button class="modal__close trailer-modal__close" :aria-label="t('common.close')" @click="showTrailerModal = false">
+          ×
+        </button>
+      </div>
+
+      <div class="modal__content trailer-modal__content">
+        <div v-if="isLoadingTrailer" class="trailer-modal__loading">
+          <span class="trailer-modal__loading-icon" aria-hidden="true">⏳</span>
+          <p>{{ t('common.loading') }}</p>
+        </div>
+
+        <div v-else-if="trailerError" class="trailer-modal__error">
+          <span class="trailer-modal__error-icon" aria-hidden="true">❌</span>
+          <p>{{ trailerError }}</p>
+        </div>
+
+        <div v-else-if="trailerVideoId" class="trailer-modal__video-container">
+          <iframe
+            :src="'https://www.youtube.com/embed/' + trailerVideoId"
+            title="Movie trailer"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        
+        <div v-else class="trailer-modal__error">
+          <span class="trailer-modal__error-icon" aria-hidden="true">❌</span>
+          <p>{{ t('movie.trailer_unavailable') }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watchEffect, watch } from 'vue'
+import { getMovieCredits, type MovieCredit, type MovieCreditsResponse } from '@/services/movie.service'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { generateMovieSchema } from '@/lib/seo'
 import { useSeo } from '@/composables/useSeo'
 import { useWatchProviders } from '@/composables/useWatchProviders'
 import { useSupabaseAppAuth } from '@/composables/useSupabaseAppAuth'
+import { getAccessToken, getRefreshToken } from '@/lib/http/client'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Chip from '@/components/Chip.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
-import { getMovieByUuid, getTmdbImageUrl, type MovieDetail } from '@/services/movie.service'
+import { getMovieByUuid, getTmdbImageUrl, type MovieDetail, getMovieVideos } from '@/services/movie.service'
 import { loadDownloadConfig } from '@/services/downloads'
+import { fetchSimilarMovies } from '@/lib/api/movieDataSource'
+import { slugify } from '@/lib/content/slugify'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
+import { useAdsterraPopunder } from '@/composables/useAdsterraPopunder'
+import CommentSection from '@/components/comments/CommentSection.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+// Debug token state
+
 const route = useRoute()
+
+// Function to load movie data
+async function loadMovieData() {
+  try {
+    isLoading.value = true
+    error.value = null
+    const id = movieId.value
+    if (!id) {
+      throw new Error('Invalid movie ID')
+    }
+
+    // Load movie details
+    console.debug('[MoviePage.vue] Attempting to load movie with id:', id)
+    try {
+      movie.value = await getMovieByUuid(id)
+      console.debug('[MoviePage.vue] Movie loaded successfully:', movie.value?.title || 'unknown')
+    } catch (movieError) {
+      console.error('[MoviePage.vue] Error loading movie:', movieError)
+      throw movieError // Re-throw to be caught by outer try/catch
+    }
+
+    // Load watch providers (non-blocking)
+    try {
+      await loadProviders(id)
+    } catch (providersError) {
+      console.error('[MoviePage.vue] Error loading watch providers:', providersError)
+      // Continue execution - providers failure doesn't block movie display
+    }
+
+
+    // Load credits (non-blocking) - using movie's UUID after movie details are loaded
+    isLoadingCredits.value = true
+    try {
+      credits.value = await getMovieCredits(movie.value?.id ?? '')
+      console.debug('[MoviePage.vue] Credits loaded successfully')
+    } catch (err: any) {
+      creditsError.value = err?.message ?? 'Unknown error'
+      console.warn('[MoviePage.vue] Failed to load credits:', err)
+    } finally {
+      isLoadingCredits.value = false
+    }
+
+    // Load similar movies (non-blocking, optional content)
+    isLoadingRelated.value = true
+    try {
+      const similar = await fetchSimilarMovies(movie.value?.tmdb_id ?? 0)
+      relatedMovies.value = (similar?.results ?? []).slice(0, 10) as RelatedMovie[]
+    } catch (relatedError) {
+      relatedMovies.value = []
+      console.warn('[MoviePage.vue] Failed to load similar movies:', relatedError)
+    } finally {
+      isLoadingRelated.value = false
+    }
+
+    // Load trailer (non-blocking)
+    isLoadingTrailer.value = true
+    trailerError.value = null
+    trailerVideoId.value = null
+    try {
+      const videos = await getMovieVideos(movie.value?.id ?? '')
+      const trailer = selectBestTrailer(videos)
+      if (trailer && trailer.key) {
+        trailerVideoId.value = trailer.key
+      } else {
+        trailerError.value = t('movie.trailer_unavailable')
+      }
+    } catch (trailerError) {
+      console.warn('[MoviePage.vue] Failed to load trailer:', trailerError)
+      trailerError.value = t('common.error')
+    } finally {
+      isLoadingTrailer.value = false
+    }
+  } catch (err: any) {
+    console.error('[MoviePage.vue] Error fetching movie:', {
+      message: err?.message,
+      isAxiosError: !!err?.isAxiosError,
+      status: err?.response?.status,
+      statusText: err?.response?.statusText,
+      url: err?.config?.url,
+      id: movieId.value
+    })
+
+    // Check if this error is from the movie request (not watch providers or credits)
+    const isMovieRequestError =
+      err?.isAxiosError &&
+      err?.config?.url === `/movies/${movieId.value}`
+
+    if (isMovieRequestError) {
+      // This is an error loading the movie itself
+      error.value = err?.response?.status === 404 ? 404 : 'unknown'
+      movie.value = null
+    }
+    // For errors from watch providers or credits requests,
+    // we don't update movie.value or error.value here
+    // as they have their own error handling
+  } finally {
+    isLoading.value = false
+  }
+}
 
 // Watch dialog state: platform choice first, streaming providers below (collapsible)
 const showStreams = ref(true)
@@ -268,6 +628,14 @@ const {
   loadProviders,
 } = useWatchProviders()
 
+const { maybeTriggerPopunder } = useAdsterraPopunder()
+
+// Provider-card click: keep the card's default behavior intact; a single
+// session-capped popunder may fire alongside it (premium users excluded).
+function onProviderCardClick() {
+  void maybeTriggerPopunder()
+}
+
 // Route uses :slug param containing backend ID in format: {id}-{title-slugified}
 // ID can be UUID (9f5dde6b-...) or TMDB ID (550)
 // Extract the ID (first segment before first hyphen)
@@ -287,8 +655,17 @@ const movieId = computed(() => {
 
 const movie = ref<MovieDetail | null>(null)
 const isLoading = ref(true)
+
+const credits = ref<MovieCreditsResponse | null>(null)
+const isLoadingCredits = ref(false)
+const creditsError = ref<string | null>(null)
 const showWatchModal = ref(false)
+const showTrailerModal = ref(false)
+const trailerVideoId = ref<string | null>(null)
+const isLoadingTrailer = ref(false)
+const trailerError = ref<string | null>(null)
 const error = ref<number | string | null>(null)
+const activeTab = ref<'discussions' | 'comments'>('comments')
 
 // providers, isLoadingProviders, loadedMovieId já vêm do composable
 
@@ -310,6 +687,102 @@ const posterUrl = computed(() => {
 const backdropUrl = computed(() => {
   return getTmdbImageUrl(movie.value?.backdrop_path ?? null, 'original')
 })
+
+// --- Media section (Backdrops / Posters) ---
+const activeMediaTab = ref<'backdrops' | 'posters'>('posters')
+
+// The movie API exposes a single poster/backdrop path per category (Case A).
+const mediaBackdrops = computed<string[]>(() =>
+  movie.value?.backdrop_path ? [movie.value.backdrop_path] : [],
+)
+
+const mediaPosters = computed<string[]>(() =>
+  movie.value?.poster_path ? [movie.value.poster_path] : [],
+)
+
+const mediaAvailable = computed(
+  () => mediaBackdrops.value.length > 0 || mediaPosters.value.length > 0,
+)
+
+const activeMediaImages = computed<string[]>(() =>
+  activeMediaTab.value === 'backdrops' ? mediaBackdrops.value : mediaPosters.value,
+)
+
+const activeMediaCount = computed(() => activeMediaImages.value.length)
+
+// Sharp but reasonable sizes: backdrops tend to render wide, posters tall.
+const activeMediaImageSize = computed(() =>
+  activeMediaTab.value === 'backdrops' ? 'w780' : 'w500',
+)
+
+function getMediaImageUrl(path: string): string | undefined {
+  return getTmdbImageUrl(path, activeMediaImageSize.value)
+}
+
+// Media dialog state
+const isMediaDialogOpen = ref(false)
+const selectedMediaImage = ref<string | null>(null)
+function openMediaDialog(image: string): void {
+  selectedMediaImage.value = image
+  isMediaDialogOpen.value = true
+}
+function closeMediaDialog(): void {
+  isMediaDialogOpen.value = false
+  selectedMediaImage.value = null
+}
+function handleMediaDialogKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Escape') closeMediaDialog()
+}
+
+// Default to a category that actually has images once the movie loads.
+watch(
+  movie,
+  (m) => {
+    if (m) {
+      activeMediaTab.value = m.backdrop_path ? 'backdrops' : 'posters'
+    }
+  },
+  { immediate: true },
+)
+
+// --- Related Movies ---
+interface RelatedMovie {
+  id: number
+  title: string
+  poster_path: string | null
+  release_date: string
+  vote_average: number
+}
+
+const relatedMovies = ref<RelatedMovie[]>([])
+const isLoadingRelated = ref(false)
+
+// Related carousel scroll state
+const relatedScrollX = ref(0)
+const relatedScroll = ref<HTMLElement | null>(null)
+
+const relatedMaxScroll = computed(() => {
+  if (!relatedScroll.value) return 0
+  const containerWidth = relatedScroll.value.clientWidth
+  const trackWidth = relatedScroll.value.scrollWidth
+  return Math.max(0, trackWidth - containerWidth)
+})
+
+const cardWidth = 220 + 16 // card width + gap
+
+function scrollRelated(direction: -1 | 1) {
+  if (!relatedScroll.value) return
+  const newScrollX = relatedScrollX.value + direction * cardWidth * 2
+  relatedScrollX.value = Math.max(0, Math.min(newScrollX, relatedMaxScroll.value))
+  relatedScroll.value.scrollTo({ left: relatedScrollX.value, behavior: 'smooth' })
+}
+
+function relatedMovieUrl(m: RelatedMovie): string {
+  const id = m.id
+  const slug = slugify(m.title || 'movie')
+  const year = m.release_date?.slice(0, 4) || ''
+  return `/movies/${id}-${slug}${year ? `-${year}` : ''}`
+}
 
 const releaseYear = computed(() => {
   if (!movie.value?.release_date) return ''
@@ -357,20 +830,72 @@ onMounted(async () => {
       throw new Error('Invalid movie ID')
     }
 
-    // Load movie details and watch providers in parallel
-    await Promise.all([
-      (async () => {
-        movie.value = await getMovieByUuid(id)
-      })(),
-      (async () => {
-        await loadProviders(id)
-      })(),
-    ])
+    // Load movie details
+    console.debug('[MoviePage.vue] Attempting to load movie with id:', id)
+    try {
+      movie.value = await getMovieByUuid(id)
+      console.debug('[MoviePage.vue] Movie loaded successfully:', movie.value?.title || 'unknown')
+    } catch (movieError) {
+      console.error('[MoviePage.vue] Error loading movie:', movieError)
+      throw movieError // Re-throw to be caught by outer try/catch
+    }
 
+    // Load watch providers (non-blocking)
+    try {
+      await loadProviders(id)
+    } catch (providersError) {
+      console.error('[MoviePage.vue] Error loading watch providers:', providersError)
+      // Continue execution - providers failure doesn't block movie display
+    }
+
+
+    // Load credits (non-blocking) - using movie's UUID after movie details are loaded
+    isLoadingCredits.value = true
+    try {
+      credits.value = await getMovieCredits(movie.value?.id ?? '')
+      console.debug('[MoviePage.vue] Credits loaded successfully')
+    } catch (err: any) {
+      creditsError.value = err?.message ?? 'Unknown error'
+      console.warn('[MoviePage.vue] Failed to load credits:', err)
+    } finally {
+      isLoadingCredits.value = false
+    }
+
+    // Load similar movies (non-blocking, optional content)
+    isLoadingRelated.value = true
+    try {
+      const similar = await fetchSimilarMovies(movie.value?.tmdb_id ?? 0)
+      relatedMovies.value = (similar?.results ?? []).slice(0, 10) as RelatedMovie[]
+    } catch (relatedError) {
+      relatedMovies.value = []
+      console.warn('[MoviePage.vue] Failed to load similar movies:', relatedError)
+    } finally {
+      isLoadingRelated.value = false
+    }
 
   } catch (err: any) {
-    error.value = err?.response?.status === 404 ? 404 : 'unknown'
-    movie.value = null
+    console.error('[MoviePage.vue] Error fetching movie:', {
+      message: err?.message,
+      isAxiosError: !!err?.isAxiosError,
+      status: err?.response?.status,
+      statusText: err?.response?.statusText,
+      url: err?.config?.url,
+      id: movieId.value
+    })
+
+    // Check if this error is from the movie request (not watch providers or credits)
+    const isMovieRequestError =
+      err?.isAxiosError &&
+      err?.config?.url === `/movies/${movieId.value}`
+
+    if (isMovieRequestError) {
+      // This is an error loading the movie itself
+      error.value = err?.response?.status === 404 ? 404 : 'unknown'
+      movie.value = null
+    }
+    // For errors from watch providers or credits requests,
+    // we don't update movie.value or error.value here
+    // as they have their own error handling
 
   } finally {
     isLoading.value = false
@@ -433,6 +958,13 @@ watch(movie, (newMovie) => {
   }
 })
 
+// Refetch movie data when locale changes
+watch(locale, () => {
+  if (movieId.value) {
+    loadMovieData()
+  }
+})
+
 // Fallback: carrega providers apenas se necessário (não foi carregado no onMounted)
 watchEffect(() => {
   const currentMovieId = movie.value?.id
@@ -444,6 +976,7 @@ watchEffect(() => {
 
 // Handle login-required actions
 const { isAuthenticated, signIn } = useSupabaseAppAuth()
+const isAppAuthenticated = isAuthenticated
 
 function handleLoginRequired() {
   if (!isAuthenticated.value) {
@@ -458,6 +991,72 @@ const activeActions = ref<{ watchlist: boolean; favorite: boolean; interest: boo
   favorite: false,
   interest: false,
 })
+
+// Helper function to select the best trailer from available videos
+function selectBestTrailer(videos: Video[]): Video | null {
+  if (!videos || videos.length === 0) return null
+
+  // Filter for trailers only
+  const trailers = videos.filter(video =>
+    video.type === 'Trailer' &&
+    video.site === 'YouTube'
+  )
+
+  if (trailers.length === 0) {
+    // Fallback to any YouTube video if no trailers found
+    const youtubeVideos = videos.filter(video => video.site === 'YouTube')
+    if (youtubeVideos.length > 0) {
+      // Prefer official videos
+      const officialVideos = youtubeVideos.filter(video =>
+        video.name.toLowerCase().includes('official') ||
+        video.name.toLowerCase().includes('trailer')
+      )
+      return officialVideos[0] || youtubeVideos[0]
+    }
+    return null
+  }
+
+  // Sort by preference: official, then by name (putting "trailer" first), then by published date
+  return trailers.sort((a, b) => {
+    const aIsOfficial = a.name.toLowerCase().includes('official')
+    const bIsOfficial = b.name.toLowerCase().includes('official')
+    if (aIsOfficial && !bIsOfficial) return -1
+    if (!aIsOfficial && bIsOfficial) return 1
+
+    const aHasTrailer = a.name.toLowerCase().includes('trailer')
+    const bHasTrailer = b.name.toLowerCase().includes('trailer')
+    if (aHasTrailer && !bHasTrailer) return -1
+    if (!aHasTrailer && bHasTrailer) return 1
+
+    // Sort by published date (newer first)
+    return new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+  })[0]
+}
+
+// Fetch trailer when button is clicked
+async function fetchTrailer() {
+  if (!movie.value) return
+
+  isLoadingTrailer.value = true
+  trailerError.value = null
+  trailerVideoId.value = null
+  showTrailerModal.value = true
+
+  try {
+    const videos = await getMovieVideos(movie.value.id)
+    const trailer = selectBestTrailer(videos)
+    if (trailer && trailer.key) {
+      trailerVideoId.value = trailer.key
+    } else {
+      trailerError.value = t('movie.trailer_unavailable')
+    }
+  } catch (err) {
+    console.warn('[MoviePage.vue] Failed to load trailer:', err)
+    trailerError.value = t('common.error')
+  } finally {
+    isLoadingTrailer.value = false
+  }
+}
 
 function toggleAction(action: 'watchlist' | 'favorite' | 'interest') {
   handleLoginRequired()
@@ -804,6 +1403,23 @@ useSeo({
         cursor: not-allowed;
       }
     }
+
+    &--trailer {
+      flex: 1;
+      min-width: 200px;
+      background: var(--brand-secondary);
+      color: var(--text-primary);
+
+      &:hover:not(:disabled) {
+        background: var(--bg-tertiary);
+        transform: translateY(-2px);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
   }
 
   &__loading {
@@ -866,6 +1482,252 @@ useSeo({
       animation: shimmer 1.5s infinite;
     }
   }
+
+  &__credits {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &__title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &::before {
+        content: "";
+        width: 4px;
+        height: 24px;
+        background: linear-gradient(180deg, #3E8BFF, #8A2BE2);
+        border-radius: 2px;
+      }
+    }
+
+    &__description {
+      font-size: 0.95rem;
+      color: var(--text-tertiary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    &__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+
+      @media (max-width: 1024px) {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 480px) {
+        gap: 1rem;
+      }
+    }
+
+    &__section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &::before {
+        content: "";
+        width: 3px;
+        height: 20px;
+        background: linear-gradient(180deg, #3E8BFF, #8A2BE2);
+        border-radius: 1.5px;
+      }
+    }
+
+    &__grid-items {
+      display: grid;
+      gap: 1.25rem;
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    &__grid-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+      text-align: center;
+      padding: 1.25rem;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      flex: 0 0 auto;
+      width: 200px;
+      min-width: 200px;
+      max-width: 200px;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border-color: var(--accent);
+        background: var(--bg-secondary);
+
+        &::before {
+          opacity: 0.1;
+        }
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3E8BFF, #8A2BE2);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+    }
+
+    &__carousel-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 1rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-tertiary);
+
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: var(--bg-tertiary);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--accent);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--accent-hover, var(--accent));
+      }
+    }
+
+    &__carousel {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: 1.5rem;
+      padding: 0 1rem;
+      width: max-content;
+      min-width: 100%;
+      scroll-behavior: smooth;
+    }
+
+    &__view-more {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    &__poster {
+      width: 90px;
+      height: 135px;
+      object-fit: cover;
+      border-radius: 10px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      background: var(--bg-primary);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: scale(1.03);
+      }
+    }
+
+    &__info {
+      text-align: center;
+      width: 100%;
+    }
+
+    &__name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 180px;
+      line-height: 1.3;
+    }
+
+    &__character,
+    &__job {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 180px;
+      line-height: 1.4;
+
+      &:before {
+        content: "• ";
+        color: var(--text-tertiary);
+        margin-right: 2px;
+      }
+    }
+
+    &__character {
+      font-style: italic;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+    font-size: 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+
+    @media (max-width: 480px) {
+      padding: 2rem 1.5rem;
+    }
+  }
+}
+
+.movie-page__media,
+.movie-page__related {
+  margin-top: 3rem;
+  padding: 2rem;
 }
 
 .movie-page__ratings {
@@ -1392,18 +2254,16 @@ useSeo({
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.9) 25%,
-      rgba(0, 0, 0, 0.7) 90%,
-      rgba(0, 0, 0, 0.4) 100%,
-      transparent 80%
-    );
+    background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0.9) 25%,
+        rgba(0, 0, 0, 0.7) 90%,
+        rgba(0, 0, 0, 0.4) 100%,
+        transparent 80%);
     pointer-events: none;
     z-index: 1;
   }
 
-  & > .container {
+  &>.container {
     position: relative;
     z-index: 2;
   }
@@ -1427,12 +2287,687 @@ useSeo({
     }
   }
 }
+
 @media (prefers-reduced-motion: reduce) {
+
   .watch-platform,
   .watch-streams__toggle,
   .provider__card,
   .movie-page__btn {
     transition: none;
+  }
+}
+
+/* Cast credits — horizontal carousel */
+.credits__grid.credits__grid--cast {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+.credits__carousel-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.credits__carousel {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 1rem;
+  width: max-content;
+  min-width: 100%;
+  padding: 0.5rem;
+  scroll-behavior: smooth;
+}
+
+.credits__grid-item {
+  flex: 0 0 200px;
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg-tertiary, #1f2430);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  position: relative;
+}
+
+.credits__grid-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-color: var(--border);
+  background: var(--bg-secondary);
+}
+
+.credits__grid-item--more {
+  align-items: center;
+  justify-content: center;
+}
+
+.credits__grid-item--more .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.credits__poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  background: var(--bg-tertiary, #1f2430);
+}
+
+.credits__info {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.credits__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.credits__character {
+  font-size: 0.8rem;
+  margin: 0;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+@media (max-width: 640px) {
+  .credits__grid-item {
+    flex: 0 0 160px;
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+  }
+}
+
+/* Media section — Backdrops / Posters carousel (shares Credits carousel pattern) */
+.movie-page__media {
+  margin-top: 3rem;
+}
+
+.movie-page__media .section__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.movie-page__media .media__tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    gap: 0.25rem;
+  }
+}
+
+.movie-page__media .media__tab {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  &--active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+}
+
+.movie-page__media .media__panel {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.movie-page__media .media__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+.movie-page__media .media__item {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.movie-page__media .media__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.movie-page__media .media__empty {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Media Modal (cloned from TvShow.vue) */
+.media-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+    align-items: center;
+  }
+}
+
+.media-modal {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+.media-modal__close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 480px) {
+    top: -45px;
+    right: -5px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+}
+
+.media-modal__image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 480px) {
+    border-radius: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .media__tab,
+  .media__item,
+  .related__link,
+  .related__nav,
+  .media-modal,
+  .media-modal__close {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Related Movies section — horizontal carousel (cloned from TvShow.vue) */
+.movie-page__related {
+  margin-top: 3rem;
+}
+
+.movie-page__related .section__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  color: var(--text-primary);
+}
+
+.movie-page__related .related__carousel {
+  position: relative;
+  padding: 0 4rem;
+
+  @media (max-width: 768px) {
+    padding: 0 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 2.5rem;
+  }
+}
+
+.movie-page__related .related__scroll {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.movie-page__related .related__track {
+  display: flex;
+  gap: 1rem;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.movie-page__related .related__card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+
+  @media (max-width: 768px) {
+    flex: 0 0 180px;
+  }
+
+  @media (max-width: 480px) {
+    flex: 0 0 150px;
+  }
+}
+
+.movie-page__related .related__link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.movie-page__related .related__poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+
+.movie-page__related .related__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.movie-page__related .related__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--text-tertiary);
+}
+
+.movie-page__related .related__info {
+  padding: 0.75rem 0.25rem 0;
+  text-align: center;
+}
+
+.movie-page__related .related__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.movie-page__related .related__rating {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin: 0;
+}
+
+.movie-page__related .related__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover:not(:disabled) {
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  &--prev {
+    left: 0;
+  }
+
+  &--next {
+    right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-page__related .related__nav {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-page__related .related__nav {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .movie-page__related .related__track {
+    transition: none;
+  }
+
+  .movie-page__related .related__link {
+    transition: none;
+  }
+
+  .movie-page__related .related__link:hover {
+    transform: none;
+  }
+
+  .movie-page__related .related__nav {
+    transition: none;
+  }
+}
+
+/* Trailer modal styles */
+.trailer-modal {
+  max-width: 640px;
+  width: 90vw;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-primary);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.trailer-modal__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trailer-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.trailer-modal__close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border);
+}
+
+.trailer-modal__close:hover {
+  background: var(--bg-secondary);
+  transform: translateY(-2px);
+}
+
+.trailer-modal__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.trailer-modal__content {
+  padding: 1.5rem;
+  position: relative;
+}
+
+.trailer-modal__video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.trailer-modal__video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.trailer-modal__error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.trailer-modal__error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.trailer-modal__loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.trailer-modal__loading-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: block;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 640px) {
+  .trailer-modal {
+    width: 90vw;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .trailer-modal__header {
+    padding: 1.25rem;
+  }
+
+  .trailer-modal__title {
+    font-size: 1.125rem;
+  }
+
+  .trailer-modal__content {
+    padding: 1.25rem;
+  }
+
+  .trailer-modal__video-container {
+    margin-bottom: 1rem;
+  }
+
+  .trailer-modal__close {
+    width: 32px;
+    height: 32px;
   }
 }
 </style>

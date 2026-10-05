@@ -60,6 +60,12 @@ interface BackendMoviesList {
   total_pages: number;
 }
 
+/** Backend response shape for GET /movies/{id}/similar (success + data array). */
+interface SimilarMoviesBackendResponse {
+  success: boolean;
+  data: BackendMovie[];
+}
+
 interface BackendCredit {
   id: string;
   tmdb_id: number;
@@ -261,16 +267,18 @@ export async function fetchSimilarMovies(
   tmdbId: number,
   page = 1
 ): Promise<SimilarMoviesResponse> {
-  const response = await httpClient.get<BackendMoviesList>(
+  const response = await httpClient.get<SimilarMoviesBackendResponse>(
     `/movies/${tmdbId}/similar`,
     { params: { page } }
   );
 
+  const results = response.data.data ?? [];
+
   return {
-    page: response.data.page,
-    results: response.data.items.map(mapMovieToTMDBFormat),
-    total_pages: response.data.total_pages,
-    total_results: response.data.total,
+    page,
+    results: results.map(mapMovieToTMDBFormat),
+    total_pages: 1,
+    total_results: results.length,
   };
 }
 

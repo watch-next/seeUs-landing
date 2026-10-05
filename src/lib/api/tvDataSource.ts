@@ -4,7 +4,7 @@
  * This module adapts backend API calls to the expected TV show data format.
  */
 
-import { httpClient } from '@/lib/http/client';
+import { httpClient } from '../http/client';
 import type { TVShowDetail, TVShowsListResponse, SeasonDetail, Episode } from '../tmdb/types';
 
 /**
@@ -33,7 +33,7 @@ interface BackendTVShow {
 }
 
 interface BackendTVList {
-  items: BackendTVShow[];
+  data: BackendTVShow[];
   total: number;
   page: number;
   page_size: number;
@@ -97,7 +97,7 @@ function mapTVShowToTMDBFormat(show: BackendTVShow): TVShowDetail {
 function mapTVListToTMDBFormat(response: BackendTVList): TVShowsListResponse {
   return {
     page: response.page,
-    results: response.items.map(mapTVShowToTMDBFormat),
+    results: response.data.map(mapTVShowToTMDBFormat),
     total_pages: response.total_pages,
     total_results: response.total,
   };
@@ -226,11 +226,37 @@ export async function fetchSimilarShows(
   );
 
   return {
-    results: response.data.items.map(mapTVShowToTMDBFormat),
+    results: response.data.data.map(mapTVShowToTMDBFormat),
     total: response.data.total,
     page: response.data.page,
     total_pages: response.data.total_pages,
   };
+}
+
+/**
+ * Get on TV TV shows from backend.
+ */
+export async function fetchOnTvShows(
+  page = 1,
+  pageSize = 20
+): Promise<TVShowsListResponse> {
+  const response = await httpClient.get<BackendTVList>('/tv/on-tv', {
+    params: { page, page_size: pageSize },
+  });
+  return mapTVListToTMDBFormat(response.data);
+}
+
+/**
+ * Get airing today TV shows from backend.
+ */
+export async function fetchAiringTodayShows(
+  page = 1,
+  pageSize = 20
+): Promise<TVShowsListResponse> {
+  const response = await httpClient.get<BackendTVList>('/tv/airing-today', {
+    params: { page, page_size: pageSize },
+  });
+  return mapTVListToTMDBFormat(response.data);
 }
 
 /**
@@ -244,4 +270,32 @@ export async function fetchAllShows(
     params: { page, page_size: pageSize },
   });
   return mapTVListToTMDBFormat(response.data);
+}
+
+/**
+ * Video entity (from TMDB API).
+ */
+export interface TvShowVideo {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+}
+
+/**
+ * Get videos for a TV show by TMDB ID.
+ * @param tmdbId - TMDB ID of the TV show
+ */
+export async function getTvShowVideos(tmdbId: number): Promise<TvShowVideo[]> {
+  const response = await httpClient.get<{ success: boolean; videos: TvShowVideo[] }>(`/tv/${tmdbId}/videos`);
+  if (!response.data.success) {
+    throw new Error('Failed to fetch videos');
+  }
+  return response.data.videos;
 }

@@ -5,7 +5,9 @@
     "error": "Ocorreu um erro inesperado.",
     "processing": "Processando...",
     "active": "Ativo",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "more": "Mais",
+    "close": "Fechar"
   },
   "navigation": {
     "home": "Início",
@@ -14,6 +16,8 @@
     "premium": "Premium",
     "roadmap": "Roadmap",
     "blog": "Blog",
+    "movies": "Filmes",
+    "tvShows": "Séries",
     "about": "Sobre Nós",
     "login": "Entrar",
     "openMenu": "Abrir menu",
@@ -395,7 +399,9 @@
     "postNotFound": "Post Não Encontrado",
     "postNotFoundDescription": "O artigo que você está procurando não existe.",
     "backToBlog": "Voltar ao Blog",
-    "relatedArticles": "Artigos Relacionados"
+    "relatedArticles": "Artigos Relacionados",
+    "viewMore": "Ver mais",
+    "viewLess": "Ver menos"
   },
   "content": {
     "meta": {
@@ -434,6 +440,13 @@
     }
   },
   "movie": {
+    "media": {
+      "title": "Mídias",
+      "backdrops": "Backdrops",
+      "posters": "Posters",
+      "no_media": "Nenhuma mídia disponível"
+    },
+    "related": "Relacionados",
     "watch_now": "Assistir Agora",
     "no_poster": "Nenhum pôster disponível",
     "no_synopsis": "Nenhuma sinopse disponível.",
@@ -490,8 +503,83 @@
     "noMoviesFoundDescription": "Não encontramos filmes correspondentes a \"{query}\".",
     "noMoviesAvailable": "Nenhum filme disponível ainda",
     "noMoviesAvailableDescription": "Volte em breve!",
+    "serverSleeping": "Nosso servidor tirou uma soneca 😴",
+    "serverSleepingDescription": "Clique no botão abaixo para acordá-lo e tentar novamente.",
+    "wakeServer": "Acordar servidor",
     "searchResults": "{count} resultados para \"{query}\"",
     "totalResults": "{count} filmes"
+  },
+  "tvShows": {
+    "title": "Séries",
+    "subtitle": "Descubra nossa coleção de séries",
+    "searchPlaceholder": "Buscar séries...",
+    "clearSearch": "Limpar busca",
+    "loading": "Carregando séries...",
+    "searchResults": "{count} resultados para \"{query}\"",
+    "noShowsAvailable": "Nenhuma série disponível ainda",
+    "noShowsAvailableDescription": "Volte em breve!",
+    "serverSleeping": "Nosso servidor tirou uma soneca 😴",
+    "serverSleepingDescription": "Clique no botão abaixo para acordá-lo e tentar novamente.",
+    "wakeServer": "Acordar servidor",
+    "seasonsLabel": "{count} temporadas",
+    "underConstruction": "Ainda estamos trabalhando nisso."
+  },
+  "tvShow": {
+    "watch_now": "Assistir Agora",
+    "no_poster": "Sem pôster disponível",
+    "no_synopsis": "Sem sinopse disponível.",
+    "original_title": "Título original",
+    "popularity": "Popularidade",
+    "votes": "votos",
+    "synopsis": "Sinopse",
+    "official_site": "Site Oficial",
+    "seasons": "Temporadas",
+    "status": "Status",
+    "trailer": "Trailer",
+    "trailer_unavailable": "Trailer indisponível",
+    "discussions_comments": {
+      "title": "Discussões & Comentários"
+    },
+    "discussions": "Discussões",
+    "comments": "Comentários",
+    "discussions_auth_required": "Por favor faça login para participar das discussões",
+    "discussions_placeholder": "A funcionalidade de discussão estará disponível em breve.",
+    "watch_dialog": {
+      "title": "Assistir no SeeUs",
+      "subtitle": "Escolha como você deseja assistir",
+      "web_app": "Abrir Web App",
+      "web_app_desc": "Assista diretamente no seu navegador.",
+      "android_app": "Obter o App Android",
+      "android_app_desc": "Aproveite o SeeUs no seu dispositivo Android.",
+      "close": "Fechar",
+      "toggle_providers": "Provedores de streaming"
+    },
+    "watchlist": "Lista para assistir",
+    "favorite": "Favorito",
+    "interest": "Interesse",
+    "season": {
+      "title": "Temporada Atual",
+      "season": "Temporada",
+      "episodes": "Episódios",
+      "episode_count": "{count} episódios",
+      "air_date": "Data de exibição",
+      "overview": "Visão geral",
+      "no_overview": "Sem visão geral disponível.",
+      "loading": "Carregando temporada...",
+      "error": "Falha ao carregar temporada"
+    },
+    "media": {
+      "title": "Mídia",
+      "posters": "Posters",
+      "backdrops": "Backdrops",
+      "no_media": "Nenhuma mídia disponível"
+    },
+    "related": {
+      "title": "Relacionados",
+      "no_related": "Nenhuma série relacionada encontrada",
+      "prev": "Anterior",
+      "next": "Próximo"
+    }
   },
   "waitlist": {
     "error": {
@@ -775,5 +863,12 @@
       "subtitle": "Agora você sabe o que é o SeeUs, como ele funciona e para onde está indo. A forma mais rápida de avaliar é abrir o produto e navegar por conta própria.",
       "cta": "Abrir o SeeUs"
     }
+  },
+  "credits": {
+    "title": "Créditos",
+    "description": "Veja o elenco e a equipe deste filme",
+    "cast": "Elenco",
+    "crew": "Equipe",
+    "no_credits": "Não há créditos disponíveis"
   }
 }

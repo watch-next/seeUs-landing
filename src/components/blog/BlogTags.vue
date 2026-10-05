@@ -1,9 +1,9 @@
 <template>
   <div class="blog-tags">
     <h3 class="blog-tags__title">{{ t('blog.tags') }}</h3>
-    <div class="blog-tags__cloud" aria-label="Blog tags">
+    <div class="blog-tags__list">
       <button
-        v-for="tag in tags"
+        v-for="tag in visibleTags"
         :key="tag"
         :class="['blog-tags__item', { active: tag === selectedTag }]"
         @click="selectTag(tag)"
@@ -11,15 +11,20 @@
         {{ tag }}
       </button>
     </div>
+    <button v-if="hasMore" type="button" class="blog-tags__toggle" @click="toggleExpand">
+      {{ expanded ? t('blog.viewLess') : t('blog.viewMore') }}
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { BlogPost } from '@/blog'
 
 const { t } = useI18n()
+
+const TAG_LIMIT = 10
 
 const props = defineProps<{
   posts: BlogPost[]
@@ -37,6 +42,25 @@ const tags = computed(() => {
   })
   return Array.from(tagSet).sort()
 })
+
+const expanded = ref(false)
+
+const hasMore = computed(() => tags.value.length > TAG_LIMIT)
+
+const visibleTags = computed(() => {
+  const all = tags.value
+  if (expanded.value) return all
+  const head = all.slice(0, TAG_LIMIT)
+  // If a hidden tag is selected, keep it visible so selection is not lost.
+  if (props.selectedTag && !head.includes(props.selectedTag)) {
+    return Array.from(new Set([...head, props.selectedTag])).sort()
+  }
+  return head
+})
+
+const toggleExpand = () => {
+  expanded.value = !expanded.value
+}
 
 const selectTag = (tag: string) => {
   if (tag === props.selectedTag) {
@@ -60,45 +84,11 @@ const selectTag = (tag: string) => {
     color: $color-text;
   }
 
-  &__cloud {
-    position: relative;
+  &__list {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: $space-2;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    padding: $space-1 0 $space-2;
-    margin-inline: calc(-1 * #{$space-1});
-    padding-inline: $space-1;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: $space-6;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    &::before {
-      left: 0;
-      background: linear-gradient(90deg, $color-background 20%, rgba($color-background, 0));
-    }
-
-    &::after {
-      right: 0;
-      background: linear-gradient(270deg, $color-background 20%, rgba($color-background, 0));
-    }
+    justify-content: flex-start;
   }
 
   &__item {
@@ -112,6 +102,7 @@ const selectTag = (tag: string) => {
     font-size: $text-sm;
     font-weight: $weight-medium;
     line-height: 1;
+    white-space: nowrap;
     cursor: pointer;
     transition: all $transition-base;
 
@@ -124,6 +115,38 @@ const selectTag = (tag: string) => {
       background: $color-primary-light;
       border-color: $color-primary;
       color: $color-primary;
+    }
+  }
+
+  &__toggle {
+    margin-top: $space-3;
+    padding: $space-1 0;
+    background: none;
+    border: none;
+    color: $color-primary;
+    font-size: $text-sm;
+    font-weight: $weight-medium;
+    cursor: pointer;
+    text-align: left;
+    transition: color $transition-base;
+
+    &:hover {
+      color: $color-primary-dark;
+      text-decoration: underline;
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: $space-2;
+
+    &__item {
+      padding: $space-1 $space-3;
+      min-height: 1.75rem;
+      font-size: $text-xs;
+    }
+
+    &__list {
+      gap: $space-1;
     }
   }
 }

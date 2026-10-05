@@ -100,7 +100,7 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 /**
- * Request interceptor - adds JWT token to requests.
+ * Request interceptor - adds JWT token and i18n locale to requests.
  */
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -116,12 +116,41 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // Inject i18n locale as `language` query parameter for API requests
+    const language = getI18nLanguage();
+    if (language && config.params) {
+      config.params = { ...config.params, language };
+    } else if (language && config.params === undefined) {
+      config.params = { language };
+    }
+
     return config;
   },
   (error) => {
     return Promise.reject(handleApiError(error));
   }
 );
+
+/**
+ * Get the current i18n locale mapped to the backend API format.
+ * Frontend locales: pt-BR, en, es
+ * Backend expects: pt-BR, en-US, es-ES
+ */
+function getI18nLanguage(): string | undefined {
+  if (typeof localStorage === 'undefined') {
+    return undefined;
+  }
+  const savedLang = localStorage.getItem('watchnext-locale');
+  if (!savedLang || !['en', 'pt-BR', 'es'].includes(savedLang)) {
+    return undefined;
+  }
+  const localeMap: Record<string, string> = {
+    'pt-BR': 'pt-BR',
+    'en': 'en-US',
+    'es': 'es-ES',
+  };
+  return localeMap[savedLang];
+}
 
 /**
  * Response interceptor - handles 401 errors and attempts token refresh.

@@ -33,6 +33,21 @@ export interface MovieDetail {
   genres: Genre[];
 }
 
+export interface MovieCreditsResponse {
+  id?: number;
+  cast: MovieCredit[];
+  crew: MovieCredit[];
+}
+
+export interface MovieCredit {
+  id: number;
+  name: string;
+  character?: string;
+  job?: string;
+  department?: string;
+  profile_path?: string | null;
+}
+
 export interface Video {
   id: string;
   iso_639_1: string;
@@ -78,6 +93,23 @@ export async function getMovieByUuid(uuid: string): Promise<MovieDetail> {
 }
 
 /**
+ * Get movie credits by movie ID.
+ * @param movieId - UUID do filme ou TMDB ID
+ */
+export async function getMovieCredits(movieId: string | number): Promise<MovieCreditsResponse> {
+  const response: AxiosResponse<{ success: boolean; cast: MovieCredit[]; crew: MovieCredit[] }> = await httpClient.get(`/movies/${movieId}/credits`);
+
+  if (!response.data.success) {
+    throw new Error('Failed to fetch credits');
+  }
+
+  return {
+    cast: response.data.cast,
+    crew: response.data.crew,
+  };
+}
+
+/**
  * Get watch providers for a movie.
  * @param movieId - UUID do filme ou TMDB ID
  * @param region - Código da região (padrão: 'US')
@@ -88,6 +120,18 @@ export async function getWatchProviders(movieId: string | number, region: string
       params: { region },
     });
   return response.data.data;
+}
+
+/**
+ * Get videos (trailers, teasers, etc.) for a movie from TMDB.
+ * @param movieId - UUID do filme ou TMDB ID
+ */
+export async function getMovieVideos(movieId: string | number): Promise<Video[]> {
+  const response: AxiosResponse<{ success: boolean; videos: Video[] }> = await httpClient.get(`/movies/${movieId}/videos`);
+  if (!response.data.success) {
+    throw new Error('Failed to fetch movie videos');
+  }
+  return response.data.videos;
 }
 
 /**

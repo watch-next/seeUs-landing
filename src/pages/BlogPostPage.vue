@@ -1,5 +1,6 @@
 <template>
   <article v-if="post" class="blog-post">
+
     <div class="container blog-post__container">
       <header class="blog-post__header">
         <nav class="blog-post__breadcrumb" aria-label="Breadcrumb">
@@ -20,15 +21,22 @@
           </ol>
         </nav>
 
+        <!-- AdSense Banner após a imagem de capa 
+      <AdSenseAd
+        format="auto"
+        layout="in-article"
+        responsive
+        class="blog-post__ad"
+      /> -->
+
+        <!-- Adsterra Banner após a imagem de capa -->
+        <AdsterraBanner class="blog-post__adsterra" />
+
         <div class="blog-post__meta-header">
           <span class="blog-post__category" :style="{ backgroundColor: categoryColor }">
             {{ post.category }}
           </span>
-          <BlogMeta
-            :author="post.author"
-            :date="post.date"
-            :reading-time="post.readingTime"
-          />
+          <BlogMeta :author="post.author" :date="post.date" :reading-time="post.readingTime" />
         </div>
 
         <h1 class="blog-post__title">{{ post.title }}</h1>
@@ -37,50 +45,33 @@
 
         <div class="blog-post__tags" v-if="post.tags.length">
           <span class="blog-post__tags-label">{{ t('blog.tags') }}:</span>
-          <span
-            v-for="tag in post.tags"
-            :key="tag"
-            class="blog-post__tag"
-          >
+          <span v-for="tag in post.tags" :key="tag" class="blog-post__tag">
             {{ tag }}
           </span>
         </div>
       </header>
 
       <figure v-if="post.cover" class="blog-post__cover-figure">
-        <img
-          :src="post.cover"
-          :alt="post.title"
-          class="blog-post__cover"
-          loading="lazy"
-        />
+        <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac">
+          <img :src="post.cover" :alt="post.title" class="blog-post__cover" loading="lazy" /></a>
         <figcaption v-if="post.author" class="blog-post__cover-caption">
           {{ t('blog.coverCredit', { author: post.author }) }}
         </figcaption>
       </figure>
 
-      <!-- AdSense Banner após a imagem de capa -->
-      <AdSenseAd
-        format="auto"
-        layout="in-article"
-        responsive
-        class="blog-post__ad"
-      />
-
-      <!-- Adsterra Banner após a imagem de capa -->
-      <AdsterraBanner class="blog-post__adsterra" />
+      <AdsterraNative class="blog-post__adsterra-native" />
 
       <div class="blog-post__content">
         <MarkdownRenderer :content="post.content" />
       </div>
 
-      <!-- AdSense Banner após o conteúdo -->
+      <!-- AdSense Banner após o conteúdo 
       <AdSenseAd
         format="auto"
         layout="in-feed"
         responsive
         class="blog-post__ad"
-      />
+      />-->
 
       <CommentSection :post-slug="post.slug" />
 
@@ -88,11 +79,7 @@
         <div v-if="relatedPosts.length" class="blog-post__related">
           <h2 class="blog-post__related-title">{{ t('blog.relatedArticles') }}</h2>
           <div class="blog-post__related-grid">
-            <BlogCard
-              v-for="related in relatedPosts"
-              :key="related.slug"
-              :post="related"
-            />
+            <BlogCard v-for="related in relatedPosts" :key="related.slug" :post="related" />
           </div>
         </div>
       </footer>
@@ -110,6 +97,8 @@
       </div>
     </div>
   </div>
+
+
 </template>
 
 <script setup lang="ts">
@@ -125,6 +114,7 @@ import MarkdownRenderer from '@/components/blog/MarkdownRenderer.vue'
 import AdSenseAd from '@/components/ads/AdSenseAd.vue'
 import AdsterraBanner from '@/components/ads/AdsterraBanner.vue'
 import CommentSection from '@/components/comments/CommentSection.vue'
+import AdsterraNative from '@/components/ads/AdsterraNative.vue'
 
 const { t } = useI18n()
 const route = useRoute()
