@@ -14,10 +14,10 @@
         <header class="tv-show-page__header">
           <div class="tv-show-page__media">
             <div class="tv-show-page__poster">
-              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac" v-if="posterUrl"
-                target="_blank" rel="noopener noreferrer">
-                <img :src="posterUrl" :alt="series.name" class="tv-show-page__poster-img" loading="lazy" />
-              </a>
+
+              <img :src="posterUrl" :alt="series.name" class="tv-show-page__poster-img" loading="lazy"
+                v-if="posterUrl" />
+
               <div v-else class="tv-show-page__poster-placeholder">
                 <span>📺</span>
                 <p>{{ t('tvShow.no_poster') }}</p>
@@ -108,7 +108,8 @@
                 🌐 {{ t('tvShow.official_site') }}
                 <span class="external-link-icon">↗</span>
               </a>
-              <button type="button" @click="fetchTrailer" class="tv-show-page__btn tv-show-page__btn--trailer" :disabled="isLoadingTrailer">
+              <button type="button" @click="fetchTrailer" class="tv-show-page__btn tv-show-page__btn--trailer"
+                :disabled="isLoadingTrailer">
                 🎬 {{ t('tvShow.trailer') }}
               </button>
               <button type="button" @click="showWatchModal = true" class="tv-show-page__btn tv-show-page__btn--watch">
@@ -126,7 +127,7 @@
         </header>
       </div>
     </div>
-    
+
   </article>
 
 
@@ -147,10 +148,8 @@
 
       <div v-else-if="currentSeason" class="season__card">
         <div class="season__media">
-          <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
-            v-if="currentSeason.poster_path" target="_blank" rel="noopener noreferrer">
-            <img :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')" :alt="currentSeason.name"
-              class="season__poster" loading="lazy" /></a>
+          <img :src="getTmdbImageUrl(currentSeason.poster_path, 'w500')" :alt="currentSeason.name"
+            class="season__poster" loading="lazy" v-if="currentSeason.poster_path" />
           <div v-else class="season__poster-placeholder">
             <span>📺</span>
             <p>{{ t('tvShow.no_poster') }}</p>
@@ -433,44 +432,40 @@
     </div>
   </div>
 
-<!-- Trailer Modal -->
-<div v-if="showTrailerModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="trailer-modal-title"
-  @click="showTrailerModal = false" @keydown.esc="showTrailerModal = false">
-  <div class="modal" @click.stop>
-    <div class="modal__header">
-      <div>
-        <h2 id="trailer-modal-title">{{ t('tvShow.trailer') }}</h2>
+  <!-- Trailer Modal -->
+  <div v-if="showTrailerModal" class="modal-overlay" role="dialog" aria-modal="true"
+    aria-labelledby="trailer-modal-title" @click="showTrailerModal = false" @keydown.esc="showTrailerModal = false">
+    <div class="modal" @click.stop>
+      <div class="modal__header">
+        <div>
+          <h2 id="trailer-modal-title">{{ t('tvShow.trailer') }}</h2>
+        </div>
+        <button class="modal__close" :aria-label="t('tvShow.watch_dialog.close')" @click="showTrailerModal = false">
+          ×
+        </button>
       </div>
-      <button class="modal__close" :aria-label="t('tvShow.watch_dialog.close')" @click="showTrailerModal = false">
-        ×
-      </button>
-    </div>
-    <div class="modal__content">
-      <div v-if="isLoadingTrailer" class="trailer__loading">
-        <div class="spinner"></div>
-        <p>{{ t('common.loading') }}</p>
-      </div>
-      <div v-else-if="trailerError" class="trailer__error">
-        <p>{{ trailerError }}</p>
-      </div>
-      <div v-else-if="trailerVideoId" class="trailer__video">
-        <iframe
-          width="100%"
-          height="400"
-          :src="`https://www.youtube.com/embed/${trailerVideoId}?rel=0&showinfo=0&autoplay=1`"
-          title="YouTube trailer"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      </div>
-      <div v-else class="trailer__empty">
-        <p>{{ t('tvShow.trailer_unavailable') }}</p>
+      <div class="modal__content">
+        <div v-if="isLoadingTrailer" class="trailer__loading">
+          <div class="spinner"></div>
+          <p>{{ t('common.loading') }}</p>
+        </div>
+        <div v-else-if="trailerError" class="trailer__error">
+          <p>{{ trailerError }}</p>
+        </div>
+        <div v-else-if="trailerVideoId" class="trailer__video">
+          <iframe width="100%" height="400"
+            :src="`https://www.youtube.com/embed/${trailerVideoId}?rel=0&showinfo=0&autoplay=1`" title="YouTube trailer"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        <div v-else class="trailer__empty">
+          <p>{{ t('tvShow.trailer_unavailable') }}</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<AdsterraNative class="tv-show-page__adsterra-native" />
+  <AdsterraNative class="tv-show-page__adsterra-native" />
 
 </template>
 

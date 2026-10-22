@@ -52,14 +52,14 @@
       </header>
 
       <figure v-if="post.cover" class="blog-post__cover-figure">
-        <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac">
-          <img :src="post.cover" :alt="post.title" class="blog-post__cover" loading="lazy" /></a>
+
+        <img :src="post.cover" :alt="post.title" class="blog-post__cover" loading="lazy" />
         <figcaption v-if="post.author" class="blog-post__cover-caption">
           {{ t('blog.coverCredit', { author: post.author }) }}
         </figcaption>
       </figure>
 
-      
+
 
       <div class="blog-post__content">
         <MarkdownRenderer :content="post.content" />
@@ -98,7 +98,7 @@
     </div>
   </div>
 
-<AdsterraNative class="blog-post__adsterra-native" />
+  <AdsterraNative class="blog-post__adsterra-native" />
 </template>
 
 <script setup lang="ts">

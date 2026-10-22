@@ -14,9 +14,7 @@
         <header class="movie-page__header">
           <div class="movie-page__media">
             <div class="movie-page__poster">
-              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
-                v-if="posterUrl"><img :src="posterUrl" :alt="movie.title" class="movie-page__poster-img"
-                  loading="lazy" /></a>
+              <img :src="posterUrl" :alt="movie.title" class="movie-page__poster-img" loading="lazy" v-if="posterUrl" />
               <div v-else class="movie-page__poster-placeholder">
                 <span>🎬</span>
                 <p>{{ t('movie.no_poster') }}</p>
@@ -107,7 +105,8 @@
                 🌐 {{ t('movie.official_site') }}
                 <span class="external-link-icon">↗</span>
               </a>
-              <button type="button" @click="fetchTrailer" class="movie-page__btn movie-page__btn--trailer" :disabled="isLoadingTrailer">
+              <button type="button" @click="fetchTrailer" class="movie-page__btn movie-page__btn--trailer"
+                :disabled="isLoadingTrailer">
                 🎬 {{ t('movie.trailer') }}
               </button>
               <button type="button" @click="showWatchModal = true" class="movie-page__btn movie-page__btn--watch">
@@ -144,7 +143,7 @@
         </header>
       </div>
     </div>
-    
+
     <!-- Credits Card -->
     <section v-if="credits" class="movie-page__credits" aria-label="Credits">
       <h2 class="credits__title">{{ t('credits.title') }}:</h2>
@@ -158,11 +157,10 @@
         <div class="credits__carousel-container">
           <div class="credits__carousel">
             <div v-for="credit in credits.cast.slice(0, 10)" :key="credit.id" class="credits__grid-item">
-              <a href="https://harryinspectionlucy.com/d2vxeqfnda?key=dee1664d4eefae5c2c7b9b913de207ac"
-                v-if="credit.profile_path" target="_blank" rel="noopener noreferrer">
-                <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w185') : undefined"
-                  :alt="`${credit.name} as ${credit.character}`" class="credits__poster" />
-              </a>
+
+              <img :src="credit.profile_path ? getTmdbImageUrl(credit.profile_path, 'w185') : undefined"
+                :alt="`${credit.name} as ${credit.character}`" class="credits__poster" v-if="credit.profile_path" />
+
               <div class="credits__info">
                 <p class="credits__name">{{ credit.name }}</p>
                 <p class="credits__character">{{ credit.character }}</p>
@@ -439,14 +437,15 @@
   </div>
 
   <!-- Trailer Modal -->
-  <div v-if="showTrailerModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="trailer-modal-title"
-    @click="showTrailerModal = false" @keydown.esc="showTrailerModal = false">
+  <div v-if="showTrailerModal" class="modal-overlay" role="dialog" aria-modal="true"
+    aria-labelledby="trailer-modal-title" @click="showTrailerModal = false" @keydown.esc="showTrailerModal = false">
     <div class="modal trailer-modal" @click.stop>
       <div class="modal__header trailer-modal__header">
         <div>
           <h2 id="trailer-modal-title">{{ t('movie.trailer') }}</h2>
         </div>
-        <button class="modal__close trailer-modal__close" :aria-label="t('common.close')" @click="showTrailerModal = false">
+        <button class="modal__close trailer-modal__close" :aria-label="t('common.close')"
+          @click="showTrailerModal = false">
           ×
         </button>
       </div>
@@ -463,15 +462,12 @@
         </div>
 
         <div v-else-if="trailerVideoId" class="trailer-modal__video-container">
-          <iframe
-            :src="'https://www.youtube.com/embed/' + trailerVideoId"
-            title="Movie trailer"
-            frameborder="0"
+          <iframe :src="'https://www.youtube.com/embed/' + trailerVideoId" title="Movie trailer" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
           </iframe>
         </div>
-        
+
         <div v-else class="trailer-modal__error">
           <span class="trailer-modal__error-icon" aria-hidden="true">❌</span>
           <p>{{ t('movie.trailer_unavailable') }}</p>
@@ -480,7 +476,7 @@
     </div>
   </div>
 
-<AdsterraNative class="movie-page__adsterra-native" />
+  <AdsterraNative class="movie-page__adsterra-native" />
 </template>
 
 <script setup lang="ts">
@@ -2888,7 +2884,8 @@ useSeo({
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  padding-bottom: 56.25%;
+  /* 16:9 aspect ratio */
   background: #000;
   border-radius: 12px;
   overflow: hidden;
@@ -2933,9 +2930,11 @@ useSeo({
   0% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     opacity: 0.6;
   }
